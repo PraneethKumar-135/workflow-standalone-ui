@@ -9,6 +9,10 @@ import {
   SaveOutlined,
   CloseCircleFilled,
 } from "@ant-design/icons";
+<<<<<<< HEAD
+=======
+import { useRouter } from 'next/navigation'
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -18,6 +22,18 @@ const Page = () => {
   const setprojectIds = useSelector((state) => state.addResources);
   const ProjectId = setprojectIds.id[0].prjectId;
   const [api, contextHolder] = notification.useNotification();
+<<<<<<< HEAD
+=======
+
+  const openNotification = (placement, type, message) => {
+    notification[type]({
+      message: message,
+      placement: placement,
+    });
+  };
+
+  const  router = useRouter();
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
   console.log(ProjectId);
 
   const postWorkflow = async () => {
@@ -48,8 +64,21 @@ const Page = () => {
       .request(config)
       .then((response) => {
         console.log("success:",response);
+<<<<<<< HEAD
       })
       .catch((error) => {
+=======
+        openNotification("topRight", "success", "UseCase saved successfully!");
+
+        router.push("/main/projects/workflowlist");
+      })
+      .catch((error) => {
+        const seterror = {error}
+        console.log(seterror)
+        const errorStatus = error.response.data.error
+        console.log(errorStatus)
+        openNotification("topRight", "error",  ` ${errorStatus}`);
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
         console.log(error);
       });
   };
@@ -87,13 +116,6 @@ const Page = () => {
     const updatedStages = [...stages];
     updatedStages[index].checklist.push("");
     setStages(updatedStages);
-  };
-
-  const openNotification = (placement, type, message) => {
-    api[type]({
-      message: message,
-      placement: placement,
-    });
   };
 
   return (
@@ -162,7 +184,7 @@ const Page = () => {
             >
               Add Sub Stages
             </Button>
-            {contextHolder}
+            
           </div>
 
           <div>
@@ -239,11 +261,20 @@ const Page = () => {
       ))}
      
       <div className="flex justify-center mt-6 w-[100%]">
+<<<<<<< HEAD
         <Link href="/main/projects/workflowlist">
         <Button className="bg-blue-500 text-white" onClick={postWorkflow}>
           Save
         </Button>
         </Link>
+=======
+        {/* <Link href="/main/projects/workflowlist"> */}
+        <Button className="bg-blue-500 text-white" onClick={postWorkflow} >
+          Save
+        </Button>
+        {contextHolder}
+        {/* </Link> */}
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
       </div>
     </div>
   );

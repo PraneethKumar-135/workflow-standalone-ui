@@ -27,14 +27,14 @@ export const Projectmanager = (props) => {
 
   // select User
   const [selectUser, setSelectUser] = useState([]);
+<<<<<<< HEAD
 
 
   // useProjec
 
+=======
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
   console.log(selectUser);
-
-  // console.log(project);
-
   // useEffect to fetch all users
   useEffect(() => {
     // Fetch data when the component mounts
@@ -54,13 +54,23 @@ export const Projectmanager = (props) => {
     };
     fetchData();
   }, []);
+
+  var handleResourcesAdd = (emp_id, data) => {
+    dispatch(addResources({ id: emp_id}));
+    dispatch(addResourcesData(data));
+    console.log(emp_id, data);
+  };
   const dispatch = useDispatch();
   console.log(selectUser);
+<<<<<<< HEAD
   var handleResourcesAdd = (emp_id) => {
     dispatch(addResources({ id: emp_id }));
 
     console.log(emp_id);
   };
+=======
+ 
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
   var handleResourcesInfo = (pm) => {
     dispatch(addResourcesData(pm))
   }
@@ -98,6 +108,7 @@ export const Projectmanager = (props) => {
                     {/* CheckBox Button */}
                     <input
                       type="checkbox"
+<<<<<<< HEAD
                       onChange={(e) => {
                         // handleResourcesAdd(Manager.emp_id);
                         // dispatch(addResources( Manager.emp_id ));
@@ -114,6 +125,12 @@ export const Projectmanager = (props) => {
                           setSelectedDataPM(updatedSelectedData);
                           dispatch(addResourcesPM({ ProjectManager: updatedSelectedData }));
                         }
+=======
+                      onChange={() => {
+                        const selectedId = Manager.emp_id;
+                        const selectedData = { name: Manager.first_name, last_name: Manager.last_name, email: Manager.email }; 
+                        handleResourcesAdd(selectedId, selectedData); 
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
                       }}
                       className="cursor-pointer"
                     />
@@ -398,6 +415,7 @@ export const TesterResourcePool = (props) => {
 
   // HandleCheckBoxChange
 
+<<<<<<< HEAD
   console.log(selectUser);
   var handleResourcesAdd = (emp_id) => {
     dispatch(addResources({ id: emp_id }));
@@ -407,6 +425,40 @@ export const TesterResourcePool = (props) => {
   var handleResourcesInfo = (Tester) => {
     dispatch(addResourcesData(Tester))
   }
+=======
+  // console.log(selectUser);
+  // var handleResourcesAdd = (emp_id ) => {
+  //   setSelectUser (emp_id)
+  //   dispatch(addResources({ id: (selectUser) }));
+
+  //   console.log(emp_id);
+  // };
+  // var handleResourcesInfo = (Tester) =>{
+  //   console.log(Tester.emp_id)
+  //   console.log(selectUser)
+  //   if (selectUser ===  Tester.emp_id){
+  //   dispatch(addResourcesData(Tester))
+  //   }
+  //   else{
+  //     console.log(" notDispached")
+  //   }
+  // }
+  var handleResourcesAdd = (emp_id, data) => {
+    dispatch(addResources({ id: emp_id}));
+    dispatch(addResourcesData(data));
+    console.log(emp_id, data);
+  };
+
+  // var handleResourcesInfo = (emp_id) => {
+  //   const selectedId = emp_id;
+  //   console.log(selectedId)
+  //   // Agar selected ID hai toh resources ko dispatch karein
+  //   dispatch(addResourcesData({ id: selectedId }));
+  // };
+
+
+  // const handleResourcesAdd = (emp_id) => {
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
 
   const [selectedDataTester, setSelectedDataTester] = useState([]);
 
@@ -466,6 +518,7 @@ export const TesterResourcePool = (props) => {
                     {/* CheckBox Button */}
                     <input
                       type="checkbox"
+<<<<<<< HEAD
                       onChange={(e) => {
 
 
@@ -482,6 +535,12 @@ export const TesterResourcePool = (props) => {
                           setSelectedDataTester(updatedSelectedData);
                           dispatch(addResourcesTester({ Tester: updatedSelectedData }));
                         }
+=======
+                      onChange={() => {
+                        const selectedId = Manager.emp_id;
+                        const selectedData = { name: Manager.first_name, last_name: Manager.last_name, email: Manager.email }; 
+                        handleResourcesAdd(selectedId, selectedData); 
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
                       }}
                       className="cursor-pointer"
                     />
@@ -592,6 +651,7 @@ export const UxDesignResourcePool = (props) => {
                             onChange={(e) => {
                               handleResourcesAdd(Manager.emp_id)
                               handleResourcesInfo(uxDesigner)
+<<<<<<< HEAD
                               const isChecked = e.target.checked;
                               const empId = Manager.emp_id;
                               if (isChecked) {
@@ -602,6 +662,8 @@ export const UxDesignResourcePool = (props) => {
                                 setSelectedDataUxDesign(updatedSelectedData);
                                 dispatch(addResourcesUxDesigner({ UXDesigner: updatedSelectedData }));
                               }
+=======
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
                             }}
                             className="cursor-pointer"
                           />
@@ -720,6 +782,7 @@ export const UiDeveloperResourcePool = (props) => {
                       onChange={(e) => {
                         handleResourcesAdd(Manager.emp_id)
                         handleResourcesInfo(uiDeveloper)
+<<<<<<< HEAD
                         const isChecked = e.target.checked;
                         const empId = Manager.emp_id;
                         if (isChecked) {
@@ -730,6 +793,8 @@ export const UiDeveloperResourcePool = (props) => {
                           setSelectedDataUiDeveloper(updatedSelectedData);
                           dispatch(addResourcesUiDeveloper({ UIDeveloper: updatedSelectedData }));
                         }
+=======
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
                       }}
                       className="cursor-pointer"
                     />
@@ -843,6 +908,7 @@ export const UxResearcher = (props) => {
                       onChange={(e) => {
                         handleResourcesAdd(Manager.emp_id),
                           handleResourcesInfo(uxResearcher)
+<<<<<<< HEAD
 
 
                         const isChecked = e.target.checked;
@@ -855,6 +921,8 @@ export const UxResearcher = (props) => {
                           setSelectedDataUxResearch(updatedSelectedData);
                           dispatch(addResourcesUxResearch({ UXResearcher: updatedSelectedData }));
                         }
+=======
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
                       }}
                       className="cursor-pointer"
                     />

@@ -6,8 +6,9 @@ import UserForm from '@/Components/useCaseAddForm/useCaseAddForm';
 
 const AddUserPage = () => {
     const saveData = (formData) => {
+        const isBrowser = typeof window !== 'undefined';
         // Save user data to local storage
-        const data = JSON.parse(localStorage.getItem('userData')) || [];
+        const data = isBrowser ? JSON.parse(localStorage.getItem('userData')) || [] : [];
         data.push(formData);
         // localStorage.setItem('userData', JSON.stringify(data));
     };

@@ -31,10 +31,17 @@ const steps = [
 
 export default function page({ formNext }) {
   const projectData = useSelector((state) => state.addProject);
-  const resourcesId = useSelector((state) => state.addResources.Tester);
+  const setresourcesId = useSelector((state) => state.addResources);
+  const resourcesId = setresourcesId.id[0].resourcesId
+
+  const ValueresourcesId = resourcesId.map(obj => Object.values(obj));
+console.log(ValueresourcesId);
+
+  console.log("resoursesId",resourcesId)
   // const str = useSelector((state) => state);
 
   const projectId = useSelector((state) => state.addProject.id);
+
   console.log("projectId : ", projectId);
   console.log("resourceIn Project", resourcesId)
   console.log(projectData);
@@ -99,13 +106,14 @@ export default function page({ formNext }) {
       !projectData.projectDescription ||
       !projectData.projectDepartment ||
       !projectData.startDate ||
-      !projectData.endDate
+      !projectData.endDate 
     ) {
       message.error(
         "Please fill in all fields before proceeding to the next step"
       );
       return;
     }
+<<<<<<< HEAD
     if (current === 0) {
       try {
         // console.log(projectData)
@@ -114,7 +122,17 @@ export default function page({ formNext }) {
       } catch (error) {
         console.error("Error submitting data:", error);
       }
+=======
+    if(current === 0){
+    try {
+      // console.log(projectData)
+      await Apisubmit(projectData);
+      setCurrent(current + 1);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
     }
+  }
     // Apisubmit(projectData);
     // console.log(projectData);
     if (current === 1) {
@@ -122,7 +140,7 @@ export default function page({ formNext }) {
         project_id: projectId,
         team_name: projectData.projectName,
         created_by_id: "550e8400-e29b-41d4-a716-446655440001",
-        roles: resourcesId,
+        roles: [],
       };
 
       console.log("Before PUT request");

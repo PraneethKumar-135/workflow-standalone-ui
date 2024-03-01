@@ -2,8 +2,14 @@
 import React from 'react';
 
 const UserListPage = () => {
+<<<<<<< HEAD
     // Retrieve user data from local storage
     const userData = JSON.parse(localStorage.getItem('userData')) || [];
+=======
+    const isBrowser = typeof window !== 'undefined';
+    // Retrieve user data from local storage
+    const userData =isBrowser? JSON.parse(localStorage.getItem('userData')) || []:[];
+>>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
 
     return (
         <div>
