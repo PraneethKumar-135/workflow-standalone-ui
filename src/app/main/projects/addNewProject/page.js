@@ -36,7 +36,7 @@ export default function page({ formNext }) {
 
   const projectId = useSelector((state) => state.addProject.id);
   console.log("projectId : ", projectId);
-console.log("resourceIn Project",resourcesId )
+  console.log("resourceIn Project", resourcesId)
   console.log(projectData);
 
   const [toggleValue, setToggleValue] = useState(false);
@@ -47,7 +47,7 @@ console.log("resourceIn Project",resourcesId )
     console.log("Received data from child:", data);
     setFormData(data); // Update the state in the parent component
   };
-  const ProjectId= (ProjectId)=>{
+  const ProjectId = (ProjectId) => {
 
     dispatch(addProjectId(ProjectId))
     // console.log(ProjectId)
@@ -99,22 +99,22 @@ console.log("resourceIn Project",resourcesId )
       !projectData.projectDescription ||
       !projectData.projectDepartment ||
       !projectData.startDate ||
-      !projectData.endDate 
+      !projectData.endDate
     ) {
       message.error(
         "Please fill in all fields before proceeding to the next step"
       );
       return;
     }
-    if(current === 0){
-    try {
-      // console.log(projectData)
-      await Apisubmit(projectData);
-      setCurrent(current + 1);
-    } catch (error) {
-      console.error("Error submitting data:", error);
+    if (current === 0) {
+      try {
+        // console.log(projectData)
+        await Apisubmit(projectData);
+        setCurrent(current + 1);
+      } catch (error) {
+        console.error("Error submitting data:", error);
+      }
     }
-  }
     // Apisubmit(projectData);
     // console.log(projectData);
     if (current === 1) {
@@ -129,25 +129,25 @@ console.log("resourceIn Project",resourcesId )
       // console.log(project.projectId);
       console.log(JSON.stringify(postData));
       console.log(postData);
-
+      const MockData = postData
       let config = {
         method: 'put',
         maxBodyLength: Infinity,
         url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
-        headers: { 
-          'Content-Type': 'application/json', 
+        headers: {
+          'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        data : postData
+        data: postData
       };
       setCurrent(current + 1);
       axios.request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
 
       // fetch(
       //   `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
@@ -155,7 +155,7 @@ console.log("resourceIn Project",resourcesId )
       //     method: "PUT",
       //     headers: {
       //       "Content-Type": "application/json",
-            
+
       //     },
       //     body: postData,
       //   }
@@ -316,13 +316,13 @@ console.log("resourceIn Project",resourcesId )
 
           {current === steps.length - 1 && (
             <Link href="/main/projects/workflowlist">
-            <Button
-              type="primary"
-              onClick={()=>{ProjectId(projectId)}}
-              className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
-            >
-              Done
-            </Button></Link>
+              <Button
+                type="primary"
+                onClick={() => { ProjectId(projectId) }}
+                className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
+              >
+                Done
+              </Button></Link>
           )}
           {/* {current > 0 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
