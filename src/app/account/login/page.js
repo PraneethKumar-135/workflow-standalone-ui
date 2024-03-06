@@ -122,7 +122,7 @@ const Login = () => {
               <div className="mt-8 flex flex-col gap-2 items-center">
                 <Link href="/main" className="cursor-pointer w-[100%] bg-blue-500 text-white px-3 py-2 rounded w-28 text-center">
                 {/* <input
-                  type="text"
+                
                   value="Sign In"
                   className="cursor-pointer w-[100%] bg-blue-500 text-white px-3 py-2 rounded w-28"
                 /> */}

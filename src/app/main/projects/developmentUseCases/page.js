@@ -17,6 +17,8 @@ export default function Page() {
   const projectId = setprojectIds.id[0].prjectId;
   const setWorkFlowIds = useSelector((state) => state.addResources);
   const workFlowId = setWorkFlowIds.id[0].workFlowId;
+
+  
   console.log(projectId)
   console.log(workFlowId)
   const dispatch = useDispatch()

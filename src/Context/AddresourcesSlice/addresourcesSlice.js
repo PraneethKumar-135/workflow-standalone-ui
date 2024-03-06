@@ -1,27 +1,84 @@
-"use client"
-import { createSlice } from "@reduxjs/toolkit";
+// "use client";
+// import { createSlice } from "@reduxjs/toolkit";
+// const addresourcesSlice = createSlice({
+//   name: "addResource",
+//   initialState: {
+//     id: [],
+//     // UIUXDeveloper: [],
+//     // FrontEndDeveloper: [],
+//     // BackendDeveloper: [],
+//     // SRE: [],
+//     // DevOpsEngineer: [],
+//     // AutomationTester: [],
+//     // ProjectManager: [],
+//     // UXDesigner: [],
+//     // UIDeveloper: [],
+//     // APIDeveloper: [],
+//     Tester: [],
+//     // UXResearcher: [],
+//     // CICDSpecialist: [],
+//   },
+
+//   reducers: {
+//     // addResources: (state, action) => {
+//     //   state.Tester.push(action.payload.id); // Pushing the payload ID to the id array
+//     // //   state.Tester = action.payload.Tester;
+//     //   console.log(action.payload.Tester) // Updating the Tester array with the payload Tester data
+//     // },
+//     addResources: (state, action) => {
+//       const { id } = action.payload;
+//       // Check if the id already exists in the array
+
+//       state.Tester.push(id);
+
+//       console.log(action.payload);
+//     },
+
+//     removeResources: (state, action) => {
+//       // Removing the specified ID from the id array
+//       state.id = state.id.filter((id) => id !== action.payload.id);
+//       // Clearing the Tester array
+//       state.Tester = [];
+//       console.log(action.payload.Tester);
+//     },
+//   },
+// });
+
+// export const { addResources, removeResources } = addresourcesSlice.actions;
+// export default addresourcesSlice.reducer;
+
+"use client";
+import { createSlice, current } from "@reduxjs/toolkit";
+
+const isBrowser = typeof window !== "undefined";
 const addresourcesSlice = createSlice({
   name: "addResource",
   initialState: {
-<<<<<<< HEAD
-    id: [{ prjectId: {}, workFlowId: {}, }],
-=======
-    id: [{ prjectId: {} ,resourcesId:[],workFlowId:{} }],
->>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
+    id: [
+      {
+        prjectId: isBrowser
+          ? JSON.parse(localStorage.getItem("ProjectId")) || []
+          : [],
+        resourcesId: [],
+        workFlowId: isBrowser
+          ? JSON.parse(localStorage.getItem("workFlowId")) || []
+          : [],
+      },
+    ],
     resoucesInfo: [],
-    UIUXDeveloper: [{ resoucesInfo: {} }],
-    FrontEndDeveloper: [{ resoucesInfo: {} }],
-    BackendDeveloper: [{ resoucesInfo: {} }],
-    SRE: [{ resoucesInfo: {} }],
-    DevOpsEngineer: [{ resoucesInfo: {} }],
-    AutomationTester: [],
-    ProjectManager: [],
-    UXDesigner: [],
-    UIDeveloper: [],
-    APIDeveloper: [],
-    Tester: [],
-    UXResearcher: [],
-    CICDSpecialist: [],
+    "UIUXDeveloper": [],
+    "FrontEndDeveloper": [],
+    "BackendDeveloper": [],
+    "SRE": [],
+    "DevOpsEngineer": [],
+    "AutomationTester": [],
+    "ProjectManager": [],
+    "UXDesigner": [],
+    "UIDeveloper": [],
+    "APIDeveloper": [],
+    "Tester": [],
+    "UXResearcher": [],
+    "CICDSpecialist": [],
   },
 
   reducers: {
@@ -33,14 +90,16 @@ const addresourcesSlice = createSlice({
     addProjectId: (state, action) => {
       state.id[0].prjectId = action.payload;
       console.log(action.payload);
+
+      let setProjectId = JSON.stringify(state.id[0].prjectId);
+      localStorage.setItem("ProjectId", setProjectId);
     },
     addWorkFlowId: (state, action) => {
       state.id[0].workFlowId = action.payload;
-<<<<<<< HEAD
       console.log("workFlowData: ", action.payload);
-=======
-      console.log("workFlowData: ",action.payload);
->>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
+
+      let setWorkFlowId = JSON.stringify(state.id[0].workFlowId);
+      localStorage.setItem("workFlowId", setWorkFlowId);
     },
     addResourcesData: (state, action) => {
       state.resoucesInfo.push(action.payload);
@@ -63,11 +122,11 @@ const addresourcesSlice = createSlice({
       console.log("APIDeveloper Data: ", action.payload);
     },
     addResourcesTester: (state, action) => {
-      state.Tester.push(action.payload);
+      state.Tester = action.payload;
       console.log("Tester Data: ", action.payload);
     },
     addResourcesUxResearch: (state, action) => {
-      state.UXResearcher.push(action.payload);
+      state.UXResearcher= action.payload;
       console.log("UXResearcher Data: ", action.payload);
     },
     addResourcesCiCd: (state, action) => {
@@ -97,14 +156,7 @@ export const {
 } = addresourcesSlice.actions;
 export default addresourcesSlice.reducer;
 
-
-
-
-
-
 // -----
-
-
 
 // "use client";
 // import { createSlice } from "@reduxjs/toolkit";
@@ -196,3 +248,6 @@ export default addresourcesSlice.reducer;
 //   addResourcesCiCd,
 // } = addresourcesSlice.actions;
 // export default addresourcesSlice.reducer;
+
+
+// { name: Manager.resource_name, email: Manager.email, image :Manager.image }

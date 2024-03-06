@@ -1,22 +1,30 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import { Button } from "antd";
 import { Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import Array from "./array";
 import { useSelector, useDispatch } from "react-redux";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
+import Image from "next/image";
 const { Search } = Input;
 
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const AddEmployReview = () => {
   const ResourcesInfo = useSelector((state) => state.addResources);
+  // const MapingDataPm = ResourcesInfo.ProjectManager[0].resoucesInfo;
+  // const MapingDataUxDesigner = ResourcesInfo.UXDesigner[0].resoucesInfo;
+  // const MapingDataUiDeve = ResourcesInfo.UIDeveloper[0].resoucesInfo;
+  // const MapingDataApiDevel = ResourcesInfo.APIDeveloper[0].resoucesInfo;
+  // const MapingDataTester = ResourcesInfo.Tester[0].resoucesInfo;
+  // const MapingDataUxRes = ResourcesInfo.UXResearcher[0].resoucesInfo;
+  // const MapingDataCiCd = ResourcesInfo.CICDSpecialist[0].resoucesInfo;
+
 
   const ResourceAdded = ResourcesInfo.resoucesInfo;
-  console.log(ResourceAdded);
+  console.log(ResourceAdded)
 
-  const [data, setData] = useState(Array);
+  const [data, setData] = useState([]);
   const projectData = useSelector((state) => state.addProject);
   console.log(projectData);
 
@@ -127,48 +135,37 @@ const AddEmployReview = () => {
                 </th>
               </tr>
             </thead>
-            {ResourceAdded.map((innerArray, outerIndex) => (
-              <div key={outerIndex} className="w-[100%]">
-                {innerArray.map(
-                  (resource, innerIndex) => (
-                    console.log(resource.first_name),
-                    (
-                      <tbody
-                        key={innerIndex}
-                        className="bg-white divide-y divide-gray-200 w-[100%]"
-                      >
-                        <tr className="bg-white">
-                          <td className="py-2 whitespace-nowrap">
-                            <div className="flex items-center space-x-5">
-                              <div className="text-sm font-medium text-gray-900">
-                                {resource.image}
-                                {resource.first_name} {resource.last_name}
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-2 text-sm text-center font-medium text-gray-900">
-                            {resource.Designation}
-                          </td>
-                          <td className="py-2 text-sm font-medium text-gray-900">
-                            {resource.email}
-                          </td>
-                          <td className="py-2 whitespace-nowrap text-sm space-x-5">
-                            <Button icon={<EditOutlined />}>Edit</Button>
-                            <Button
-                              type="primary"
-                              danger
-                              icon={<DeleteOutlined />}
-                              onClick={() => handleDelete(resource.id)}
-                            >
-                              Remove
-                            </Button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    )
-                  )
-                )}
-              </div>
+            {ResourceAdded.map((resource, index) => (
+              console.log(resource.first_name),
+              <tbody key={index} className="bg-white divide-y divide-gray-200">
+                
+                <tr className="bg-white">
+                  <td className="py-2 whitespace-nowrap">
+                    <div className="flex items-center space-x-5">
+                      <div className="text-sm font-medium text-gray-900">
+                        {resource.name}
+                      </div>
+                    </div>
+                  </td>
+                  <td className="py-2 text-sm text-center font-medium text-gray-900">
+                    {resource.Designation}
+                  </td>
+                  <td className="py-2 text-sm font-medium text-gray-900">
+                    {resource.email}
+                  </td>
+                  <td className="py-2 whitespace-nowrap text-sm space-x-5">
+                    <Button icon={<EditOutlined />}>Edit</Button>
+                    <Button
+                      type="primary"
+                      danger
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDelete(resource.id)}
+                    >
+                      Remove
+                    </Button>
+                  </td>
+                </tr>
+              </tbody>
             ))}
             {/* {MapingDataUxDesigner.map((resource, index) => (
               console.log(resource.first_name),
@@ -401,5 +398,6 @@ const AddEmployReview = () => {
     </div>
   );
 };
-
 export default AddEmployReview;
+
+

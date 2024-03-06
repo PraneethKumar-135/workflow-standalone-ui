@@ -9,10 +9,7 @@ import {
   SaveOutlined,
   CloseCircleFilled,
 } from "@ant-design/icons";
-<<<<<<< HEAD
-=======
 import { useRouter } from 'next/navigation'
->>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
 import { useSelector } from "react-redux";
 import axios from "axios";
 
@@ -22,8 +19,23 @@ const Page = () => {
   const setprojectIds = useSelector((state) => state.addResources);
   const ProjectId = setprojectIds.id[0].prjectId;
   const [api, contextHolder] = notification.useNotification();
-<<<<<<< HEAD
-=======
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { value } = e.target;
+    setWorkFlowName(value);
+    // Define the regex pattern to match disallowed characters
+
+    const disallowedRegex = /[#%^&*}{;:"><,?`|\\@]/;
+    // Check if the value contains any disallowed characters
+    if (disallowedRegex.test(value)) {
+      setError(
+        'Workflow name cannot contain special characters: #%^&*}{;:"><,?`@|'
+      );
+    } else {
+      setError("");
+    }
+  };
 
   const openNotification = (placement, type, message) => {
     notification[type]({
@@ -33,7 +45,6 @@ const Page = () => {
   };
 
   const  router = useRouter();
->>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
   console.log(ProjectId);
 
   const postWorkflow = async () => {
@@ -64,10 +75,6 @@ const Page = () => {
       .request(config)
       .then((response) => {
         console.log("success:",response);
-<<<<<<< HEAD
-      })
-      .catch((error) => {
-=======
         openNotification("topRight", "success", "UseCase saved successfully!");
 
         router.push("/main/projects/workflowlist");
@@ -78,7 +85,6 @@ const Page = () => {
         const errorStatus = error.response.data.error
         console.log(errorStatus)
         openNotification("topRight", "error",  ` ${errorStatus}`);
->>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
         console.log(error);
       });
   };
@@ -130,11 +136,16 @@ const Page = () => {
         Creating Workflow
       </h3>
       <div className="flex justify-between p-4 items-center bg-white">
-        <Input
-          placeholder="example"
-          className="w-1/2"
-          onChange={(e) => setWorkFlowName(e.target.value)}
-        />
+      <div className="w-[100%] flex flex-col">
+          <Input
+            placeholder="example"
+            className="w-1/2"
+            onChange={(e) => {
+              setWorkFlowName(e.target.value), handleChange(e);
+            }}
+          />
+          {error && <div className="error text-red-400">{error}</div>}
+        </div>
         <Button
           icon={<SaveOutlined />}
           type="primary"
@@ -261,20 +272,12 @@ const Page = () => {
       ))}
      
       <div className="flex justify-center mt-6 w-[100%]">
-<<<<<<< HEAD
-        <Link href="/main/projects/workflowlist">
-        <Button className="bg-blue-500 text-white" onClick={postWorkflow}>
-          Save
-        </Button>
-        </Link>
-=======
         {/* <Link href="/main/projects/workflowlist"> */}
         <Button className="bg-blue-500 text-white" onClick={postWorkflow} >
           Save
         </Button>
         {contextHolder}
         {/* </Link> */}
->>>>>>> 174299aa92d8a37c5a2223ed2b421313180a3733
       </div>
     </div>
   );

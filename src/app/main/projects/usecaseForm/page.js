@@ -1,7 +1,8 @@
 "use client";
-import { Form, Input, Upload, Button, message, DatePicker,notification } from "antd";
+import { Form, Input, Upload, Button, message, DatePicker, notification } from "antd";
+import { Select } from 'antd';
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from 'next/navigation'
 // import { useRouter } from 'next/router';
@@ -32,6 +33,7 @@ const newform = () => {
   const workFlowId = setWorkFlowIds.id[0].workFlowId;
   const [api, contextHolder] = notification.useNotification();
 
+
   const openNotification = (placement, type, message) => {
     api[type]({
       message: message,
@@ -43,7 +45,7 @@ const newform = () => {
 
   const [project, setProject] = useState({
     usecase_name: "",
-    assigned_to_id: "e252ea71-6452-49b1-b32b-449112303af2",
+    assigned_to_id: "",
     description: "",
     start_date: null,
     end_date: null,
@@ -102,12 +104,40 @@ const newform = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         openNotification("topRight", "success", "UseCase saved successfully!");
-        router.push("/main/projects/developmentUsecases") })
+        router.push("/main/projects/developmentUsecases")
+      })
       .catch((error) => {
         console.log(error);
         openNotification("topRight", "error", "Fill the Form Correctly.");
       });
   };
+
+  //callPmName
+
+  const [pmName, setPmName] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/get_resource_by_role?designation=Project Manager');
+        setPmName(response.data); // Set pmName with the data from the response
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(pmName); // This will log the updated pmName after it's set
+
+  const PmNameChange = (value) => {
+    console.log(value); // Log the value
+    setProject(({
+      ...project,
+      assigned_to_id: value 
+    }));
+  }
 
   return (
     <div className="">
@@ -162,12 +192,19 @@ const newform = () => {
               },
             ]}
           >
-            <Input
-              name="assigned_to_id"
-              id="assigned_to_id"
-              value={project.assigned_to_id}
-              // onChange={handleChange}
-            />
+            <Select
+              className='w-full'
+              onChange={PmNameChange}
+            >
+              {pmName.map(Filter => (
+                <Option key={Filter.id} value={Filter.emp_id} >
+                  {Filter.resource_name}
+                </Option>
+
+              ))}
+            </Select>
+
+
           </Form.Item>
 
           <Form.Item
@@ -195,7 +232,7 @@ const newform = () => {
                 className="text-slate-500 font-sans text-sm font-normal not-italic leading-6 pb-1 self-stretch items-center flex-1 border rounded-sm border-slate-200  px-1 py-1 h-8 w-[184px] m-1"
                 onChange={handleStartDateChange}
 
-                // value={project.startDate}
+              // value={project.startDate}
               />
               <span>-</span>
               <DatePicker

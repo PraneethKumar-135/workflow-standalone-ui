@@ -20,7 +20,7 @@ import { UploadPopul2 } from "@/app/main/projects/addNewProject/uploadPopul";
 
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { updateFormData } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { updateFormData ,UpdateStartDate} from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 const layout = {
   labelCol: {
@@ -57,19 +57,28 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
     console.log(project)
   };
   const handleStartDateChange = (date, dateString) => {
+    const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+    
     setProject({
       ...project,
-      startDate: moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      startDate: formattedStartDate,
     });
-    // dispatch(updateFormData({ ...project, [date.target.name]: date.target.value }))
+  
+    // Dispatch the updated form data with the startDate included
+    dispatch(updateFormData({ ...project, startDate: formattedStartDate }));
   };
 
+
   const handleEndDateChange = (date, dateString) => {
+    const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
+    
     setProject({
       ...project,
-      endDate: moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]"),
+      endDate: formattedStartDate,
     });
-    // dispatch(updateFormData({ ...project, [date.target.name]: date.target.value }))
+  
+    // Dispatch the updated form data with the startDate included
+    dispatch(updateFormData({ ...project, endDate: formattedStartDate }));
   };
 
   
@@ -116,8 +125,6 @@ const convertImageToBase64 = (file) => {
 
   const projectData = useSelector(state => state.addProject);
   console.log(projectData)
-
-  
   return (
     <div>
       <section className="flex flex-col items-center flex-shrink-0  w-auto py-1 bg-white ">
@@ -186,6 +193,7 @@ const convertImageToBase64 = (file) => {
                 id="projectStartDate"
                 placeholder="Start Date"
                 className="text-slate-500 font-sans text-sm font-normal not-italic leading-6 pb-1 self-stretch items-center flex-1 border rounded-sm border-slate-200  px-1 py-1 h-8 w-[184px] m-1"
+                // value={project.startDate}
                 onChange={handleStartDateChange}
 
                 // value={project.startDate}
@@ -195,7 +203,15 @@ const convertImageToBase64 = (file) => {
                 id="projectEndDate"
                 placeholder="End Date"
                 className="text-slate-500 font-sans text-sm font-normal not-italic leading-6 pb-1 self-stretch items-center flex-1 border rounded-sm border-slate-200shadow px-1 py-1 h-8 w-[184px] m-1"
-                
+                // onChange={(date, dateString) =>
+                //   setProject({
+                //     ...project,
+                //     endDate: moment(dateString).format(
+                //       "YYYY-MM-DDTHH:mm:ss.SSS[Z]"
+                //     ),
+                //   })
+                // }
+                // value={project.endDate}
                 onChange={handleEndDateChange}
               />
             </div>
@@ -207,7 +223,13 @@ const convertImageToBase64 = (file) => {
             valuePropName="fileList"
             getValueFromEvent={(e) => e?.fileList}
           >
-
+            {/* <Upload
+              action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+              listType="picture"
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload> */}
+            
 
             <Upload
               name="image_url"

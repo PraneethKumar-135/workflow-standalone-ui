@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { Steps, Tooltip } from "antd";
+import { Steps, Tooltip, Breadcrumb } from "antd";
 import { TiTick } from "react-icons/ti";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 // import { UseCase1Comments } from "../useCaseWorkViewDetailsComments/UseCaseComments";
 // import { UseCase2Comments } from "../useCaseWorkViewDetailsComments/UseCaseComments";
 // import { UseCase3Comments } from "../useCaseWorkViewDetailsComments/UseCaseComments";
@@ -14,6 +14,8 @@ import CICDTestForm from "@/Components/AddUsecaseStepperForms/CI-CD-TestForm";
 import StageReleaseForm from "@/Components/AddUsecaseStepperForms/Stage-ReleaseForm";
 import PublishandOperateForm from "@/Components/AddUsecaseStepperForms/PublishandOperateForm";
 import RequirementForm from "@/Components/AddUsecaseStepperForms/RequirementForm";
+import { Tabs } from 'antd';
+
 
 Mock
 
@@ -27,7 +29,7 @@ const Stepper = ({ popoverVisible, setWorkFlowView }) => {
 
   const [requireData, setRequireData] = useState();
   const setUsecaseId = useSelector((state) => state.addUsecase);
-  const UsecaseId = setUsecaseId.initialState
+  const UsecaseId = setUsecaseId.useCaseId
 
   useEffect(() => {
     const axios = require('axios');
@@ -41,7 +43,7 @@ const Stepper = ({ popoverVisible, setWorkFlowView }) => {
             }
           }
         );
-        console.log(response.data);
+        // console.log(response.data);
         setRequireData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -54,45 +56,45 @@ const Stepper = ({ popoverVisible, setWorkFlowView }) => {
     switch (currentStep) {
       case 0:
         return <RequirementForm />;
-      case 1:
-        return <Mock />;
-      case 2:
-        return <ActualDevelopmentForm />;
-      case 3:
-        return <CICDTestForm />;
-      case 4:
-        return <StageReleaseForm />;
-      case 5:
-        return <PublishandOperateForm />;
+
       default:
         return null;
     }
   };
 
-
   const mappedSteps = requireData && requireData.usecase
     ? requireData.usecase.stages.map(stage => ({
-      title: Object.keys(stage)[0] // Extracting the stage name from the dynamic key
+      title: Object.keys(stage)[0], // Extracting the stage name from the dynamic key
+      titlevalue: Object.values(stage)[0],
     }))
     : [];
 
+  // mappedSteps.forEach(step => {
+  //   const titlevalue = step.titlevalue;
+  //   const checklist = titlevalue.checklist;
+  //   const tasks = titlevalue.tasks;
 
-  return (
-    <>
-      <div className=" bg-white px-4 py-4 ">
-        <h1 className="flex w-[100%] h-7 flex-col justify-center text-black  text-2xl non-italic font-semibold leading-snug">
-          Procurement (Development workflow)
-        </h1>
-        <p>Form pages are used to collect or verify information to users, and basic forms are common in scenarios where there are fewer data items.</p>
-      </div>
-      <div className="flex w-100% ">
+  //   console.log(checklist);
+  //   // console.log(tasks);
 
-        <div className="w-20% h-screen ml-4 mt-4">
+  //   const descriptions = checklist.map(item => item.description);
+
+  //   console.log(descriptions);
+  // });
+
+
+
+
+  // console.log(mappedSteps)
+  const Contentdata = () => {
+    return (
+      <div className="flex w-100% space-x-4">
+        <div className="w-10% border rounded-xl bg-white">
           <Steps
             current={currentStep}
             onChange={handleStepClick}
             direction="vertical"
-            className="bg-white w-[250px] h-[100%] gap-4 p-5 justify-center"
+            className="w-[200px] gap-4 p-5 justify-center"
           >
             {mappedSteps.map((step, index) => (
               <Steps.Step
@@ -103,16 +105,64 @@ const Stepper = ({ popoverVisible, setWorkFlowView }) => {
             ))}
           </Steps>
         </div>
-
-
-
-
-        <div className="my-[5rem] w-100% ml-6 p-8 mt-4 bg-white">{handleContentChange()}</div>
+        <div className="w-screen bg-white">{handleContentChange()}</div>
       </div>
+    )
+  }
 
 
+  const items = [
+    {
+      key: '1',
+      label: 'Overview',
+      children: 'Content of Tab Pane 2',
+    },
+    {
+      key: '2',
+      label: 'Workflow View',
+      children: <Contentdata />,
+    },
+    {
+      key: '3',
+      label: 'Asset view',
+      children: 'Content of Tab Pane 3',
+    },
+    {
+      key: '4',
+      label: 'Planning',
+      children: 'Content of Tab Pane 3',
+    },
+  ];
 
-    </>
+  const dispatch = useDispatch()
+
+  // const DispatchData = () => {
+  //   dispatch()
+  // }
+  return (
+    <div className="flex flex-col p-5 bg-white ">
+      <Breadcrumb
+        className="mb-2"
+        items={[
+          {
+            title: 'Home',
+          },
+          {
+            title: <a href="">Procurement</a>,
+          },
+          {
+            title: <a href="">Development workflow</a>,
+          },
+          {
+            title: 'Use case 1',
+          },
+        ]}
+      />
+      <h1 className="text-base font-medium leading-normal tracking-normal text-left">Use case 1</h1>
+      <div>
+        <Tabs defaultActiveKey="1" items={items} />
+      </div>
+    </div>
   );
 };
 
