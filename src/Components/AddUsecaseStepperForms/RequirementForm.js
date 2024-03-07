@@ -1,234 +1,478 @@
+import React, { useEffect, useState, useRef } from "react";
+import { Modal, Tabs, Upload } from "antd";
+import {
+  CaretDownOutlined,
+  DownOutlined,
+  SearchOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
+import { Dropdown, Space, Button, Menu, Typography, Skeleton } from "antd";
+import {
+  BarsOutlined,
+  ShoppingOutlined,
+  RiseOutlined,
+  MessageOutlined,
+} from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import { data } from "autoprefixer";
+// import { axios } from 'axios';
 
-// import React, { useEffect, useState } from 'react';
-// import { Tabs } from 'antd';
-// import { BarsOutlined, ShoppingOutlined, RiseOutlined, MessageOutlined } from '@ant-design/icons';
-// import { useSelector } from "react-redux";
-// // import { axios } from 'axios';
+const RequirementForm = (stepperState) => {
+  const [size, setSize] = useState("small");
+  console.log("propsValue", stepperState);
 
-
-// const RequirementForm = () => {
-
-//     const [size, setSize] = useState('small');
-
-//     const onChange = (e) => {
-//         setSize(e.target.value)
-//     }
-
-//     const [requireData, setRequireData] = useState();
-//     const setUsecaseId = useSelector((state) => state.addUsecase);
-//     const UsecaseId = setUsecaseId.useCaseId
-
-//     console.log(UsecaseId);
-//     useEffect(() => {
-//         const axios = require('axios');
-//         const fetchData = async () => {
-//             try {
-//                 const response = await axios.get(
-//                     `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
-//                     {
-//                         headers: {
-//                             'Accept': 'application/json'
-//                         }
-//                     }
-//                 );
-//                 console.log(response.data);
-//                 setRequireData(response.data);
-//             } catch (error) {
-//                 console.error("Error fetching data:", error);
-//             }
-//         };
-//         fetchData()
-
-//     }, [UsecaseId]);
-//     console.log(requireData);
-//     // const checklist = requireData.usecase.stages[0]["Stage 1"].checklist;
-//     // const tasks = requireData.usecase.stages[0]["Stage 1"].tasks;
-//     // console.log(checklist);
-//     // console.log(tasks);
-
-//     return (
-//         <div>
-//             {requireData && (
-
-//                 <div className='flex items-center justify-between border rounded-lg p-5 mb-2'>
-//                     <div className="flex space-x-2 items-center">
-//                         <img src={requireData.image} alt='' className='w-[7rem] h-[7rem] rounded-md' />
-//                         <div>
-//                             <h1 className="my-3 text-lg font-medium leading-7 tracking-normal text-left">{requireData.assignee_name}</h1>
-//                             <div className="my-3 flex space-x-2" >
-//                                 <ShoppingOutlined style={{ fontSize: "1rem" }} />
-//                                 <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">{requireData.role}</h3>
-//                             </div>
-//                             <div className="my-3 flex space-x-2" >
-//                                 <BarsOutlined style={{ fontSize: "1rem" }} />
-//                                 <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">{requireData.total_task}</h3>
-//                             </div>
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <div className="flex space-x-3 my-10">
-//                             <p className="text-sm font-medium leading-snug tracking-normal text-left">Assigned date</p>
-//                             <h3 className='text-base font-normal leading-tight tracking-normal text-left'>{requireData.usecase.creation_date}</h3>
-//                         </div>
-//                         <div className="flex space-x-3 my-10">
-//                             <p className="text-sm font-medium leading-snug tracking-normal text-left">Planned date</p>
-//                             <h3 className='text-base font-normal leading-tight tracking-normal text-left'>{requireData.usecase.end_date}</h3>
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <div className="flex space-x-3 my-10">
-//                             <p className="text-sm font-medium leading-snug tracking-normal text-left">Start date</p>
-//                             <h3 className='text-base font-normal leading-tight tracking-normal text-left'>{requireData.usecase.start_date}</h3>
-//                         </div>
-//                         <div className="flex space-x-3 my-10">
-//                             <p className="text-sm font-medium leading-snug tracking-normal text-left">Deviation</p>
-//                             <h3 className='text-base font-normal leading-tight tracking-normal text-left'>00days</h3>
-//                         </div>
-//                     </div>
-//                 </div>
-//             )}
+  const onChange = (e) => {
+    setSize(e.target.value);
+  };
+  const arrayOfObjects = [
+    { id: 1, name: "John" },
+    { id: 2, name: "Jane" },
+    { id: 3, name: "Doe" },
+  ];
 
 
-//             <div className='bg-white border rounded-md mt-3'>
-//                 <Tabs
-//                     defaultActiveKey="1"
-//                     type="card"
-//                     size={size}
-//                     items={new Array(3).fill(null).map((_, i) => {
-//                         const id = String(i + 1);
-//                         if (id == 1) {
-//                             return {
-//                                 label: `All`,
-//                                 key: id,
-//                                 children: (
-//                                     <div className='flex flex-col ml-5'>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Yahiyaalikhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Created the task about 2 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Yahiyaalikhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>assign task to Ghouse about 6 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Ghouse</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Filled the task about 6 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Ghouse</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Started the task about 8 hours ago.</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Ghouse</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>completed the task about 12 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <MessageOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <div>
-//                                                 <h3 className='text-xs font-normal leading-snug tracking-normal text-left'>Ghouse</h3>
-//                                                 <p className='text-xs font-normal leading-snug tracking-normal text-left'>Commented about 12 hours ago</p>
-//                                             </div>
-//                                         </div>
-//                                         <div className='ml-10 mx-10'>
-//                                             <textarea value={"A design system for enterprise-level products. Create an efficient and enjoyable work experience."} className='w-full border p-2 resize-none rounded-sm'></textarea>
-//                                         </div>
-//                                     </div>
-//                                 ),
-//                             };
-//                         }
-//                         else if (id == 2) {
-//                             return {
-//                                 label: `Detailed log`,
-//                                 key: id,
-//                                 children: (
-//                                     <div className='flex flex-col  ml-5'>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Yahiyaalikhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Created the task about 2 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Yahiyaalikhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>assign task to Ghouse about 6 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Ghouse</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Filled the task about 6 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Ghouse</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Started the task about 8 hours ago.</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Ghouse</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>completed the task about 12 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Yahiyaalikhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Reviewed the task 24 hours ago</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Yahiyaalikhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>sended for approval to<span className='text-base font-normal leading-normal tracking-normal text-left'>Akbarkhan</span>On February 21st 2024 at 3:00PM</p>
-//                                         </div>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <RiseOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <h3 className='text-base font-normal leading-normal tracking-normal text-left'>Akbarkhan</h3>
-//                                             <p className='text-sm font-normal leading-snug tracking-normal text-left'>Approved the design On February 22nd 2024 at 1:00PM</p>
-//                                         </div>
-//                                     </div>
-//                                 ),
-//                             };
-//                         }
-//                         else if (id == 3) {
-//                             return {
-//                                 label: `Comment`,
-//                                 key: id,
-//                                 children: (
-//                                     <div className='flex flex-col m-3'>
-//                                         <div className='flex items-center space-x-3 my-3'>
-//                                             <MessageOutlined style={{ background: "rgba(240, 240, 240, 1)", color: "rgba(24, 144, 255, 1)", padding: "5px", fontSize: "1rem" }} className='rounded-lg' />
-//                                             <div>
-//                                                 <h3 className='text-xs font-normal leading-snug tracking-normal text-left'>Ghouse</h3>
-//                                                 <p className='text-xs font-normal leading-snug tracking-normal text-left'>Commented about 12 hours ago</p>
-//                                             </div>
-//                                         </div>
-//                                         <div className='ml-10'>
-//                                             <textarea value={"A design system for enterprise-level products. Create an efficient and enjoyable work experience."} className='w-full border p-2 resize-none rounded-sm'></textarea>
-//                                         </div>
-//                                     </div>
-//                                 ),
-//                             };
-//                         }
-//                     })}
-//                 />
-//             </div >
-//         </div>
-//     );
-// };
+  const [requireData, setRequireData] = useState();
+  const [formatedDate, setformatedDate] = useState();
+  const [requiretasks, setrequireTasks] = useState();
+  const [requireChecklist, setrequireChecklist] = useState();
+  const setUsecaseId = useSelector((state) => state.addUsecase);
+  const UsecaseId = setUsecaseId.useCaseId;
+  const [loading, setLoading] = useState(true);
+  const [teamData, setTeamData] = useState([]);
+  const setprojectIds = useSelector((state) => state.addResources);
+  const projectId = setprojectIds.id[0].prjectId;
+  console.log(UsecaseId);
+  useEffect(() => {
+    const axios = require("axios");
 
-// export default RequirementForm;
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
+      headers: {
+        Accept: "application/json",
+      },
+    };
+    setLoading(true); // Set loading state to true when fetching data
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        console.log(JSON.stringify(response.data.usecase.stages));
+        setRequireData(response.data);
+        const stages = response.data.usecase.stages;
+        const propsValue = Object.values(stepperState)[0];
+        const creationDate = new Date(requireData.usecase.creation_date);
+        const formattedDate = creationDate.toISOString().slice(0, 10); // YYYY-MM-DD format
+        setformatedDate(formattedDate);
+        console.log("date", formattedDate);
+        console.log(propsValue);
+        const stage = stages.filter(
+          (obj) => Object.values(stepperState)[0] in obj
+        );
+        const tasks = stage[0][propsValue].tasks;
+        const checkList = stage[0][propsValue].checklist;
+        console.log("tassks", tasks);
+        console.log("checklist", checkList);
+        setrequireTasks(tasks);
+        setrequireChecklist(checkList);
+        console.log(tasks);
+
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`);
+        const responseData = response.data;
+        console.log("responsedata ", responseData)
+        console.log(JSON.stringify(responseData));
+        setTeamData(responseData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [UsecaseId, stepperState, projectId]);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get(`https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`);
+  //       const responseData = response.data;
+  //       console.log("responsedata ", responseData)
+  //       console.log(JSON.stringify(responseData));
+  //       setTeamData(responseData);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [projectId]);
+  console.log("teamData", teamData)
+
+  console.log(requiretasks);
+
+  const InsideDropDown = ({ name }) => {
+    const [visible, setVisible] = useState(false);
+
+    const items = [
+      { key: "1", label: "Item 1" },
+      { key: "2", label: "Item 2" },
+      { key: "3", label: "Item 3" },
+    ];
+
+    const handleVisibleChange = (flag) => {
+      setVisible(flag);
+    };
+
+    const handleButtonClick = () => {
+      // Handle button click action here
+    };
+
+    return (
+      <Dropdown
+        visible={visible}
+        onVisibleChange={handleVisibleChange}
+        overlay={
+          <Space direction="vertical">
+            {items.map((item) => (
+              <Button key={item.key} type="text">
+                {item.label}
+              </Button>
+            ))}
+          </Space>
+        }
+      >
+        <Typography.Link onClick={(e) => e.preventDefault()}>
+          <Space>
+            {name}
+            <DownOutlined />
+          </Space>
+        </Typography.Link>
+        {visible && (
+          <Button type="primary" onClick={handleButtonClick}>
+            Action
+          </Button>
+        )}
+      </Dropdown>
+    );
+  };
+  const items = [
+    {
+      label: "UI Designer",
+      items: ["Resource 1", "Resource 2", "Resource 3"],
+    },
+    {
+      label: "API Developer",
+      items: ["Resource 1", "Resource 2", "Resource 3"],
+    },
+    {
+      label: "Tester",
+      items: ["Resource 1", "Resource 2", "Resource 3"],
+    },
+    {
+      label: "UX Designer",
+      items: ["Resource 1", "Resource 2", "Resource 3"],
+    },
+  ];
+
+  const props = {
+    action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    onChange({ file, fileList }) {
+      if (file.status !== "uploading") {
+        console.log(file, fileList);
+      }
+    },
+    defaultFileList: [
+      {
+        uid: "1",
+        name: "yyy.png",
+        status: "done",
+        url: "http://www.baidu.com/yyy.png",
+      },
+      {
+        uid: "2",
+        name: "yyy.png",
+        status: "done",
+        url: "http://www.baidu.com/yyy.png",
+      },
+    ],
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [openItemIndex, setOpenItemIndex] = useState(null);
+  const dropdownRef = useRef(null);
+  const [showOptions, setShowOptions] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedSubItem, setSelectedSubItem] = useState(null);
+
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
+  const handleOptionClick = (inde) => {
+    setShowUploadModal(true);
+  };
+  const handleCancel = () => {
+    setShowUploadModal(false);
+  };
+
+  const toggleDropDown = (index) => {
+    setIsOpen(!isOpen);
+  };
+
+  const toggleSubItems = (index) => {
+    setOpenItemIndex(openItemIndex === index ? null : index);
+  };
+  const handleSubItemClick = (subItem) => {
+    setSelectedSubItem(subItem);
+  };
+  const handleAssignButtonClick = () => {
+    console.log("Selected SubItem:", selectedSubItem);
+  };
 
 
+  // console.log("requiredData:", requireData.usecase.stages  )
+  return (
+    <div>
+      {requireData && (
+        <div className=" w-[100%] px-4">
+          <div className="flex space-x-5 items-center mb-3 ">
+            <div>
+              <img
+                src={requireData.image}
+                className="w-[7rem] h-[7rem] rounded-md"
+              />
+            </div>
+            <div>
+              <h1 className="my-3 text-xl font-medium leading-7 tracking-normal text-left">
+                {requireData.assignee_name}
+              </h1>
+              <div className="my-3 flex space-x-2">
+                <ShoppingOutlined style={{ fontSize: "1rem" }} />
+                <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">
+                  {requireData.role}
+                </h3>
+              </div>
+              <div className="my-3 flex space-x-2">
+                <BarsOutlined style={{ fontSize: "1rem" }} />
+                <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">
+                  {requireData.total_task}
+                </h3>
+              </div>
+            </div>
+            <div>
+              <div className="flex space-x-3 my-10">
+                <p className="text-sm font-medium leading-snug tracking-normal text-left">
+                  Assigned date
+                </p>
+                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
+                  {formatedDate}
+                </h3>
+              </div>
+              <div className="flex space-x-3 my-10">
+                <p className="text-sm font-medium leading-snug tracking-normal text-left">
+                  Planned date
+                </p>
+                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
+                  {requireData.usecase.end_date}
+                </h3>
+              </div>
+            </div>
+            <div>
+              <div className="flex space-x-3 my-10">
+                <p className="text-sm font-medium leading-snug tracking-normal text-left">
+                  Start date
+                </p>
+                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
+                  {requireData.usecase.start_date}
+                </h3>
+              </div>
+              <div className="flex space-x-3 my-10">
+                <p className="text-sm font-medium leading-snug tracking-normal text-left">
+                  Deviation
+                </p>
+                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
+                  03days
+                </h3>
+              </div>
+            </div>
+          </div>
+          {loading ? (
+            <p>
+              {" "}
+              <Skeleton
+                active
+                paragraph={{
+                  rows: 6,
+                }}
+              />
+            </p>
+          ) : (
+            <>
+              {requiretasks.map((data, index) => (
+                <div className="mb-8" key={index}>
+                  <div
+                    className="flex items-center justify-between py-3 px-2"
+                    style={{ background: "rgba(230, 247, 255, 1)" }}
+                  >
+                    <h1 className="text-base font-bold leading-tight tracking-normal text-left">
+                      {data.name}
+                    </h1>
+                    <DownOutlined />
+                  </div>
+                  <div
+                    className="flex items-center justify-between mt-2"
+                    key={index}
+                  >
+                    <div ref={dropdownRef} className="relative">
+                      <button
+                        onClick={() => toggleSubItems(index)}
+                        className="bg-white border text-black p-2 rounded-md flex items-center gap-1 "
+                      >
+                        Assign
+                        <img
+                          width="15"
+                          src="https://img.icons8.com/ios/50/expand-arrow--v2.png"
+                          alt="expand-arrow--v2"
+                        />
+                      </button>
+                      {openItemIndex === index && (
+                        <ul className="absolute top-10 left-0 bg-white text-black shadow-md rounded-md z-10">
+                          <div className="flex items-center justify-center">
+                            <SearchOutlined className="pl-2" />
+                            <input
+                              type="text"
+                              placeholder="Search Role"
+                              className="outline-none ml-2"
+                            />
+                          </div>
+                          {teamData.map((itemsData, itemIndex) => (
+                            console.log(itemsData),
+                            <li key={itemIndex} className="p-2">
+                              <div className="flex items-center justify-between">
+                                {Object.keys(itemsData).map((key, inx) => (
+                                  console.log(key),
+                                  <button
+                                    key={inx}
+                                    onClick={() => handleSubItemClick(itemIndex)}
+                                    className="font-semibold"
+                                  >
+                                    {key}
+                                  </button>
+                                ))}
+                                <CaretDownOutlined />
+                              </div>
+                              {selectedSubItem === itemIndex && itemsData && (
+                                <ul>
+                                  <li className="pl-4">
+                                    {Object.values(itemsData).map((subItem, i) => (
+                                      <React.Fragment key={i}>
+                                        {Array.isArray(subItem) && subItem.map((item, j) => (
+                                          <button
+                                            key={j}
+                                            style={{
+                                              backgroundColor:
+                                                selectedSubItem === item.name // Assuming `selectedSubItem` is the selected name
+                                                  ? "#E6F7FF"
+                                                  : "transparent",
+                                            }}
+                                            onClick={() =>
+                                              handleAssignButtonClick(item)
+                                            }
+                                          >
+                                            {item.name} {/* Assuming `name` is the property to be displayed */}
+                                          </button>
+                                        ))}
+                                      </React.Fragment>
+                                    ))}
+                                  </li>
+                                  <button
+                                    onClick={() =>
+                                      handleAssignButtonClick(null)
+                                    }
+                                    className="bg-sky-500 p-1"
+                                  >
+                                    Assign
+                                  </button>
+                                </ul>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <MessageOutlined style={{ fontSize: "20px" }} />
+                      <div>
+                        <button
+                          onClick={toggleOptions}
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-semibold p-2 rounded"
+                        >
+                          Action
+                        </button>
+                        {showOptions && (
+                          <div className="absolute z-10 bg-gray-500 rounded-lg shadow-lg overflow-hidden">
+                            <ul>
+                              <li onClick={handleOptionClick}>
+                                Upload Document
+                              </li>
+                              <li onClick={handleOptionClick}>Upload Link</li>
+                              <li onClick={handleOptionClick}>Raise Issue</li>
+                            </ul>
+                          </div>
+                        )}
+                        <Modal
+                          title="Upload Document"
+                          visible={showUploadModal}
+                          onCancel={handleCancel}
+                          footer={null}
+                        >
+                          <Upload {...props}>
+                            <Button icon={<UploadOutlined />}>Upload</Button>
+                          </Upload>
+                        </Modal>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
 
+              <div className="mt-6 border ">
+                <h2 className="text-l font-medium p-2">
+                  Checklist for requirement
+                </h2>
+                {requireChecklist.map((checklistdata, index) => (
+                  <div
+                    className="px-4 py-2 flex items-center gap-2 "
+                    key={index}
+                  >
+                    <input type="checkbox"></input>
+                    <p>{checklistdata.description}</p>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default RequirementForm;
+
+//-------------------------------------------------////-------------------------------------------------///
 
 // import React from "react";
 // import { Input, Select, Form, DatePicker, Button } from "antd";
 // import { ShoppingOutlined, BarsOutlined, FileAddOutlined } from "@ant-design/icons"
 
 // const { Option } = Select;
-
 
 // const axios = require('axios');
 // let data = JSON.stringify({
@@ -281,39 +525,38 @@
 //         console.log(error);
 //     });
 
-
 // const RequirementForm = () => {
 //     return (
 //         <div>
 //             <div className='flex items-center justify-between mb-3'>
 //                 <div className="flex space-x-2 items-center">
-//                     <img src={requireData.image} className='w-[7rem] h-[7rem] rounded-md' />
+//                     <img src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_1280.jpg" className='w-[7rem] h-[7rem] rounded-md' />
 //                     <div>
-//                         <h1 className="my-3 text-lg font-medium leading-7 tracking-normal text-left">{requireData.assignee_name}</h1>
+//                         <h1 className="my-3 text-lg font-medium leading-7 tracking-normal text-left">Darlene Robertson</h1>
 //                         <div className="my-3 flex space-x-2" >
 //                             <ShoppingOutlined style={{ fontSize: "1rem" }} />
-//                             <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">{requireData.role}</h3>
+//                             <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">Project Manager</h3>
 //                         </div>
 //                         <div className="my-3 flex space-x-2" >
 //                             <BarsOutlined style={{ fontSize: "1rem" }} />
-//                             <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">{requireData.total_task}</h3>
+//                             <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">10 Task</h3>
 //                         </div>
 //                     </div>
 //                 </div>
 //                 <div>
 //                     <div className="flex space-x-3 my-10">
 //                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Assigned date</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>{requireData.usecase.creation_date}</h3>
+//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>February 24, 2023</h3>
 //                     </div>
 //                     <div className="flex space-x-3 my-10">
 //                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Planned date</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>{requireData.usecase.end_date}</h3>
+//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>MM/DD/YY</h3>
 //                     </div>
 //                 </div>
 //                 <div>
 //                     <div className="flex space-x-3 my-10">
 //                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Start date</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>{requireData.usecase.start_date}</h3>
+//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>MM/DD/YY</h3>
 //                     </div>
 //                     <div className="flex space-x-3 my-10">
 //                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Deviation</p>
@@ -410,381 +653,99 @@
 
 // export default RequirementForm;
 
+// import React, { Children, useState } from 'react'
+// import { DownOutlined, MessageOutlined } from "@ant-design/icons";
+// import { Dropdown, Space, Button, Menu, Typography } from 'antd';
 
+// const InsideDropDown = ({ name, }) => {
+//     const [visible, setVisible] = useState(false);
 
-import React, { useState } from 'react';
-import { Button, Modal, Dropdown, Menu, Upload, Input, Space } from 'antd';
-import { DownOutlined, FileImageOutlined, PlusOutlined, UploadOutlined, BugOutlined, InboxOutlined } from '@ant-design/icons'
-import { MessageOutlined, CaretDownOutlined } from "@ant-design/icons";
+//     const items = [
+//         { key: '1', label: 'Item 1' },
+//         { key: '2', label: 'Item 2' },
+//         { key: '3', label: 'Item 3' },
+//     ];
 
-const InsideDropDown = ({ name }) => {
-    const display = (value) => {
-        console.log(`${name} + ${value}`);
-    };
+//     const handleVisibleChange = (flag) => {
+//         setVisible(flag);
+//     };
 
-    const items = [
-        { key: '1', label: `Item 1` },
-        { key: '2', label: 'Item 2' },
-        { key: '3', label: 'Item 3' },
-    ];
+//     const handleButtonClick = () => {
+//         // Handle button click action here
+//     }
+//     return (
+//         <Dropdown
+//         visible={visible}
+//         onVisibleChange={handleVisibleChange}
+//         overlay={
+//             <Space direction="vertical">
+//                 {items.map((item) => (
+//                     <Button key={item.key} type="text">
+//                         {item.label}
+//                     </Button>
+//                 ))}
+//             </Space>
+//         }
+//     >
+//         <Typography.Link onClick={(e) => e.preventDefault()}>
+//             <Space>
+//                 {name}
+//                 <DownOutlined />
+//             </Space>
+//         </Typography.Link>
+//         {visible && (
+//             <Button type="primary" onClick={handleButtonClick}>
+//                 Action
+//             </Button>
+//         )}
+//     </Dropdown>
 
-    const menu = (
-        <Menu>
-            {items.map(item => (
-                <Menu.Item key={item.key} onClick={() => display(item.label)}>
-                    {item.label}
-                </Menu.Item>
-            ))}
-        </Menu>
-    );
+//     )
+// }
+// const items = [
+//     {
+//         label: <InsideDropDown name={"UI Designer"} />,
+//         key: '0',
+//     },
+//     {
+//         label: <InsideDropDown name={"API Developer"} />,
+//         key: '1',
+//     },
+//     {
+//         label: <InsideDropDown name={"Tester"} />,
+//         key: '2',
+//     },
+//     {
+//         label: <InsideDropDown name={"UX Designer"} />,
+//         key: '3',
+//     },
+// ];
 
-    return (
-        <Space>
-            <Dropdown overlay={menu} trigger={['click']}>
-                <Button className='flex items-center justify-between w-full'>
-                    <p className='w-full'>{name}</p> <CaretDownOutlined />
-                </Button>
-            </Dropdown>
-        </Space>
-    );
-};
-const { Search } = Input;
-const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-    });
+// const RequirementForm = () => {
+//     return (
+//         <div>
+//             <div className='flex items-center justify-between py-3 px-2' style={{ background: "rgba(230, 247, 255, 1)" }}>
+//                 <h1 className='text-base font-bold leading-tight tracking-normal text-left'>Create Usecase Document</h1>
+//                 <DownOutlined />
+//             </div>
+//             <div className='flex items-center justify-between mt-2'>
+//                 <Dropdown
+//                     menu={{ items, }} trigger={['click']}
+//                 >
+//                     <button onClick={(e) => e.preventDefault()} className='border py-1 px-2'>
+//                         <Space>
+//                             Assign
+//                             <DownOutlined />
+//                         </Space>
+//                     </button>
+//                 </Dropdown>
+//                 <div className='flex items-center space-x-2'>
+//                     <MessageOutlined style={{ fontSize: "20px" }} />
+//                     <Button type='primary' style={{ background: "rgba(24, 144, 255, 1)" }}>Action</Button>
+//                 </div>
+//             </div>
+//         </div>
+//     )
+// }
 
-const RequirementForm = () => {
-    const items1 = [
-        { label: <InsideDropDown name="UI Designer" />, key: '0' },
-        { label: <InsideDropDown name="API Developer" />, key: '1' },
-        { label: <InsideDropDown name="Tester" />, key: '2' },
-        { label: <InsideDropDown name="UX Designer" />, key: '3' },
-    ];
-    const [isModalOpenDoc, setIsModalOpenDoc] = useState(false);
-    const [isModalOpenLink, setIsModalOpenlink] = useState(false);
-    const [isModalOpenIssue, setIsModalOpenIssue] = useState(false);
-    //Img
-    const showModalImg = () => {
-        setIsModalOpenDoc(true);
-    };
-    //link
-    const showModalLink = () => {
-        setIsModalOpenlink(true);
-    };
-    //Issue
-    const showModalIssue = () => {
-        setIsModalOpenIssue(true);
-    };
-    const handleOk = () => {
-        setIsModalOpenDoc(false);
-        setIsModalOpenlink(false)
-        setIsModalOpenIssue(false)
-    };
-    const handleCancel = () => {
-        setIsModalOpenDoc(false);
-        setIsModalOpenlink(false)
-        setIsModalOpenIssue(false)
-    };
-    const items = [
-        {
-            label: <Button className=' border-none flex items-center justify-around' icon={<FileImageOutlined className='ml-3' />} onClick={showModalImg}>Upload Document</Button>,
-            key: '0'
-        },
-
-        {
-            label: <Button className='ml-3 border-none flex items-center justify-around ' icon={<UploadOutlined />} onClick={showModalLink}>Upload LInk</Button>,
-            key: '2'
-        },
-        {
-            label: <Button className='ml-3 border-none flex items-center justify-around' icon={<BugOutlined />} onClick={showModalIssue}>Raise Issue</Button>,
-            key: '3'
-        },
-
-    ];
-
-    //UploadDoc
-
-    const [previewOpen, setPreviewOpen] = useState(false);
-    const [previewImage, setPreviewImage] = useState('');
-    const [previewTitle, setPreviewTitle] = useState('');
-    const [fileList, setFileList] = useState([
-        {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-2',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-3',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-        {
-            uid: '-4',
-            name: 'image.png',
-            status: 'done',
-            url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-        },
-    ]);
-    // const handleCancel = () => setPreviewOpen(false);
-    const handlePreview = async (file) => {
-        if (!file.url && !file.preview) {
-            file.preview = await getBase64(file.originFileObj);
-        }
-        setPreviewImage(file.url || file.preview);
-        setPreviewOpen(true);
-        setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
-    };
-    const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
-    const uploadButton = (
-        <button
-            style={{
-                border: 0,
-                background: 'none',
-            }}
-            type="button"
-        >
-            <PlusOutlined />
-            <div
-                style={{
-                    marginTop: 8,
-                }}
-            >
-                Upload
-            </div>
-        </button>
-    );
-
-    //search
-    const onSearch = (value, _e, info) => console.log(info?.source, value);
-
-
-
-    return (
-        <div className='flex flex-col space-y-5'>
-        
-
-            <div>
-                <div className='flex items-center justify-between py-3 px-2' style={{ background: "rgba(230, 247, 255, 1)" }}>
-                    <h1 className='text-base font-bold leading-tight tracking-normal text-left'>Create Usecase Document</h1>
-                    <DownOutlined />
-                </div>
-                <div className='flex items-center justify-between mt-2 py-5'>
-                    <Dropdown
-                        overlay={<Menu>{items1.map(item => <Menu.Item key={item.key}>{item.label}</Menu.Item>)}</Menu>}
-                        trigger={['click']}
-                    >
-                        <Button className='flex items-center'>
-                            Assign <DownOutlined />
-                        </Button>
-                    </Dropdown>
-                    <div className='flex items-center space-x-2'>
-                        <MessageOutlined />
-                        <div>
-                            <Dropdown
-                                overlay={<Menu>{items.map(item => <Menu.Item key={item.key}>{item.label}</Menu.Item>)}</Menu>}
-                                trigger={['click']}
-                            >
-                                <Button className='flex items-center text-white' style={{ background: "rgba(24, 144, 255, 1)", color: "white" }}>
-                                    Action
-                                </Button>
-                            </Dropdown>
-                            {/* UploadDoc */}
-                            <Modal open={isModalOpenDoc} onOk={handleOk} onCancel={handleCancel} footer={null}>
-                                <div className='flex flex-col items-center justify-center space-y-3 p-5'>
-                                    <div className='flex items-center justify-center' style={{ fontSize: "4rem", color: "rgba(24, 144, 255, 1)" }}><InboxOutlined /></div>
-                                    <div>
-                                        <h1 className='text-base font-semibold leading-normal tracking-normal text-center'>Click or drag file to this area to upload</h1>
-                                        <p className='text-sm font-normal leading-snug tracking-normal text-center'>Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
-                                    </div>
-                                    <div className='ml-12'>
-                                        <Upload
-                                            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                                            listType="picture-card"
-                                            fileList={fileList}
-                                            onPreview={handlePreview}
-                                            onChange={handleChange}
-                                        >
-                                            {fileList.length >= 8 ? null : uploadButton}
-                                        </Upload>
-                                        <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                                            <img
-                                                alt="example"
-                                                style={{
-                                                    width: '100%',
-                                                }}
-                                                src={previewImage}
-                                            />
-                                        </Modal>
-                                    </div>
-                                    <div>
-                                        <Button className='flex items-center text-white' style={{ background: "rgba(24, 144, 255, 1)", color: "white" }}>
-                                            Save
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Modal>
-                            <Modal open={isModalOpenLink} onOk={handleOk} onCancel={handleCancel} footer={null}>
-                                <div className='flex flex-col space-y-3 p-5 '>
-                                    <Input placeholder="Link Name" />
-                                    <Search
-                                        styles={{ width: "100%" }}
-                                        addonBefore="https://"
-                                        placeholder="input search text"
-                                        allowClear
-                                        onSearch={onSearch}
-                                        style={{
-                                            width: 304,
-                                        }}
-                                    />
-                                    <div className='flex justify-center'>
-                                        <Button className='flex items-center text-white' style={{ background: "rgba(24, 144, 255, 1)", color: "white" }}>
-                                            Save
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Modal>
-                            <Modal title="Basic Modal" open={isModalOpenIssue} onOk={handleOk} onCancel={handleCancel}>
-                                <p>Some isModal contents...</p>
-                                <p>Some isModal contents...</p>
-                                <p>Some isModal contents...</p>
-                            </Modal>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div>
-                <div className='flex items-center justify-between py-3 px-2' style={{ background: "rgba(230, 247, 255, 1)" }}>
-                    <h1 className='text-base font-bold leading-tight tracking-normal text-left'>Create Screen Design</h1>
-                    <DownOutlined />
-                </div>
-                <div className='flex items-center justify-between mt-2 py-5'>
-                    <Dropdown
-                        overlay={<Menu>{items1.map(item => <Menu.Item key={item.key}>{item.label}</Menu.Item>)}</Menu>}
-                        trigger={['click']}
-                    >
-                        <Button className='flex items-center'>
-                            Assign <DownOutlined />
-                        </Button>
-                    </Dropdown>
-                    <div className='flex items-center space-x-2'>
-                        <MessageOutlined />
-                        <div>
-                            <Dropdown
-                                overlay={<Menu>{items.map(item => <Menu.Item key={item.key}>{item.label}</Menu.Item>)}</Menu>}
-                                trigger={['click']}
-                            >
-                                <Button className='flex items-center text-white' style={{ background: "rgba(24, 144, 255, 1)", color: "white" }}>
-                                    Action
-                                </Button>
-                            </Dropdown>
-                            {/* UploadDoc */}
-                            <Modal open={isModalOpenDoc} onOk={handleOk} onCancel={handleCancel} footer={null}>
-                                <div className='flex flex-col items-center justify-center space-y-3 p-5'>
-                                    <div className='flex items-center justify-center' style={{ fontSize: "4rem", color: "rgba(24, 144, 255, 1)" }}><InboxOutlined /></div>
-                                    <div>
-                                        <h1 className='text-base font-semibold leading-normal tracking-normal text-center'>Click or drag file to this area to upload</h1>
-                                        <p className='text-sm font-normal leading-snug tracking-normal text-center'>Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
-                                    </div>
-                                    <div className='ml-12'>
-                                        <Upload
-                                            action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                                            listType="picture-card"
-                                            fileList={fileList}
-                                            onPreview={handlePreview}
-                                            onChange={handleChange}
-                                        >
-                                            {fileList.length >= 8 ? null : uploadButton}
-                                        </Upload>
-                                        <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                                            <img
-                                                alt="example"
-                                                style={{
-                                                    width: '100%',
-                                                }}
-                                                src={previewImage}
-                                            />
-                                        </Modal>
-                                    </div>
-                                    <div>
-                                        <Button className='flex items-center text-white' style={{ background: "rgba(24, 144, 255, 1)", color: "white" }}>
-                                            Save
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Modal>
-                            <Modal open={isModalOpenLink} onOk={handleOk} onCancel={handleCancel} footer={null}>
-                                <div className='flex flex-col space-y-3 p-5 '>
-                                    <Input placeholder="Link Name" />
-                                    <Search
-                                        styles={{ width: "100%" }}
-                                        addonBefore="https://"
-                                        placeholder="input search text"
-                                        allowClear
-                                        onSearch={onSearch}
-                                        style={{
-                                            width: 304,
-                                        }}
-                                    />
-                                    <div className='flex justify-center'>
-                                        <Button className='flex items-center text-white' style={{ background: "rgba(24, 144, 255, 1)", color: "white" }}>
-                                            Save
-                                        </Button>
-                                    </div>
-                                </div>
-                            </Modal>
-                            <Modal title="Basic Modal" open={isModalOpenIssue} onOk={handleOk} onCancel={handleCancel}>
-                                <p>Some isModal contents...</p>
-                                <p>Some isModal contents...</p>
-                                <p>Some isModal contents...</p>
-                            </Modal>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div>
-                <h1 className='text-sm font-bold leading-snug tracking-normal text-left'>Checklist for requirement</h1>
-                <div>
-                    <div className="flex items-center m-4 space-x-3">
-                        <input type="checkbox" />
-                        <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Use Case Document is stitched in netlify site in Use Cases Matrix</h3>
-                    </div>
-                    <div className="flex items-center m-4 space-x-3">
-                        <input type="checkbox" />
-                        <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Screen Design is stitched in netlify site in Use Cases Matrix</h3>
-                    </div>
-                    <div className="flex items-center m-4 space-x-3">
-                        <input type="checkbox" />
-                        <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Functional Design Review meeting is done with Technical Team</h3>
-                    </div>
-                    <div className="flex items-center m-4 space-x-3">
-                        <input type="checkbox" />
-                        <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Scrum Planning with Micro Level Task Allocation is done</h3>
-                    </div>
-                </div>
-            </div>
-
-            
-        </div>
-    );
-};
-
-export default RequirementForm;
-
-
-
+// export default RequirementForm

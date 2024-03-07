@@ -1,13 +1,12 @@
 "use client";
-import { Form, Input, Upload, Button, message, DatePicker, notification } from "antd";
-import { Select } from 'antd';
+import { Form, Input, Upload, Button, message, DatePicker,notification,Select } from "antd";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from 'next/navigation'
 // import { useRouter } from 'next/router';
 import moment from "moment";
-
+const { Option } = Select;
 const layout = {
   labelCol: {
     span: 8,
@@ -27,12 +26,13 @@ const layout = {
 };
 
 const newform = () => {
+  const [assignees, setAssignees] = useState([]);
+  const [loading, setLoading] = useState(true);
   const setprojectIds = useSelector((state) => state.addResources);
   const projectId = setprojectIds.id[0].prjectId;
   const setWorkFlowIds = useSelector((state) => state.addResources);
   const workFlowId = setWorkFlowIds.id[0].workFlowId;
   const [api, contextHolder] = notification.useNotification();
-
 
   const openNotification = (placement, type, message) => {
     api[type]({
@@ -57,6 +57,12 @@ const newform = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProject({ ...project, [name]: value });
+  };
+
+  const handleAssigneChange = (value,name,) => {
+    // const { name, value } = e.target;
+    setProject({ ...project, [value]: name });
+    // dispatch(setSelectedAssignee(value));
   };
 
   const handleStartDateChange = (date, dateString) => {
@@ -104,40 +110,26 @@ const newform = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         openNotification("topRight", "success", "UseCase saved successfully!");
-        router.push("/main/projects/developmentUsecases")
-      })
+        router.push("/main/projects/developmentUsecases") })
       .catch((error) => {
         console.log(error);
         openNotification("topRight", "error", "Fill the Form Correctly.");
       });
   };
-
-  //callPmName
-
-  const [pmName, setPmName] = useState([]);
-
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAssignees = async () => {
       try {
         const response = await axios.get('https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/get_resource_by_role?designation=Project Manager');
-        setPmName(response.data); // Set pmName with the data from the response
+        setAssignees(response.data);
+        console.log("setassignees.....", response.data)
+        setLoading(false);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching assignees:', error);
       }
     };
 
-    fetchData();
+    fetchAssignees();
   }, []);
-
-  console.log(pmName); // This will log the updated pmName after it's set
-
-  const PmNameChange = (value) => {
-    console.log(value); // Log the value
-    setProject(({
-      ...project,
-      assigned_to_id: value 
-    }));
-  }
 
   return (
     <div className="">
@@ -193,18 +185,15 @@ const newform = () => {
             ]}
           >
             <Select
-              className='w-full'
-              onChange={PmNameChange}
+              placeholder="Select assignee"
+              loading={loading}
+              onChange={(value,name,emp_id) => {handleAssigneChange("assigned_to_id", value,name);
+            console.log(emp_id)}}
             >
-              {pmName.map(Filter => (
-                <Option key={Filter.id} value={Filter.emp_id} >
-                  {Filter.resource_name}
-                </Option>
-
+              {assignees.map((assignee, index) => (
+                <Option key={index} value={assignee.emp_id}>{assignee.resource_name}</Option>
               ))}
             </Select>
-
-
           </Form.Item>
 
           <Form.Item
@@ -232,7 +221,7 @@ const newform = () => {
                 className="text-slate-500 font-sans text-sm font-normal not-italic leading-6 pb-1 self-stretch items-center flex-1 border rounded-sm border-slate-200  px-1 py-1 h-8 w-[184px] m-1"
                 onChange={handleStartDateChange}
 
-              // value={project.startDate}
+                // value={project.startDate}
               />
               <span>-</span>
               <DatePicker
