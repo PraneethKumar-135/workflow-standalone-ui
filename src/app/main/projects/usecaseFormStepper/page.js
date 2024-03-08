@@ -9,79 +9,80 @@ import Mock from "@/Components/AddUsecaseStepperForms/Mock";
 import UseCasesOverView from "@/Components/AddUsecaseStepperForms/UseCasesOverView";
 
 import { Tabs } from "antd";
+import  Planning  from "@/Components/AddUsecaseStepperForms/Planning";
 
 Mock;
 
 const Stepper = () => {
-//   const [currentStep, setCurrentStep] = useState(0);
+  //   const [currentStep, setCurrentStep] = useState(0);
 
-// const [stepperState , setstepperState] = useState( );
-//   const [requireData, setRequireData] = useState();
-//   const setUsecaseId = useSelector((state) => state.addUsecase);
-//   const UsecaseId = setUsecaseId.useCaseId;
+  // const [stepperState , setstepperState] = useState( );
+  //   const [requireData, setRequireData] = useState();
+  //   const setUsecaseId = useSelector((state) => state.addUsecase);
+  //   const UsecaseId = setUsecaseId.useCaseId;
 
-//   useEffect(() => {
-//     const axios = require("axios");
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get(
-//           `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
-//           {
-//             headers: {
-//               Accept: "application/json",
-//             },
-//           }
-//         );
-//         console.log(response.data);
-//         setRequireData(response.data);
-//       } catch (error) {
-//         console.error("Error fetching data:", error);
-//       }
-//     };
-//     fetchData();
-//   }, [UsecaseId]);
+  //   useEffect(() => {
+  //     const axios = require("axios");
+  //     const fetchData = async () => {
+  //       try {
+  //         const response = await axios.get(
+  //           `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
+  //           {
+  //             headers: {
+  //               Accept: "application/json",
+  //             },
+  //           }
+  //         );
+  //         console.log(response.data);
+  //         setRequireData(response.data);
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     };
+  //     fetchData();
+  //   }, [UsecaseId]);
 
-//   const handleStepClick = ( title,stepIndex ) => {
-//     setCurrentStep(stepIndex);
-//     console.log(title)
-//     setstepperState(title)
-//     console.log("stapper state", title)
-//     // for(let i = 0 ; i===title;i++){
-//     //   console.log(mappedSteps[i].title)
-//     //   setstepperState(mappedSteps[i].title)
-//     // }
-//     // const currentStepTitle = mappedSteps[stepIndex]?.title;
-//     // console.log(currentStepTitle)
-//     // setstepperState(currentStepTitle);
-//   };
-//   const handleContentChange = () => {
-//     switch (currentStep) {
-//       case 0:
-//         return <RequirementForm />;
-//       case 1:
-//         return <RequirementForm />;
-//       case 2:
-//         return <ActualDevelopmentForm />;
-//       case 3:
-//         return <CICDTestForm />;
-//       case 4:
-//         return <StageReleaseForm />;
-//       case 5:
-//         return <PublishandOperateForm />;
-//       default:
-//         return null;
-//     }
-//   };
+  //   const handleStepClick = ( title,stepIndex ) => {
+  //     setCurrentStep(stepIndex);
+  //     console.log(title)
+  //     setstepperState(title)
+  //     console.log("stapper state", title)
+  //     // for(let i = 0 ; i===title;i++){
+  //     //   console.log(mappedSteps[i].title)
+  //     //   setstepperState(mappedSteps[i].title)
+  //     // }
+  //     // const currentStepTitle = mappedSteps[stepIndex]?.title;
+  //     // console.log(currentStepTitle)
+  //     // setstepperState(currentStepTitle);
+  //   };
+  //   const handleContentChange = () => {
+  //     switch (currentStep) {
+  //       case 0:
+  //         return <RequirementForm />;
+  //       case 1:
+  //         return <RequirementForm />;
+  //       case 2:
+  //         return <ActualDevelopmentForm />;
+  //       case 3:
+  //         return <CICDTestForm />;
+  //       case 4:
+  //         return <StageReleaseForm />;
+  //       case 5:
+  //         return <PublishandOperateForm />;
+  //       default:
+  //         return null;
+  //     }
+  //   };
 
-//   const mappedSteps =
-//     requireData && requireData.usecase
-//       ? requireData.usecase.stages.map((stage) => ({
-//           title: Object.keys(stage)[0] // Extracting the stage name from the dynamic key
-//         }
-//         ))
-       
-//       : [];
- 
+  //   const mappedSteps =
+  //     requireData && requireData.usecase
+  //       ? requireData.usecase.stages.map((stage) => ({
+  //           title: Object.keys(stage)[0] // Extracting the stage name from the dynamic key
+  //         }
+  //         ))
+
+  //       : [];
+
 
   // const Contentdata = () => {
   //   return (
@@ -128,12 +129,12 @@ const Stepper = () => {
     {
       key: "3",
       label: "Asset view",
-      children: "" ,
+      children: "",
     },
     {
       key: "4",
       label: "Planning",
-      children: "Content of Tab Pane 3",
+      children: <Planning />
     },
   ];
 
@@ -151,7 +152,7 @@ const Stepper = () => {
           </p>
 
           <div className="mt-3   ">
-            <Tabs defaultActiveKey="1" items={items}  />
+            <Tabs defaultActiveKey="1" items={items} />
           </div>
         </div>
       </div>

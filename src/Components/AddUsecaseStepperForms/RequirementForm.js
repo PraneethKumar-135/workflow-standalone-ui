@@ -230,11 +230,12 @@ const RequirementForm = (stepperState) => {
   };
   const handleSubItemClick = (subItem) => {
     setSelectedSubItem(subItem);
+    setFold(true);
   };
   const handleAssignButtonClick = () => {
     console.log("Selected SubItem:", selectedSubItem);
   };
-
+  const [fold, setFold] = useState(false);
 
   // console.log("requiredData:", requireData.usecase.stages  )
   return (
@@ -331,7 +332,9 @@ const RequirementForm = (stepperState) => {
                   >
                     <div ref={dropdownRef} className="relative">
                       <button
-                        onClick={() => toggleSubItems(index)}
+                        onClick={() => {
+                          toggleSubItems(index)
+                        }}
                         className="bg-white border text-black p-2 rounded-md flex items-center gap-1 "
                       >
                         Assign
@@ -341,7 +344,7 @@ const RequirementForm = (stepperState) => {
                           alt="expand-arrow--v2"
                         />
                       </button>
-                      {openItemIndex === index && (
+                      {(openItemIndex) === index && (
                         <ul className="absolute top-10 left-0 bg-white text-black shadow-md rounded-md z-10">
                           <div className="flex items-center justify-center">
                             <SearchOutlined className="pl-2" />
@@ -359,7 +362,10 @@ const RequirementForm = (stepperState) => {
                                   console.log(key),
                                   <button
                                     key={inx}
-                                    onClick={() => handleSubItemClick(itemIndex)}
+                                    onClick={() => {
+                                      handleSubItemClick(itemIndex === selectedSubItem ? null : itemIndex)
+                                      // setFold(true)
+                                    }}
                                     className="font-semibold"
                                   >
                                     {key}
