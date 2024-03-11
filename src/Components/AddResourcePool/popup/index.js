@@ -10,7 +10,13 @@ import { useSelector, useDispatch } from "react-redux";
 // import user from "../../../../public/assets/profile1.svg";
 // import { useDispatch } from "react-redux";
 import {
-  addResources, addResourcesData, addResourcesPM, addResourcesUxDesigner, addResourcesUiDeveloper, addResourcesApiDeveloper, addResourcesTester, addResourcesUxResearch, addResourcesCiCd
+  lenghtofux,
+  lenghtofui,
+  lenghtofapi,
+  lenghtoftester,
+  lenghtofuxr,
+  lenghtofcicd,
+  lenghtofpm, addResources, addResourcesData, addResourcesPM, addResourcesUxDesigner, addResourcesUiDeveloper, addResourcesApiDeveloper, addResourcesTester, addResourcesUxResearch, addResourcesCiCd
 } from "@/Context/AddresourcesSlice/addresourcesSlice";
 
 export const Projectmanager = (props) => {
@@ -25,6 +31,7 @@ export const Projectmanager = (props) => {
 
   // project
   const [projectManager, setprojectManager] = useState([]);
+
 
   // select User
   const [selectUser, setSelectUser] = useState([]);
@@ -41,6 +48,8 @@ export const Projectmanager = (props) => {
         });
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtofpm(data.length))
+
         setprojectManager(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -49,6 +58,7 @@ export const Projectmanager = (props) => {
     fetchData();
   }, []);
   const dispatch = useDispatch();
+  console.log(projectManager.length);
 
   var handleResourcesAdd = (emp_id, data) => {
     dispatch(addResources({ id: emp_id, }));
@@ -67,6 +77,7 @@ export const Projectmanager = (props) => {
   };
 
 
+
   return (
     <div className="flex flex-col gap-4 bg-white w-[100%]">
       <div className="w-[100%] px-2 flex justify-center rounded">
@@ -79,15 +90,15 @@ export const Projectmanager = (props) => {
                 key={index}
                 className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                   <div className="flex items-center gap-3">
-                    <Image src={Manager.image || {user}} height={4} width={4} />
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                     <div>
-                      <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                      <h1 className="text-sm font-bold leading-tight tracking-normal text-left">
                         {Manager.resource_name}
-                        <span className="text-blue-300">{Manager.work_email}</span>
+                        <span className="text-blue-300 ml-1">{Manager.work_email}</span>
                       </h1>
-                      <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                      <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                     </div>
                   </div>
                   <div>
@@ -154,6 +165,7 @@ export const ApiDeveloper = (props) => {
         });
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtofapi(data.length))
         setApiDeveloper(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -175,8 +187,9 @@ export const ApiDeveloper = (props) => {
   const handleAddResourcesApiDeveloper = (data) => {
     const newData = [...selectedDataApiD, data];
     setSelectedDataApiD(newData);
-    dispatch(addResourcesApiDeveloper(newData ));
+    dispatch(addResourcesApiDeveloper(newData));
   };
+  console.log(apiDeveloper)
   return (
     <div className="flex flex-col gap-4 bg-white w-[100%]">
       <div className="w-[100%] px-2 flex justify-center rounded">
@@ -193,15 +206,15 @@ export const ApiDeveloper = (props) => {
                   key={index}
                   className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
                 >
-                  <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                  <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                     <div className="flex items-center gap-3">
-                      <Image src={Manager.image || {user}} height={4} width={4}/>
+                      <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                       <div>
-                        <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                        <h1 className="text-sm font-bold leading-tight tracking-normal text-left">
                           {Manager.resource_name}
-                          <span className="text-blue-300">{Manager.work_email}</span>
+                          <span className="text-blue-300 ml-1">{Manager.work_email}</span>
                         </h1>
-                        <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                        <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                       </div>
                     </div>
                     <div>
@@ -294,7 +307,7 @@ export const CiCdResourcePool = (props) => {
   const handleAddResourcesCiCd = (data) => {
     const newData = [...selectedDataCiCd, data];
     setSelectedDataCiCd(newData);
-    dispatch(addResourcesCiCd(newData ));
+    dispatch(addResourcesCiCd(newData));
   };
 
 
@@ -313,6 +326,7 @@ export const CiCdResourcePool = (props) => {
 
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtofcicd(data.length))
         setCiCd(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -334,15 +348,15 @@ export const CiCdResourcePool = (props) => {
                 key={index}
                 className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                   <div className="flex items-center gap-3">
-                    <Image src={Manager.image || {user}} height={4} width={4}/>
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                     <div>
-                      <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                       <h1 className="text-sm font-bold leading-tight tracking-normal text-left">
                         {Manager.resource_name}
-                        <span className="text-blue-300">{Manager.work_email}</span>
+                        <span className="text-blue-300 ml-1">{Manager.work_email}</span>
                       </h1>
-                      <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                      <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                     </div>
                   </div>
                   <div>
@@ -361,7 +375,7 @@ export const CiCdResourcePool = (props) => {
                           // Handle deselecting the checkbox
                           const updatedSelectedData = selectedDataCiCd.filter(id => id !== empId);
                           setSelectedDataCiCd(updatedSelectedData);
-                          dispatch(addResourcesCiCd(updatedSelectedData ));
+                          dispatch(addResourcesCiCd(updatedSelectedData));
                         }
                       }}
                       className="cursor-pointer"
@@ -472,6 +486,7 @@ export const TesterResourcePool = (props) => {
         });
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtoftester(data.length))
         setTester(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -495,15 +510,15 @@ export const TesterResourcePool = (props) => {
                 key={index}
                 className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                   <div className="flex items-center gap-3">
-                    <Image src={Manager.image || {user}} height={4} width={4}/>
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                     <div>
-                      <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                       <h1 className="text-sm font-bold leading-tight tracking-normal text-left">
                         {Manager.resource_name}
-                        <span className="text-blue-300">{Manager.work_email}</span>
+                        <span className="text-blue-300 ml-1">{Manager.work_email}</span>
                       </h1>
-                      <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                      <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                     </div>
                   </div>
                   <div>
@@ -566,7 +581,7 @@ export const UxDesignResourcePool = (props) => {
   const handleAddResourcesUxDesigner = (data) => {
     const newData = [...selectedDataUxDesign, data];
     setSelectedDataUxDesign(newData);
-    dispatch(addResourcesUxDesigner(newData ));
+    dispatch(addResourcesUxDesigner(newData));
   };
 
   console.log(selectUser);
@@ -585,6 +600,7 @@ export const UxDesignResourcePool = (props) => {
         });
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtofux(data.length))
         setUxDesigners(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -610,9 +626,9 @@ export const UxDesignResourcePool = (props) => {
                       key={index}
                       className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
                     >
-                      <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                      <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                         <div className="flex items-center gap-3">
-                          <Image src={Manager.image || {user}} height={4} width={4}/>
+                          <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                           <div>
                             <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
                               {Manager.resource_name}
@@ -620,7 +636,7 @@ export const UxDesignResourcePool = (props) => {
                                 {Manager.work_email}
                               </span>
                             </h1>
-                            <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                            <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                           </div>
                         </div>
                         <div>
@@ -639,7 +655,7 @@ export const UxDesignResourcePool = (props) => {
                                 // Handle deselecting the checkbox
                                 const updatedSelectedData = selectedDataUxDesign.filter(id => id !== empId);
                                 setSelectedDataUxDesign(updatedSelectedData);
-                                dispatch(addResourcesUxDesigner( updatedSelectedData ));
+                                dispatch(addResourcesUxDesigner(updatedSelectedData));
                               }
                             }}
                             className="cursor-pointer"
@@ -685,7 +701,7 @@ export const UiDeveloperResourcePool = (props) => {
   const handleAddResourcesUiDeveloper = (data) => {
     const newData = [...selectedDataUiDeveloper, data];
     setSelectedDataUiDeveloper(newData);
-    dispatch(addResourcesUiDeveloper(newData ));
+    dispatch(addResourcesUiDeveloper(newData));
   };
   console.log(selectUser);
 
@@ -705,6 +721,7 @@ export const UiDeveloperResourcePool = (props) => {
         });
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtofui(data.length))
         setuiDeveloper(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -726,15 +743,15 @@ export const UiDeveloperResourcePool = (props) => {
                 key={index}
                 className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                   <div className="flex items-center gap-3">
-                    <Image src={Manager.image || {user}} height={4} width={4}/>
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                     <div>
-                      <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                       <h1 className="text-sm font-bold leading-tight tracking-normal text-left">
                         {Manager.resource_name}
-                        <span className="text-blue-300">{Manager.work_email}</span>
+                        <span className="text-blue-300 ml-1">{Manager.work_email}</span>
                       </h1>
-                      <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                      <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                     </div>
                   </div>
                   <div>
@@ -753,7 +770,7 @@ export const UiDeveloperResourcePool = (props) => {
                           // Handle deselecting the checkbox
                           const updatedSelectedData = selectedDataUiDeveloper.filter(id => id !== empId);
                           setSelectedDataUiDeveloper(updatedSelectedData);
-                          dispatch(addResourcesUiDeveloper( updatedSelectedData ));
+                          dispatch(addResourcesUiDeveloper(updatedSelectedData));
                         }
                       }}
                       className="cursor-pointer"
@@ -811,6 +828,7 @@ export const UxResearcher = (props) => {
         });
         console.log(response.data);
         const data = response.data;
+        dispatch(lenghtofuxr(data.length))
         setuxResearcher(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -847,15 +865,15 @@ export const UxResearcher = (props) => {
                 key={index}
                 className="flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border border-gray-200 border-t-0 rounded-lg"
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%]">
+                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
                   <div className="flex items-center gap-3">
-                    <Image src={Manager.image || {user}} height={4} width={4}/>
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                     <div>
-                      <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                       <h1 className="text-sm font-bold leading-tight tracking-normal text-left">
                         {Manager.resource_name}
-                        <span className="text-blue-300">{Manager.work_email}</span>
+                        <span className="text-blue-300 ml-1">{Manager.work_email}</span>
                       </h1>
-                      <h3 className="text-neutral-300 font-segoe-ui text-base font-normal leading-normal"></h3>
+                      <h3 className="text-sm font-normal leading-tight tracking-normal text-left">{Manager.designation}</h3>
                     </div>
                   </div>
                   <div>
@@ -875,7 +893,7 @@ export const UxResearcher = (props) => {
                           // Handle deselecting the checkbox
                           const updatedSelectedData = selectedDataUxResearch.filter(id => id !== empId);
                           setSelectedDataUxResearch(updatedSelectedData);
-                          dispatch(addResourcesUxResearch(updatedSelectedData ));
+                          dispatch(addResourcesUxResearch(updatedSelectedData));
                         }
                       }}
                       className="cursor-pointer"
