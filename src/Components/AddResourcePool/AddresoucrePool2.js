@@ -38,6 +38,8 @@ const { TabPane } = Tabs;
 
 const items = () => {
   const length = useSelector((state) => state.addResources)
+  const [borderVisible, setBorderVisible] = useState(false);
+
 
   const actuallengthofPm = length.ProjectManagerLength;
   const actuallengthofUx = length.UXDesignerLength;
@@ -46,6 +48,7 @@ const items = () => {
   const actuallengthofApi = length.APIDeveloperLength;
   const actuallengthofUxr = length.UXResearcherLength;
   const actuallengthofUCicd = length.CICDSpecialistLength;
+  console.log(borderVisible)
 
   return [
 
@@ -54,7 +57,7 @@ const items = () => {
       label: (
         <span>
           <div className=" flex flex-row items-center">
-            <div className="input px-6 py-5 mr-4 bg-neutral-1 shadow-md w-[402px] ">
+          <div className={"input px-6 py-5 mr-4 bg-neutral-1 shadow-md w-[402px] " + (borderVisible ? "border-x-0 border-t-0 border-b-blue-600" : "")}>
               <div className="flex justify-between items-center">
                 <div className="flex ">
                   <Image src={Pmimage} />
@@ -65,14 +68,15 @@ const items = () => {
                     <p className=" pl-2 w-32 text-left">{actuallengthofPm} Members</p>
                   </div>
                 </div>
-                <Button className="flex p-2 h-9 items-center gap-0 bg-blue-500">
+                <Button className="flex p-2 h-9 items-center gap-0 bg-blue-500" onClick={() => setBorderVisible(!b)}>
                   <PlusOutlined className="text-white text-lg" />{" "}
                   <h1 className="text-white text-lg">Add</h1>
                 </Button>
               </div>
+
             </div>
           </div>
-        </span>
+        </span >
       ),
       children: <Projectmanager />,
     },
@@ -249,7 +253,7 @@ export default function AddResourcePool2({ result }) {
   const [project, setProject] = useProject({});
   console.log(result)
   const router = useRouter();
-
+ 
 
 
   return (
@@ -259,6 +263,8 @@ export default function AddResourcePool2({ result }) {
         tabPosition="left"
         onChange={onChange}
         className="custom-tabs"
+       
+
       >
 
         {items().map((itemsdata) => (

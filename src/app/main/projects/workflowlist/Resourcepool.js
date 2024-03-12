@@ -225,10 +225,6 @@ const Resourcepool = () => {
               ))}
             </div>
           ))}
-
-
-
-
         </div>
       </div>
     </div>
