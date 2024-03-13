@@ -1,7 +1,7 @@
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const isBrowser = typeof window !== "undefined";
-
 
 const initialState = {
   name: "",
@@ -10,9 +10,9 @@ const initialState = {
   start_date: "",
   end_date: "",
   image_url: "",
-  id: isBrowser
-  ? JSON.parse(localStorage.getItem("ProjectId")) || []
-  : []
+  id: isBrowser ? JSON.parse(localStorage.getItem("ProjectId")) || [] : [],
+  shouldNavigateToFirstPage: false,
+  shouldNavigateToSecondPage: false,
 };
 
 const addProjectSlice = createSlice({
@@ -31,9 +31,15 @@ const addProjectSlice = createSlice({
       let setProjectId = JSON.stringify(state.id);
       localStorage.setItem("ProjectId", setProjectId);
     },
+    setNavigateToFirstPage: (state) => {
+      state.shouldNavigateToFirstPage = true;
+    },
+    setNavigateToSecondPage: (state) => {
+      state.shouldNavigateToSecondPage = true;
+    },
   },
 });
 
-export const { updateFormData, updateId } = addProjectSlice.actions;
+export const { updateFormData, updateId, setNavigateToFirstPage, setNavigateToSecondPage } = addProjectSlice.actions;
 
 export default addProjectSlice.reducer;

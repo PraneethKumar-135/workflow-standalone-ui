@@ -263,7 +263,7 @@ export default function AddResourcePool2({ result }) {
       >
         {items(borderVisible, setBorderVisible).map((itemsdata) => (
           <TabPane tab={itemsdata.label} key={itemsdata.key}>
-            {React.cloneElement(itemsdata.children, { borderVisible, setBorderVisible })}
+            {itemsdata.children}
           </TabPane>
         ))}
       </Tabs>

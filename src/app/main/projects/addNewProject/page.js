@@ -10,6 +10,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Link from "next/link";
+import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { addResourcesData } from "@/Context/AddresourcesSlice/addresourcesSlice";
+
 
 const { Step } = Steps;
 
@@ -29,6 +32,10 @@ const steps = [
 ];
 
 export default function page({ formNext }) {
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToFirstPage = currentStep.shouldNavigateToFirstPage;
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+
   const projectData = useSelector((state) => state.addProject);
   const ProductManager = useSelector((state) => state.addResources.ProjectManager);
   const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
@@ -41,14 +48,14 @@ export default function page({ formNext }) {
 
 
   // console.log("TesterId", TesterId)
-// 
+  // 
   // const ValueresourcesId = resourcesId.map((obj) => Object.values(obj));
   // console.log(ValueresourcesId);
   // console.log("resoursesId", resourcesId);
   // const str = useSelector((state) => state);
-  
+
   const projectId = useSelector((state) => state.addProject.id);
-  
+
   console.log("projectId : ", projectId);
   // console.log("resourceIn Project", resourcesId);
   console.log(projectData);
@@ -82,6 +89,7 @@ export default function page({ formNext }) {
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  // setCurrent(shouldNavigateToFirstPage);
 
   const prev = () => {
     setCurrent(current - 1);
@@ -90,8 +98,7 @@ export default function page({ formNext }) {
   // const next = () => {
   //   setCurrent(current + 1);
 
-  // };
-
+  // };  
   const items = steps.map((item) => ({
     key: item.title,
     title: item.title,
@@ -102,6 +109,8 @@ export default function page({ formNext }) {
     color: token.colorTextTertiary,
     marginTop: 16,
   };
+
+
   // Api project push
 
   const handleSubmit = async () => {
@@ -118,17 +127,25 @@ export default function page({ formNext }) {
       return;
     }
     if (current === 0) {
-     
+
       try {
         // console.log(projectData)
         await Apisubmit(projectData);
-        
+
       } catch (error) {
         console.error("Error submitting data:", error);
       }
     }
-    // Apisubmit(projectData);
-    // console.log(projectData);
+
+    // console.log(shouldNavigateToFirstPage)
+    // if(shouldNavigateToFirstPage){
+    //   setCurrent(0)
+    // }
+
+
+
+
+
 
     const roles = [
       { ProductManagerId: ProductManager },
@@ -137,9 +154,9 @@ export default function page({ formNext }) {
       { ApiDeveloperId: ApiDeveloper },
       { TesterId: Tester },
       { UxResearcherId: UxResearcher },
-      { CiCdId: CiCd},
+      { CiCdId: CiCd },
     ];
-    
+
     const filteredRoles = roles.filter(role => Object.values(role)[0].length > 0);
 
     console.log("filteredRoles", filteredRoles)
@@ -301,6 +318,20 @@ export default function page({ formNext }) {
   };
   const dispatch = useDispatch();
 
+  let currentStepIndex;
+
+  if (shouldNavigateToFirstPage) {
+    currentStepIndex = 0;
+    dispatch(setNavigateToFirstPage(false));
+  } else if (shouldNavigateToSecondPage) {
+    currentStepIndex = 1;
+    dispatch(setNavigateToSecondPage(false));
+    dispatch(addResourcesData([]));
+  } else {
+    currentStepIndex = current;
+  }
+
+
   //  // Api of resources
   //  const handleOnClickNext = () => {
   //   console.log(JSON.stringify(project.resourcePool));
@@ -366,10 +397,11 @@ export default function page({ formNext }) {
         {toggleValue.toString()}
       </div>
       <div className="w-auto py-1 bg-white">
-        <Steps current={current} items={items} className="px-[10rem] py-3" />
+
+        <Steps current={currentStepIndex} items={items} className="px-[10rem] py-3" />
         <div style={contentStyle}>
           {/* Render content based on current step */}
-          {steps[current].content}
+          {steps[currentStepIndex].content}
         </div>
 
         <div style={{ marginTop: 24 }}>
@@ -397,10 +429,10 @@ export default function page({ formNext }) {
             </Link>
           )}
           {/* {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-            Previous
-          </Button>
-        )} */}
+            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
+              Previous
+            </Button>
+          )} */}
         </div>
       </div>
     </>

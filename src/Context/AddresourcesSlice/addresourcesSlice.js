@@ -75,17 +75,17 @@ const addresourcesSlice = createSlice({
     "ProjectManager": [],
     "ProjectManagerLength": "",
     "UXDesigner": [],
-    "UXDesignerLength":"",
+    "UXDesignerLength": "",
     "UIDeveloper": [],
-    "UIDeveloperLength":"",
+    "UIDeveloperLength": "",
     "APIDeveloper": [],
-    "APIDeveloperLength":"",
+    "APIDeveloperLength": "",
     "Tester": [],
-    "TesterLength":"",
+    "TesterLength": "",
     "UXResearcher": [],
-    "UXResearcherLength":"",
+    "UXResearcherLength": "",
     "CICDSpecialist": [],
-    "CICDSpecialistLength":"",
+    "CICDSpecialistLength": "",
   },
 
   reducers: {
@@ -118,7 +118,6 @@ const addresourcesSlice = createSlice({
     },
     lenghtofpm: (state, action) => {
       state.ProjectManagerLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     addResourcesUxDesigner: (state, action) => {
       state.UXDesigner = action.payload;
@@ -126,7 +125,6 @@ const addresourcesSlice = createSlice({
     },
     lenghtofux: (state, action) => {
       state.UXDesignerLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     addResourcesUiDeveloper: (state, action) => {
       state.UIDeveloper = action.payload;
@@ -134,7 +132,6 @@ const addresourcesSlice = createSlice({
     },
     lenghtofui: (state, action) => {
       state.UIDeveloperLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     addResourcesApiDeveloper: (state, action) => {
       state.APIDeveloper = action.payload;
@@ -142,7 +139,6 @@ const addresourcesSlice = createSlice({
     },
     lenghtofapi: (state, action) => {
       state.APIDeveloperLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     addResourcesTester: (state, action) => {
       state.Tester = action.payload;
@@ -150,7 +146,6 @@ const addresourcesSlice = createSlice({
     },
     lenghtoftester: (state, action) => {
       state.TesterLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     addResourcesUxResearch: (state, action) => {
       state.UXResearcher = action.payload;
@@ -158,7 +153,6 @@ const addresourcesSlice = createSlice({
     },
     lenghtofuxr: (state, action) => {
       state.UXResearcherLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     addResourcesCiCd: (state, action) => {
       state.CICDSpecialist = action.payload;
@@ -166,12 +160,13 @@ const addresourcesSlice = createSlice({
     },
     lenghtofcicd: (state, action) => {
       state.CICDSpecialistLength = action.payload
-      console.log("length Of PM", action.payload);
     },
     // console.log(action.title)
-    removeResources(state, action) {
-      return state.filter((item) => item.id !== action.payload);
-    },
+    removeResources: (state, action) => {
+      state.resoucesInfo = state.resoucesInfo.filter(
+        (resource) => resource.id !== action.payload
+      );
+    }
   },
 });
 

@@ -4,7 +4,8 @@ import { Button } from "antd";
 import { Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
+import { addProjectId, removeResources } from "@/Context/AddresourcesSlice/addresourcesSlice";
+import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 import Image from "next/image";
 
@@ -25,24 +26,38 @@ const AddEmployReview = () => {
   // const MapingDataCiCd = ResourcesInfo.CICDSpecialist[0].resoucesInfo;
 
 
+  const dispatch = useDispatch();
   const ResourceAdded = ResourcesInfo.resoucesInfo;
   console.log(ResourceAdded)
 
-  const [data, setData] = useState([]);
   const projectData = useSelector((state) => state.addProject);
   console.log(projectData);
 
-  const handleDelete = (id) => {
-    const updatedData = data.filter((employee) => employee.id !== id);
-    console.log(updatedData);
-    setData(updatedData);
+  const handleDelete = (resource) => {
+    dispatch(removeResources(resource));
+    console.log(resource);
   };
-  const dispatch = useDispatch();
 
   const ProjectId = (ProjectId) => {
     dispatch(addProjectId(ProjectId));
     // console.log(ProjectId)
   };
+
+
+  // const [current, setcurrent] = useState(0)
+  // const handletableedit = () => {
+  //   setcurrent(2)
+  //   dispatch()
+  // }
+
+
+
+  const handleFirstEditButton = () => {
+    dispatch(setNavigateToFirstPage());
+  }
+  const handleSecondEditButton = () => {
+    dispatch(setNavigateToSecondPage());
+  }
 
   return (
     <div>
@@ -53,7 +68,7 @@ const AddEmployReview = () => {
               Setup project
             </h1>
             <div className="space-x-8">
-              <Button icon={<EditOutlined />}>Edit</Button>
+              <Button icon={<EditOutlined />} onClick={handleFirstEditButton}>Edit</Button>
               <Button type="primary" className="bg-blue-500">
                 create
               </Button>
@@ -154,7 +169,7 @@ const AddEmployReview = () => {
                     {resource.email}
                   </td>
                   <td className="py-2 whitespace-nowrap text-sm space-x-5">
-                    <Button icon={<EditOutlined />}>Edit</Button>
+                    <Button icon={<EditOutlined />} onClick={handleSecondEditButton}>Edit</Button>
                     <Button
                       type="primary"
                       danger
@@ -167,6 +182,7 @@ const AddEmployReview = () => {
                 </tr>
               </tbody>
             ))}
+
           </table>
         </div>
       </div>

@@ -90,7 +90,7 @@ export const Projectmanager = (props) => {
                 className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                   } `}
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
+                <div className="flex  items-center gap-6 pl-3 w-[100%] py-3">
                   <div>
                     {/* CheckBox Button */}
 
@@ -98,7 +98,7 @@ export const Projectmanager = (props) => {
                       type="checkbox"
                       onChange={(e) => {
                         const selectedId = Manager.emp_id;
-                        const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                        const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                         handleResourcesAdd(selectedId, selectedData);
 
                         const isChecked = e.target.checked;
@@ -172,6 +172,7 @@ export const ApiDeveloper = (props) => {
     };
     fetchData();
   }, []);
+  console.log(apiDeveloper);
 
   // HandleCheckBoxChanges
   const dispatch = useDispatch();
@@ -206,24 +207,14 @@ export const ApiDeveloper = (props) => {
                   className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                     } `}
                 >
-                  <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                    <div className="flex items-center gap-3">
-                      <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                      <div>
-                        <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
-                          {Manager.resource_name}
-                          <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
-                        </h1>
-                        <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                      </div>
-                    </div>
+                  <div className="flex items-center gap-6 pl-3 w-[100%] py-3">
                     <div>
                       {/* CheckBox Button */}
                       <input
                         type="checkbox"
                         onChange={(e) => {
                           const selectedId = Manager.emp_id;
-                          const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                          const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                           handleResourcesAdd(selectedId, selectedData);
 
                           const isChecked = e.target.checked;
@@ -247,6 +238,17 @@ export const ApiDeveloper = (props) => {
                         className="cursor-pointer"
                       />
                     </div>
+                    <div className="flex items-center gap-3">
+                      <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                      <div>
+                        <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
+                          {Manager.resource_name}
+                          <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
+                        </h1>
+                        <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                      </div>
+                    </div>
+
                   </div>
                 </div>
               );
@@ -356,24 +358,14 @@ export const CiCdResourcePool = (props) => {
                 className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                   } `}
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                  <div className="flex items-center gap-3">
-                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                    <div>
-                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
-                        {Manager.resource_name}
-                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
-                      </h1>
-                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                    </div>
-                  </div>
+                <div className="flex  items-center gap-6 pl-3 w-[100%] py-3">
                   <div>
                     {/* CheckBox Button */}
                     <input
                       type="checkbox"
                       onChange={(e) => {
                         const selectedId = Manager.emp_id;
-                        const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                        const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                         handleResourcesAdd(selectedId, selectedData);
 
                         const isChecked = e.target.checked;
@@ -397,6 +389,17 @@ export const CiCdResourcePool = (props) => {
                       className="cursor-pointer"
                     />
                   </div>
+                  <div className="flex items-center gap-3">
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                    <div>
+                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
+                        {Manager.resource_name}
+                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
+                      </h1>
+                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             ))}
@@ -489,24 +492,14 @@ export const TesterResourcePool = (props) => {
                 className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                   } `}
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                  <div className="flex items-center gap-3">
-                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                    <div>
-                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
-                        {Manager.resource_name}
-                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
-                      </h1>
-                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-6 pl-3 w-[100%] py-3">
                   <div>
                     {/* CheckBox Button */}
                     <input
                       type="checkbox"
                       onChange={(e) => {
                         const selectedId = Manager.emp_id;
-                        const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                        const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                         handleResourcesAdd(selectedId, selectedData);
 
                         const isChecked = e.target.checked;
@@ -530,6 +523,17 @@ export const TesterResourcePool = (props) => {
                       className="cursor-pointer"
                     />
                   </div>
+                  <div className="flex items-center gap-3">
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                    <div>
+                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
+                        {Manager.resource_name}
+                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
+                      </h1>
+                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             ))}
@@ -614,26 +618,14 @@ export const UxDesignResourcePool = (props) => {
                       className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                         } `}
                     >
-                      <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                        <div className="flex items-center gap-3">
-                          <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                          <div>
-                            <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
-                              {Manager.resource_name}
-                              <span className="text-blue-300">
-                                {Manager.work_email}
-                              </span>
-                            </h1>
-                            <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                          </div>
-                        </div>
+                      <div className="flex items-center gap-6 pl-3 w-[100%] py-3">
                         <div>
                           {/* CheckBox Button */}
                           <input
                             type="checkbox"
                             onChange={(e) => {
                               const selectedId = Manager.emp_id;
-                              const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                              const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                               handleResourcesAdd(selectedId, selectedData);
 
                               const isChecked = e.target.checked;
@@ -657,6 +649,19 @@ export const UxDesignResourcePool = (props) => {
                             className="cursor-pointer"
                           />
                         </div>
+                        <div className="flex items-center gap-3">
+                          <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                          <div>
+                            <h1 className="text-gray-800 font-segoe-ui text-base font-bold leading-normal">
+                              {Manager.resource_name}
+                              <span className="text-blue-300">
+                                {Manager.work_email}
+                              </span>
+                            </h1>
+                            <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   ))}
@@ -741,24 +746,14 @@ export const UiDeveloperResourcePool = (props) => {
                 className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                   } `}
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                  <div className="flex items-center gap-3">
-                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                    <div>
-                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
-                        {Manager.resource_name}
-                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
-                      </h1>
-                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-6 pl-3 w-[100%] py-3">
                   <div>
                     {/* CheckBox Button */}
                     <input
                       type="checkbox"
                       onChange={(e) => {
                         const selectedId = Manager.emp_id;
-                        const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                        const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                         handleResourcesAdd(selectedId, selectedData);
 
                         const isChecked = e.target.checked;
@@ -782,6 +777,17 @@ export const UiDeveloperResourcePool = (props) => {
                       className="cursor-pointer"
                     />
                   </div>
+                  <div className="flex items-center gap-3">
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                    <div>
+                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
+                        {Manager.resource_name}
+                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
+                      </h1>
+                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             ))}
@@ -873,21 +879,14 @@ export const UxResearcher = (props) => {
                 className={`flex items-center justify-start py-3 pr-4 pl-4 gap-40 bg-white shadow-md border rounded-lg ${isCheckboxChecked[index] ? 'border-blue-400 border-solid' : ''
                   } `}
               >
-                <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                  <div className="flex items-center gap-3">
-                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                    <div>
-
-                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                    </div>
-                  </div>
+                <div className="flex items-center gap-6 pl-3 w-[100%] py-3">
                   <div>
                     {/* CheckBox Button */}
                     <input
                       type="checkbox"
                       onChange={(e) => {
                         const selectedId = Manager.emp_id;
-                        const selectedData = { name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
+                        const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image };
                         handleResourcesAdd(selectedId, selectedData);
 
                         const isChecked = e.target.checked;
@@ -911,6 +910,14 @@ export const UxResearcher = (props) => {
                       className="cursor-pointer"
                     />
                   </div>
+                  <div className="flex items-center gap-3">
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                    <div>
+
+                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             ))}
