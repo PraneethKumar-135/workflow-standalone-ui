@@ -36,9 +36,9 @@ import { useSelector } from "react-redux"
 const { TabPane } = Tabs;
 
 
-const items = () => {
+const items = (handleTabChange, borderVisible) => {
   const length = useSelector((state) => state.addResources)
-  const [borderVisible, setBorderVisible] = useState(false);
+
 
 
   const actuallengthofPm = length.ProjectManagerLength;
@@ -50,6 +50,7 @@ const items = () => {
   const actuallengthofUCicd = length.CICDSpecialistLength;
   console.log(borderVisible)
 
+
   return [
 
     {
@@ -57,7 +58,7 @@ const items = () => {
       label: (
         <span>
           <div className=" flex flex-row items-center">
-          <div className={"input px-6 py-5 mr-4 bg-neutral-1 shadow-md w-[402px] " + (borderVisible ? "border-x-0 border-t-0 border-b-blue-600" : "")}>
+            <div className={`input px-6 py-5 mr-4 bg-neutral-1 shadow-md w-[402px] ${borderVisible ? `border-x-0 border-t-0 border-b-blue-600` : ``}`}>
               <div className="flex justify-between items-center">
                 <div className="flex ">
                   <Image src={Pmimage} />
@@ -85,7 +86,7 @@ const items = () => {
       label: (
         <span>
           <div className=" flex flex-row items-center">
-            <div className="input px-6 py-5 mr-4 bg-neutral-1 shadow-md w-[402px] ">
+            <div className={`input px-6 py-5 mr-4 bg-neutral-1 shadow-md w-[402px] ${borderVisible ? `border-x-0 border-t-0 border-b-blue-600` : ``}`}>
               <div className="flex justify-between items-center">
                 <div className="flex">
                   <Image src={UxDesign} />
@@ -245,34 +246,26 @@ const items = () => {
   ];
 }
 
-const onChange = (key) => {
-  console.log(key);
-};
 
 export default function AddResourcePool2({ result }) {
-  const [project, setProject] = useProject({});
-  console.log(result)
-  const router = useRouter();
- 
-
+  const [borderVisible, setBorderVisible] = useState(false);
 
   return (
     <>
       <Tabs
         defaultActiveKey="1"
         tabPosition="left"
-        onChange={onChange}
         className="custom-tabs"
-       
-
+        onChange={(key) => {
+          console.log(key);
+          setBorderVisible(true);
+        }}
       >
-
-        {items().map((itemsdata) => (
+        {items(borderVisible, setBorderVisible).map((itemsdata) => (
           <TabPane tab={itemsdata.label} key={itemsdata.key}>
-            {itemsdata.children}
+            {React.cloneElement(itemsdata.children, { borderVisible, setBorderVisible })}
           </TabPane>
         ))}
-
       </Tabs>
     </>
   );

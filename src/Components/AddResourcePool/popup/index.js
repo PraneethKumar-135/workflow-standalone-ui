@@ -91,16 +91,6 @@ export const Projectmanager = (props) => {
                   } `}
               >
                 <div className="flex justify-between items-center gap-6 pl-3 w-[100%] py-3">
-                  <div className="flex items-center gap-3">
-                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
-                    <div>
-                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
-                        {Manager.resource_name}
-                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
-                      </h1>
-                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
-                    </div>
-                  </div>
                   <div>
                     {/* CheckBox Button */}
 
@@ -132,6 +122,17 @@ export const Projectmanager = (props) => {
                       className="cursor-pointer"
                     />
                   </div>
+                  <div className="flex items-center gap-3">
+                    <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
+                    <div>
+                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
+                        {Manager.resource_name}
+                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
+                      </h1>
+                      <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             ))}
@@ -876,10 +877,7 @@ export const UxResearcher = (props) => {
                   <div className="flex items-center gap-3">
                     <Image src={Manager.image ? Manager.image : user} height={35} width={35} />
                     <div>
-                      <h1 className={`text-sm leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-bold' : ''} `}>
-                        {Manager.resource_name}
-                        <span className={` ml-1 ${isCheckboxChecked[index] ? 'text-blue-300' : ''}`}>{Manager.work_email}</span>
-                      </h1>
+
                       <h3 className={`text-sm  leading-tight tracking-normal text-left ${isCheckboxChecked[index] ? 'font-normal' : ''}`}>{Manager.designation}</h3>
                     </div>
                   </div>
