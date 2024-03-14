@@ -11,7 +11,7 @@ import { updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Link from "next/link";
 import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
-import { addResourcesData } from "@/Context/AddresourcesSlice/addresourcesSlice";
+import { addResourcesPM } from "@/Context/AddresourcesSlice/addresourcesSlice";
 
 
 const { Step } = Steps;
@@ -137,16 +137,6 @@ export default function page({ formNext }) {
       }
     }
 
-    // console.log(shouldNavigateToFirstPage)
-    // if(shouldNavigateToFirstPage){
-    //   setCurrent(0)
-    // }
-
-
-
-
-
-
     const roles = [
       { ProductManagerId: ProductManager },
       { UxdesignerId: Uxdesigner },
@@ -239,46 +229,6 @@ export default function page({ formNext }) {
   const axios = require("axios");
 
   const Apisubmit = async (project) => {
-    // const myHeaders = new Headers();
-    // myHeaders.append("Content-Type", "application/json");
-    // myHeaders.append("Accept", "application/json");
-    // console.log(project);
-
-    // const projectname = project.projectName;
-    // console.log(projectname);
-
-    // const raw = JSON.stringify({
-    //   name: project.projectName,
-    //   description: project.projectDescription,
-    //   department: project.projectDepartment,
-    //   start_date: project.startDate,
-    //   end_date: project.endDate,
-    //   image_url: "https://i.imgur.com/PujQY5Y.png",
-    // });
-
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: myHeaders,
-    //   body: raw,
-    //   redirect: "follow",
-    // };
-    // console.log("Api.Starting");
-
-    // try {
-    //   const response = await fetch(
-    //     "https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project",
-    //     requestOptions
-    //   );
-    //   const result = await response.json();
-    //   console.log("success:", result, result.id);
-    //   dispatch(updateId(result.id));
-    //   return result;
-    // } catch (error) {
-    //   console.error("error:", error);
-    //   throw error;
-    // } finally {
-    //   console.log("Api.ENDING");
-    // }
 
     const projectname = project.projectName;
     console.log(projectname);
@@ -325,67 +275,10 @@ export default function page({ formNext }) {
     dispatch(setNavigateToFirstPage(false));
   } else if (shouldNavigateToSecondPage) {
     currentStepIndex = 1;
-    dispatch(setNavigateToSecondPage(false));
-    dispatch(addResourcesData([]));
   } else {
     currentStepIndex = current;
   }
 
-
-  //  // Api of resources
-  //  const handleOnClickNext = () => {
-  //   console.log(JSON.stringify(project.resourcePool));
-
-  //   console.log("resource pool");
-  //   console.log(project.resourcePool);
-
-  //   const postData = {
-  //     project_id: project.projectId,
-  //     team_name: project.projectName,
-  //     created_by_id: "550e8400-e29b-41d4-a716-446655440001",
-  //     roles: project.resourcePool,
-  //   };
-
-  //   console.log("Before PUT request");
-  //   console.log(project.projectId);
-  //   console.log(JSON.stringify(postData));
-  //   console.log(postData);
-
-  //   fetch(
-  //     `https://jp2malu3r8.execute-api.us-east-1.amazonaws.com/dev/project/${project.projectId}/team`,
-  //     {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: postData,
-  //     }
-  //   )
-  //     .then((response) => {
-  //       console.log("After PUT request");
-  //       console.log("This is the Response");
-  //       console.log(response);
-
-  //       // Check if the response indicates success (you can customize this check based on your API)
-  //       if (response.status === 200 || response.status === 201) {
-  //         // Navigating to the "/main/projects/addResource" route after the successful PUT request
-  //         router.push("/main/projects/addResource");
-  //       } else {
-  //         // If the response status is not successful, handle the error accordingly
-  //         console.error(
-  //           "PUT request was not successful. Status:",
-  //           response.status
-  //         );
-  //         // You can also log more details about the error response if needed
-  //         response.json().then((data) => console.error(data)); // Assuming there is a data property in the response
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       // Catching and handling any errors that may occur during the PUT request
-  //       console.error("Error during PUT request:", error.message);
-  //       // You may want to log more details about the error or show a user-friendly error message
-  //     });
-  // };
   return (
     <>
       <div className="w-auto py-2 px-1 mb-2 bg-white">

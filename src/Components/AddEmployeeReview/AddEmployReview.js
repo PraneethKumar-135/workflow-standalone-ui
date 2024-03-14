@@ -17,13 +17,7 @@ const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const AddEmployReview = () => {
   const ResourcesInfo = useSelector((state) => state.addResources);
-  // const MapingDataPm = ResourcesInfo.ProjectManager[0].resoucesInfo;
-  // const MapingDataUxDesigner = ResourcesInfo.UXDesigner[0].resoucesInfo;
-  // const MapingDataUiDeve = ResourcesInfo.UIDeveloper[0].resoucesInfo;
-  // const MapingDataApiDevel = ResourcesInfo.APIDeveloper[0].resoucesInfo;
-  // const MapingDataTester = ResourcesInfo.Tester[0].resoucesInfo;
-  // const MapingDataUxRes = ResourcesInfo.UXResearcher[0].resoucesInfo;
-  // const MapingDataCiCd = ResourcesInfo.CICDSpecialist[0].resoucesInfo;
+  
 
 
   const dispatch = useDispatch();
@@ -182,7 +176,6 @@ const AddEmployReview = () => {
                 </tr>
               </tbody>
             ))}
-
           </table>
         </div>
       </div>

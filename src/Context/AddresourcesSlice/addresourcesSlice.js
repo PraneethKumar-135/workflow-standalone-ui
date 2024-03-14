@@ -163,9 +163,19 @@ const addresourcesSlice = createSlice({
     },
     // console.log(action.title)
     removeResources: (state, action) => {
-      state.resoucesInfo = state.resoucesInfo.filter(
-        (resource) => resource.id !== action.payload
-      );
+      // Filter out the resource from state.resoucesInfo based on its ID
+      state.resoucesInfo = state.resoucesInfo.filter(resource => resource.id !== action.payload);
+
+      // Convert the action payload (employee ID) to a string
+      const removedEmployeeId = action.payload;
+
+      // Filter out the employee ID from state.APIDeveloper after converting it to a string
+      state.APIDeveloper = state.APIDeveloper.filter(employeeId => employeeId !== removedEmployeeId.toString());
+      state.Tester = state.Tester.filter(employeeId => employeeId !== removedEmployeeId.toString());
+      
+
+      console.log("Removed employee ID:", removedEmployeeId);
+      console.log("New APIDeveloper state:", state.APIDeveloper);
     }
   },
 });
