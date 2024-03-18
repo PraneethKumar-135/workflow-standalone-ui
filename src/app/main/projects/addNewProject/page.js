@@ -11,7 +11,6 @@ import { updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Link from "next/link";
 import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
-import { addResourcesPM } from "@/Context/AddresourcesSlice/addresourcesSlice";
 
 
 const { Step } = Steps;
@@ -37,13 +36,8 @@ export default function page({ formNext }) {
   const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
 
   const projectData = useSelector((state) => state.addProject);
-  const ProductManager = useSelector((state) => state.addResources.ProjectManager);
-  const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
-  const UiDesigner = useSelector((state) => state.addResources.UIDeveloper);
-  const ApiDeveloper = useSelector((state) => state.addResources.APIDeveloper);
-  const Tester = useSelector((state) => state.addResources.Tester);
-  const UxResearcher = useSelector((state) => state.addResources.UXResearcher);
-  const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
+  console.log(projectData)
+
   // const resourcesId = setresourcesId.id[0].resourcesId
 
 
@@ -53,11 +47,6 @@ export default function page({ formNext }) {
   // console.log(ValueresourcesId);
   // console.log("resoursesId", resourcesId);
   // const str = useSelector((state) => state);
-
-  const projectId = useSelector((state) => state.addProject.id);
-
-  console.log("projectId : ", projectId);
-  // console.log("resourceIn Project", resourcesId);
   console.log(projectData);
 
   const [toggleValue, setToggleValue] = useState(false);
@@ -68,10 +57,7 @@ export default function page({ formNext }) {
     console.log("Received data from child:", data);
     setFormData(data); // Update the state in the parent component
   };
-  const ProjectId = (ProjectId) => {
-    dispatch(addProjectId(ProjectId));
-    // console.log(ProjectId)
-  };
+
   const nonViewsteps = [
     {
       title: "Set up Project",
@@ -126,6 +112,9 @@ export default function page({ formNext }) {
       );
       return;
     }
+    if (current === 1) {
+      setCurrent(current + 1)
+    }
     if (current === 0) {
 
       try {
@@ -137,99 +126,11 @@ export default function page({ formNext }) {
       }
     }
 
-    const roles = [
-      { ProductManagerId: ProductManager },
-      { UxdesignerId: Uxdesigner },
-      { UiDesignerId: UiDesigner },
-      { ApiDeveloperId: ApiDeveloper },
-      { TesterId: Tester },
-      { UxResearcherId: UxResearcher },
-      { CiCdId: CiCd },
-    ];
-
-    const filteredRoles = roles.filter(role => Object.values(role)[0].length > 0);
-
-    console.log("filteredRoles", filteredRoles)
-    if (current === 1) {
-      // console.log("TesterId", TesterId)
-      // console.log(object)
-      const postData = {
-        project_id: projectId,
-        team_name: projectData.projectName,
-        created_by_id: "550e8400-e29b-41d4-a716-446655440001",
-        roles: filteredRoles,
-      };
-
-      console.log("Before PUT request");
-      // console.log(project.projectId);
-      console.log(JSON.stringify(postData));
-      console.log("projectData", postData);
-
-      let config = {
-        method: "put",
-        maxBodyLength: Infinity,
-        url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        data: postData,
-      };
-
-      axios
-        .request(config)
-        .then((response) => {
-          console.log(JSON.stringify(response.data));
-
-          setCurrent(current + 1);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
-      // fetch(
-      //   `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
-      //   {
-      //     method: "PUT",
-      //     headers: {
-      //       "Content-Type": "application/json",
-
-      //     },
-      //     body: postData,
-      //   }
-      // )
-      //   .then((response) => {
-      //     console.log("After PUT request");
-      //     console.log("This is the Response");
-      //     console.log(response);
-
-      //     // Check if the response indicates success (you can customize this check based on your API)
-      //     if (response.status === 200 || response.status === 201) {
-      //       // Navigating to the "/main/projects/addResource" route after the successful PUT request
-      //       console.log("success");
-      //       // router.push("/main/projects/addResource");
-      //     } else {
-      //       // If the response status is not successful, handle the error accordingly
-      //       console.error(
-      //         "PUT request was not successful. Status:",
-      //         response.status
-      //       );
-      //       // You can also log more details about the error response if needed
-      //       response.json().then((data) => console.error(data)); // Assuming there is a data property in the response
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     // Catching and handling any errors that may occur during the PUT request
-      //     console.error("Error during PUT request:", error.message);
-      //     // You may want to log more details about the error or show a user-friendly error message
-      //   });
-    }
   };
 
   const axios = require("axios");
 
   const Apisubmit = async (project) => {
-
     const projectname = project.projectName;
     console.log(projectname);
     let data = JSON.stringify({
@@ -238,7 +139,7 @@ export default function page({ formNext }) {
       department: project.projectDepartment,
       start_date: project.startDate,
       end_date: project.endDate,
-      image_url: "https://i.imgur.com/PujQY5Y.png",
+      image_url: project.image_url,
     });
 
     let config = {
@@ -259,7 +160,6 @@ export default function page({ formNext }) {
         const result = response.data;
         console.log("success:", result, result.id);
         dispatch(updateId(result.id));
-
         setCurrent(current + 1);
       })
       .catch((error) => {
@@ -275,6 +175,7 @@ export default function page({ formNext }) {
     dispatch(setNavigateToFirstPage(false));
   } else if (shouldNavigateToSecondPage) {
     currentStepIndex = 1;
+
   } else {
     currentStepIndex = current;
   }
@@ -312,9 +213,7 @@ export default function page({ formNext }) {
             <Link href="/main/projects/workflowlist">
               <Button
                 type="primary"
-                onClick={() => {
-                  ProjectId(projectId);
-                }}
+                
                 className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
               >
                 Done

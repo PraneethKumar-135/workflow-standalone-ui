@@ -6,10 +6,10 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { addProjectId, removeResources } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
-
+import axios from "axios";
 import Image from "next/image";
-
 import user from "../../../public/assets/user.png"
+import { useRouter } from "next/navigation";
 
 const { Search } = Input;
 
@@ -17,15 +17,10 @@ const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const AddEmployReview = () => {
   const ResourcesInfo = useSelector((state) => state.addResources);
-  
-
 
   const dispatch = useDispatch();
   const ResourceAdded = ResourcesInfo.resoucesInfo;
   console.log(ResourceAdded)
-
-  const projectData = useSelector((state) => state.addProject);
-  console.log(projectData);
 
   const handleDelete = (resource) => {
     dispatch(removeResources(resource));
@@ -37,20 +32,75 @@ const AddEmployReview = () => {
     // console.log(ProjectId)
   };
 
-
-  // const [current, setcurrent] = useState(0)
-  // const handletableedit = () => {
-  //   setcurrent(2)
-  //   dispatch()
-  // }
-
-
-
   const handleFirstEditButton = () => {
     dispatch(setNavigateToFirstPage());
   }
   const handleSecondEditButton = () => {
     dispatch(setNavigateToSecondPage());
+  }
+  const route = useRouter();
+  const routerFunction = (data) => {
+    route.push(data)
+  }
+  const projectId = useSelector((state) => state.addProject.id);
+  const projectData = useSelector((state) => state.addProject);
+  const ProductManager = useSelector((state) => state.addResources.ProjectManager);
+  const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
+  const UiDesigner = useSelector((state) => state.addResources.UIDeveloper);
+  const ApiDeveloper = useSelector((state) => state.addResources.APIDeveloper);
+  const Tester = useSelector((state) => state.addResources.Tester);
+  const UxResearcher = useSelector((state) => state.addResources.UXResearcher);
+  const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
+
+
+  const roles = [
+    { ProductManagerId: ProductManager },
+    { UxdesignerId: Uxdesigner },
+    { UiDesignerId: UiDesigner },
+    { ApiDeveloperId: ApiDeveloper },
+    { TesterId: Tester },
+    { UxResearcherId: UxResearcher },
+    { CiCdId: CiCd },
+  ];
+
+  const filteredRoles = roles.filter(role => Object.values(role)[0].length > 0);
+
+  console.log("filteredRoles", filteredRoles)
+  // console.log("TesterId", TesterId)
+  // console.log(object)
+  const createProject = () => {
+    const postData = {
+      project_id: projectId,
+      team_name: projectData.projectName,
+      created_by_id: "550e8400-e29b-41d4-a716-446655440001",
+      roles: filteredRoles,
+    };
+
+    console.log("Before PUT request");
+    // console.log(project.projectId);
+    console.log(JSON.stringify(postData));
+    console.log("projectData", postData);
+
+    let config = {
+      method: "put",
+      maxBodyLength: Infinity,
+      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      data: postData,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        routerFunction("/main/projects/workflowlist")
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   return (
@@ -63,7 +113,7 @@ const AddEmployReview = () => {
             </h1>
             <div className="space-x-8">
               <Button icon={<EditOutlined />} onClick={handleFirstEditButton}>Edit</Button>
-              <Button type="primary" className="bg-blue-500">
+              <Button type="primary" className="bg-blue-500" onClick={() => { createProject(), ProjectId(projectId) }}>
                 create
               </Button>
             </div>

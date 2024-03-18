@@ -31,7 +31,8 @@ export const Projectmanager = (props) => {
 
   // project
   const [projectManager, setprojectManager] = useState([]);
-  const [isCheckboxChecked, setIsCheckboxChecked] = useState(projectManager.map(() => false));
+  const [buttondata, setbuttondata] = useState();
+  let [isCheckboxChecked, setIsCheckboxChecked] = useState(projectManager.map(() => false));
 
   // select User
   const [selectUser, setSelectUser] = useState([]);
@@ -52,6 +53,7 @@ export const Projectmanager = (props) => {
 
         console.log(data.length)
         setprojectManager(data);
+        setIsCheckboxChecked(data.map(pm => checkboxPmData.includes(pm.emp_id)));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -75,7 +77,18 @@ export const Projectmanager = (props) => {
     setSelectedDataPM(newData);
     dispatch(addResourcesPM(newData));
   };
-
+  const Data = useSelector((state) => state.addResources)
+  const checkboxPmData = Data.ProjectManager
+  console.log(checkboxPmData);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
 
   return (
     <div className="flex flex-col gap-4 bg-white w-[100%]">
@@ -103,6 +116,8 @@ export const Projectmanager = (props) => {
 
                         const isChecked = e.target.checked;
                         const empId = Manager.emp_id;
+
+
                         if (isChecked) {
                           handleAddResourcesPM(empId);
                         } else {
@@ -111,6 +126,7 @@ export const Projectmanager = (props) => {
                           setSelectedDataPM(updatedSelectedData);
                           dispatch(addResourcesPM(updatedSelectedData));
                         }
+                        console.log("empId:", empId.toString());
                         setIsCheckboxChecked(prevState => {
                           const newState = [...prevState];
                           newState[index] = isChecked;
@@ -118,7 +134,6 @@ export const Projectmanager = (props) => {
                         });
                       }}
                       checked={isCheckboxChecked[index]}
-
                       className="cursor-pointer"
                     />
                   </div>
@@ -166,6 +181,7 @@ export const ApiDeveloper = (props) => {
         const data = response.data;
         dispatch(lenghtofapi(data.length))
         setApiDeveloper(data);
+        setIsCheckboxChecked(data.map(pm => checkboxApiData.includes(pm.emp_id)));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -189,7 +205,18 @@ export const ApiDeveloper = (props) => {
     setSelectedDataApiD(newData);
     dispatch(addResourcesApiDeveloper(newData));
   };
-  console.log(apiDeveloper)
+  const Data = useSelector((state) => state.addResources)
+  const checkboxApiData = Data.APIDeveloper
+  console.log(checkboxApiData);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
   return (
     <div className="flex flex-col gap-4 bg-white w-[100%]">
       <div className="w-[100%] px-2 flex justify-center rounded">
