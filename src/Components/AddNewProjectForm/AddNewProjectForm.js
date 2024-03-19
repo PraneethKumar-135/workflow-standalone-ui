@@ -68,7 +68,7 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
     dispatch(updateFormData({ ...project, startDate: formattedStartDate }));
   };
 
-
+  
   const handleEndDateChange = (date, dateString) => {
     const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
 
@@ -118,7 +118,7 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
     startDate: "",
     endDate: "",
     projectId: "",
-    image_url: "",
+    image_url: "https://i.imgur.com/PujQY5Y.png",
   });
 
   const projectData = useSelector(state => state.addProject);

@@ -345,7 +345,18 @@ export const CiCdResourcePool = (props) => {
     setSelectedDataCiCd(newData);
     dispatch(addResourcesCiCd(newData));
   };
-
+  const Data = useSelector((state) => state.addResources)
+  const CICDSpecialist = Data.CICDSpecialist
+  console.log(CICDSpecialist);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
 
   // console.log(project);
 
@@ -364,6 +375,7 @@ export const CiCdResourcePool = (props) => {
         const data = response.data;
         dispatch(lenghtofcicd(data.length))
         setCiCd(data);
+        setIsCheckboxChecked(data.map(pm => CICDSpecialist.includes(pm.emp_id)));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -481,6 +493,18 @@ export const TesterResourcePool = (props) => {
     setSelectedDataTester(newData);
     dispatch(addResourcesTester(newData));
   };
+  const Data = useSelector((state) => state.addResources)
+  const checkboxTesterData = Data.Tester
+  console.log(checkboxTesterData);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
 
 
   // useEffect to fetch all users
@@ -497,6 +521,7 @@ export const TesterResourcePool = (props) => {
         const data = response.data;
         dispatch(lenghtoftester(data.length))
         setTester(data);
+        setIsCheckboxChecked(data.map(pm => checkboxTesterData.includes(pm.emp_id)));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -603,6 +628,18 @@ export const UxDesignResourcePool = (props) => {
   };
 
   console.log(selectUser);
+  const Data = useSelector((state) => state.addResources)
+  const checkboxUXDesignerData = Data.UXDesigner
+  console.log(checkboxUXDesignerData);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
 
   // console.log(project);
 
@@ -620,6 +657,7 @@ export const UxDesignResourcePool = (props) => {
         const data = response.data;
         dispatch(lenghtofux(data.length))
         setUxDesigners(data);
+        setIsCheckboxChecked(data.map(pm => checkboxUXDesignerData.includes(pm.emp_id)));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -733,7 +771,18 @@ export const UiDeveloperResourcePool = (props) => {
     dispatch(addResourcesUiDeveloper(newData));
   };
   console.log(selectUser);
-
+  const Data = useSelector((state) => state.addResources)
+  const checkboxUIDeveloperData = Data.UIDeveloper
+  console.log(checkboxUIDeveloperData);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
 
 
   // console.log(project);
@@ -752,6 +801,8 @@ export const UiDeveloperResourcePool = (props) => {
         const data = response.data;
         dispatch(lenghtofui(data.length))
         setuiDeveloper(data);
+        setIsCheckboxChecked(data.map(pm => checkboxApiData.includes(pm.emp_id)));
+
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -870,6 +921,7 @@ export const UxResearcher = (props) => {
         const data = response.data;
         dispatch(lenghtofuxr(data.length))
         setuxResearcher(data);
+        setIsCheckboxChecked(data.map(pm => UXResearcher.includes(pm.emp_id)));
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -893,6 +945,18 @@ export const UxResearcher = (props) => {
     setSelectedDataUxResearch(newData);
     dispatch(addResourcesUxResearch(newData));
   };
+  const Data = useSelector((state) => state.addResources)
+  const UXResearcher = Data.UXResearcher
+  console.log(UXResearcher);
+  const currentStep = useSelector(state => state.addProject);
+  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
+  useEffect(() => {
+    if (shouldNavigateToSecondPage) {
+      // Logic to update checkbox states based on shouldNavigateToSecondPage
+      // For example, you might want to check all checkboxes
+      setIsCheckboxChecked(prevState => prevState.map(() => true));
+    }
+  }, [shouldNavigateToSecondPage]);
   return (
     <div className="flex flex-col gap-4 bg-white w-[100%]">
       <div className="w-[100%] px-2 flex justify-center rounded">

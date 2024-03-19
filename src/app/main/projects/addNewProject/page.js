@@ -100,18 +100,7 @@ export default function page({ formNext }) {
   // Api project push
 
   const handleSubmit = async () => {
-    if (
-      !projectData.projectName ||
-      !projectData.projectDescription ||
-      !projectData.projectDepartment ||
-      !projectData.startDate ||
-      !projectData.endDate
-    ) {
-      message.error(
-        "Please fill in all fields before proceeding to the next step"
-      );
-      return;
-    }
+   
     if (current === 1) {
       setCurrent(current + 1)
     }
@@ -168,17 +157,16 @@ export default function page({ formNext }) {
   };
   const dispatch = useDispatch();
 
-  let currentStepIndex;
-
-  if (shouldNavigateToFirstPage) {
-    currentStepIndex = 0;
-    dispatch(setNavigateToFirstPage(false));
-  } else if (shouldNavigateToSecondPage) {
-    currentStepIndex = 1;
-
-  } else {
-    currentStepIndex = current;
-  }
+  useEffect(() => {
+    if (shouldNavigateToFirstPage) {
+      setCurrent(0);
+      dispatch(setNavigateToFirstPage(false));
+    }
+    else if (shouldNavigateToSecondPage) {
+      setCurrent(1);
+      dispatch(setNavigateToSecondPage(false));
+    }
+  }, [shouldNavigateToSecondPage, dispatch]);
 
   return (
     <>
@@ -190,16 +178,15 @@ export default function page({ formNext }) {
         </p>
         {toggleValue.toString()}
       </div>
-      <div className="w-auto py-1 bg-white">
-
-        <Steps current={currentStepIndex} items={items} className="px-[10rem] py-3" />
+      <div className="w-auto py-1 p-1 bg-white">
+        <Steps current={current} items={items} className="px-[10rem] py-3 p-5" />
         <div style={contentStyle}>
           {/* Render content based on current step */}
-          {steps[currentStepIndex].content}
+          {steps[current].content}
         </div>
 
         <div style={{ marginTop: 24 }}>
-          {current < steps.length - 1 && (
+          {current <= steps.length - 1 && (
             <Button
               type="primary"
               onClick={() => handleSubmit()}
@@ -209,22 +196,17 @@ export default function page({ formNext }) {
             </Button>
           )}
 
+
           {current === steps.length - 1 && (
             <Link href="/main/projects/workflowlist">
               <Button
                 type="primary"
-                
                 className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
               >
-                Done
+                Create
               </Button>
             </Link>
           )}
-          {/* {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Previous
-            </Button>
-          )} */}
         </div>
       </div>
     </>

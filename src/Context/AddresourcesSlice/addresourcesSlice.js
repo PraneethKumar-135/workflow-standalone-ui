@@ -174,7 +174,6 @@ const addresourcesSlice = createSlice({
       state.UXResearcher = state.UXResearcher.filter(employeeId => employeeId !== removedEmployeeId.toString());
       state.CICDSpecialist = state.CICDSpecialist.filter(employeeId => employeeId !== removedEmployeeId.toString());
 
-
       console.log("Removed employee ID:", removedEmployeeId);
     }
   },

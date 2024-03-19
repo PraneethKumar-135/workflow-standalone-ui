@@ -63,7 +63,7 @@ const Planning = () => {
                     <Button
                       key={key}
                       onClick={() => toggleRequirement(index)}
-                      className='flex items-center text-base font-normal leading-snug tracking-normal text-left'
+                      className='flex items-center text-base font-normal leading-snug tracking-normal text-left mt-'
                       style={{ border: "none", padding: "0px" }}
                     >
                       <span className='pr-10 text-blue-400'>{key}</span>
