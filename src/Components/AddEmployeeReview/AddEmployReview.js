@@ -1,49 +1,38 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { Button } from "antd";
 import { Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { addProjectId, removeResources } from "@/Context/AddresourcesSlice/addresourcesSlice";
-import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
-import axios from "axios";
+import {
+  addProjectId,
+  removeResources,
+  addResourcesPM,
+  addResourcesData,
+  removeResourcesInfo,
+  projectID
+} from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Image from "next/image";
-import user from "../../../public/assets/user.png"
+import {
+  addStepperValue,
+  updateId,
+} from "@/Context/AddNewProjectSlice/addProjectSlice";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import user from "../../../public/assets/user.png"
 const { Search } = Input;
 
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const AddEmployReview = () => {
   const ResourcesInfo = useSelector((state) => state.addResources);
-
-  const dispatch = useDispatch();
-  const ResourceAdded = ResourcesInfo.resoucesInfo;
-  console.log(ResourceAdded)
-
-  const handleDelete = (resource) => {
-    dispatch(removeResources(resource));
-    console.log(resource);
-  };
-
-  const ProjectId = (ProjectId) => {
-    dispatch(addProjectId(ProjectId));
-    // console.log(ProjectId)
-  };
-
-  const handleFirstEditButton = () => {
-    dispatch(setNavigateToFirstPage());
-  }
-  const handleSecondEditButton = () => {
-    dispatch(setNavigateToSecondPage());
-  }
-  const route = useRouter();
-  const routerFunction = (data) => {
-    route.push(data)
-  }
-  const projectId = useSelector((state) => state.addProject.id);
+  const [data, setData] = useState([]);
   const projectData = useSelector((state) => state.addProject);
+  // const projectId = useSelector((state) => state.addProject.id);
+  const projectId = useSelector((state) => state.addProject.id);
+  console.log(projectId);
+  console.log(projectData);
+
   const ProductManager = useSelector((state) => state.addResources.ProjectManager);
   const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
   const UiDesigner = useSelector((state) => state.addResources.UIDeveloper);
@@ -52,23 +41,114 @@ const AddEmployReview = () => {
   const UxResearcher = useSelector((state) => state.addResources.UXResearcher);
   const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
 
+  const ResourceAdded = ResourcesInfo.resoucesInfo;
+  console.log(ResourceAdded);
 
-  const roles = [
-    { ProductManagerId: ProductManager },
-    { UxdesignerId: Uxdesigner },
-    { UiDesignerId: UiDesigner },
-    { ApiDeveloperId: ApiDeveloper },
-    { TesterId: Tester },
-    { UxResearcherId: UxResearcher },
-    { CiCdId: CiCd },
-  ];
+  const handleDelete = (resource) => {
+    dispatch(removeResources(resource));
+    console.log(resource);
+  };
+  const dispatch = useDispatch();
 
-  const filteredRoles = roles.filter(role => Object.values(role)[0].length > 0);
 
-  console.log("filteredRoles", filteredRoles)
-  // console.log("TesterId", TesterId)
-  // console.log(object)
-  const createProject = () => {
+  // Creating Project And Add Resourses
+  const route = useRouter();
+  const routerFunction = (data) => {
+    route.push(data)
+  }
+  const ProjectId = (ProjectId) => {
+    dispatch(addProjectId(ProjectId));
+    console.log("Dispatched-ProjectID", ProjectId)
+  };
+  const Apisubmit = async (projectData) => {
+    console.log("Clicked");
+    const projectname = projectData.projectName;
+    console.log(projectname);
+    let data = JSON.stringify({
+      name: projectData.projectName,
+      description: projectData.projectDescription,
+      department: projectData.projectDepartment,
+      start_date: projectData.startDate,
+      end_date: projectData.endDate,
+      image_url: "https://i.imgur.com/PujQY5Y.png",
+    });
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: "https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        const result = response.data;
+        console.log("success:", result, result.id);
+        dispatch(updateId(result.id));
+        // Update projectId in local storage
+        dispatch(removeResourcesInfo([]))
+        handleCreatingTeam();
+      })
+      .catch((error) => {
+        console.log(error);
+        const errorStatus = error.response.data.message;
+        console.log(errorStatus);
+        openNotification("topRight", "error", ` ${errorStatus}`);
+      });
+  };
+
+  // dispatch(addProjectId(projectId));
+
+
+  // if (
+  //   !projectData.projectName ||
+  //   !projectData.projectDescription ||
+  //   !projectData.projectDepartment ||
+  //   !projectData.startDate ||
+  //   !projectData.endDate
+  // ) {
+  //   message.error(
+  //     "Please fill in all fields before proceeding to the next step"
+  //   );
+  //   return;
+  // }
+  // if (current === 0) {
+
+  //   try {
+  //     // console.log(projectData)
+  //     await Apisubmit(projectData);
+
+  //   } catch (error) {
+  //     console.error("Error submitting data:", error);
+  //   }
+  // }
+  // Apisubmit(projectData);
+  // console.log(projectData);
+  const handleCreatingTeam = async () => {
+    const roles = [
+      { ProductManagerId: ProductManager },
+      { UxdesignerId: Uxdesigner },
+      { UiDesignerId: UiDesigner },
+      { ApiDeveloperId: ApiDeveloper },
+      { TesterId: Tester },
+      { UxResearcherId: UxResearcher },
+      { CiCdId: CiCd },
+    ];
+
+    const filteredRoles = roles.filter(
+      (role) => Object.values(role)[0].length > 0
+    );
+
+    console.log("filteredRoles", filteredRoles);
+
+    // console.log("TesterId", TesterId)
+    // console.log(object)
     const postData = {
       project_id: projectId,
       team_name: projectData.projectName,
@@ -96,12 +176,14 @@ const AddEmployReview = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        routerFunction("/main/projects/workflowlist")
+        routerFunction("/main/projects/workflowlist");
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
+
+  const axios = require("axios");
 
   return (
     <div>
@@ -112,8 +194,22 @@ const AddEmployReview = () => {
               Setup project
             </h1>
             <div className="space-x-8">
-              <Button icon={<EditOutlined />} onClick={handleFirstEditButton}>Edit</Button>
-              <Button type="primary" className="bg-blue-500" onClick={() => { createProject(), ProjectId(projectId) }}>
+              <Button
+                icon={<EditOutlined />}
+                onClick={() => {
+                  dispatch(addStepperValue("0"));
+                }}
+              >
+                Edit
+              </Button>
+
+              <Button
+                type="primary"
+                className="bg-blue-500"
+                onClick={() => {
+                  Apisubmit(projectData), ProjectId(projectId)
+                }}
+              >
                 create
               </Button>
             </div>
@@ -181,51 +277,66 @@ const AddEmployReview = () => {
           <table className="min-w-full divide-y">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider" style={{ width: '25%' }}>
+                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider pl-10" style={{ width: '40%' }}>
                   Name
                 </th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase tracking-wider" style={{ width: '25%' }}>
+                <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase tracking-wider" style={{ width: '20%' }}>
                   Designation
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider pl-10" style={{ width: '25%' }}>
+                <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase tracking-wider pl-10" style={{ width: '20%' }}>
                   Mail ID
                 </th>
-                <th className="px-6 ml-9 py-3 text-left text-xs font-medium text-black uppercase tracking-wider" colSpan={2} style={{ width: '25%' }}>
+                <th className="px-6 ml-9 py-3 text-center text-xs font-medium text-black uppercase tracking-wider" colSpan={2} style={{ width: '20%' }}>
                   Actions
                 </th>
               </tr>
             </thead>
-            {ResourceAdded.map((resource, index) => (
-              <tbody key={index} className="bg-white divide-y divide-gray-200">
-                <tr className="bg-white">
-                  <td className="py-2 whitespace-nowrap">
-                    <div className="flex items-center space-x-5">
-                      <Image src={resource.image ? resource.image : user} height={35} width={35} />
-                      <div className="text-sm font-medium text-gray-900">
-                        {resource.name}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-2 text-sm text-center font-medium text-gray-900">
-                    {resource.Designation}
-                  </td>
-                  <td className="py-2 text-sm font-medium text-gray-900">
-                    {resource.email}
-                  </td>
-                  <td className="py-2 whitespace-nowrap text-sm space-x-5">
-                    <Button icon={<EditOutlined />} onClick={handleSecondEditButton}>Edit</Button>
-                    <Button
-                      type="primary"
-                      danger
-                      icon={<DeleteOutlined />}
-                      onClick={() => handleDelete(resource.id)}
-                    >
-                      Remove
-                    </Button>
-                  </td>
-                </tr>
-              </tbody>
-            ))}
+            {ResourceAdded.map(
+              (resource, index) => (
+       
+                (
+                  <tbody
+                    key={index}
+                    className="bg-white divide-y divide-gray-200"
+                  >
+                    <tr className="bg-white">
+                      <td className="py-2 whitespace-nowrap">
+                        <div className="flex items-center space-x-5">
+                          <Image src={resource.image ? resource.image : user} height={35} width={35} />
+                          <div className="text-sm font-medium text-gray-900">
+                            {resource.name}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-2 text-sm text-center font-medium text-gray-900">
+                        {resource.Designation}
+                      </td>
+                      <td className="py-2 text-sm font-medium text-gray-900">
+                        {resource.email}
+                      </td>
+                      <td className="py-2 whitespace-nowrap text-sm space-x-5">
+                        <Button
+                          icon={<EditOutlined />}
+                          onClick={() => {
+                            dispatch(addStepperValue("1"));
+                          }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          type="primary"
+                          danger
+                          icon={<DeleteOutlined />}
+                          onClick={() => handleDelete(resource.id)}
+                        >
+                          Remove
+                        </Button>
+                      </td>
+                    </tr>
+                  </tbody>
+                )
+              )
+            )}
           </table>
         </div>
       </div>
@@ -233,5 +344,3 @@ const AddEmployReview = () => {
   );
 };
 export default AddEmployReview;
-
-

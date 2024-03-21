@@ -20,7 +20,7 @@ import { UploadPopul2 } from "@/app/main/projects/addNewProject/uploadPopul";
 
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { updateFormData, UpdateStartDate } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { updateFormData ,UpdateStartDate} from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 const layout = {
   labelCol: {
@@ -58,53 +58,112 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
   };
   const handleStartDateChange = (date, dateString) => {
     const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-
+    
     setProject({
       ...project,
       startDate: formattedStartDate,
     });
-
+  
     // Dispatch the updated form data with the startDate included
     dispatch(updateFormData({ ...project, startDate: formattedStartDate }));
   };
 
-  
+
   const handleEndDateChange = (date, dateString) => {
     const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-
+    
     setProject({
       ...project,
       endDate: formattedStartDate,
     });
-
+  
     // Dispatch the updated form data with the startDate included
     dispatch(updateFormData({ ...project, endDate: formattedStartDate }));
   };
+  
+
+  
+//   const handleImageUpload = async (info) => {
+//     const file = info.file.originFileObj;
+  
+//     try {
+//       // Convert the image file to base64
+//       const base64 = await convertImageToBase64(file);
+//       // Set the base64 value using setImageBase64
+//       setImageBase64(base64);
+//       console.log("setImage:", base64);
+  
+//       // Convert the base64 URL to a readable URL
+//       const readableUrl = convertBase64ToReadableUrl(base64);
+//       console.log("readableUrl:", readableUrl);
+//     } catch (error) {
+//       console.error("Error uploading image:", error);
+//     }
+//   };
+// const convertBase64ToReadableUrl = (base64) => {
+//   // Add the correct prefix to the base64 string
+//   const base64WithPrefix = `data:image/jpeg;base64,${base64}`;
+
+//   // Convert the base64 string to a blob
+//   const blob = dataURItoBlob(base64WithPrefix);
+
+//   // Create a URL from the blob
+//   const url = URL.createObjectURL(blob);
+
+//   return url;
+// };
+
+// const dataURItoBlob = (dataURI) => {
+//   const byteString = atob(dataURI);
+//   const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+//   const ab = new ArrayBuffer(byteString.length);
+//   const ia = new Uint8Array(ab);
+//   for (let i = 0; i < byteString.length; i++) {
+//     ia[i] = byteString.charCodeAt(i);
+//   }
+//   const blob = new Blob([ab], { type: mimeString });
+//   return blob;
+// };
+// const convertImageToBase64 = (file) => {
+//     return new Promise((resolve, reject) => {
+//         const reader = new FileReader();
+
+//         reader.onloadend = () => {
+//             resolve(reader.result.split(',')[1]);
+//         };
+
+//         reader.onerror = (error) => {
+//             reject(error);
+//         };
+
+//         reader.readAsDataURL(file);
+//     });
+// };
 
 
-  const handleImageUpload = async (info) => {
-    const file = info.file.originFileObj;
-    // Dispatch the updated form data with the startDate included
-    dispatch(updateFormData({ ...project, image_url: imageBase64 }));
+const handleImageUpload = async (info) => {
+  const file = info.file.originFileObj;
+  // Dispatch the updated form data with the startDate included
+  dispatch(updateFormData({ ...project, image_url: imageBase64 }));
 
-    try {
-      // Convert the image file to base64 format
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const base64String = event.target.result;
-        setImageBase64(base64String);
+  try {
+    // Convert the image file to base64 format
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      const base64String = event.target.result;
+      setImageBase64(base64String);
 
-        // Dispatch the updated form data with the image base64 string
-        setProject({
-          ...project,
-          image_url: base64String,
-        });
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
+      // Dispatch the updated form data with the image base64 string
+      setProject({
+        ...project,
+        image_url: base64String,
+      });
+    };
+    reader.readAsDataURL(file);
+  } catch (error) {
+    console.error("Error uploading image:", error);
+  }
+};
 
 
 
@@ -118,7 +177,7 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
     startDate: "",
     endDate: "",
     projectId: "",
-    image_url: "https://i.imgur.com/PujQY5Y.png",
+    image_url: "",
   });
 
   const projectData = useSelector(state => state.addProject);
@@ -194,7 +253,7 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
                 // value={project.startDate}
                 onChange={handleStartDateChange}
 
-              // value={project.startDate}
+                // value={project.startDate}
               />
               <span>-</span>
               <DatePicker
@@ -227,11 +286,11 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
             >
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload> */}
-
+            
 
             <Upload
               name="image_url"
-              type="file"
+              type="file" 
               accept="image/*"
               className="flex flex-col items-start ml-1"
               action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"

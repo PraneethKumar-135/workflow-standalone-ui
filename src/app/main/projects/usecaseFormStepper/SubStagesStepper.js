@@ -123,8 +123,6 @@ const SubStagesStepper = () => {
   const [requireData, setRequireData] = useState();
   const [activeStepTitle, setActiveStepTitle] = useState("");
 
-
-
   useEffect(() => {
     const axios = require("axios");
     const fetchData = async () => {

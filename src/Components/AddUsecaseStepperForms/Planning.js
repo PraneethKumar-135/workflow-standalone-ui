@@ -60,15 +60,15 @@ const Planning = () => {
               <tr key={index}>
                 <td colSpan={6}>
                   {Object.keys(Data).map((key) => (
-                    <Button
+                    <button
                       key={key}
                       onClick={() => toggleRequirement(index)}
-                      className='flex items-center text-base font-normal leading-snug tracking-normal text-left mt-'
+                      className='flex justify-between items-center text-base font-normal leading-snug tracking-normal text-left w-[15rem] p-2 my-3'
                       style={{ border: "none", padding: "0px" }}
                     >
-                      <span className='pr-10 text-blue-400'>{key}</span>
+                      <span className=' text-blue-400'>{key}</span>
                       <CaretRightOutlined style={{ transform: open[index] ? 'rotate(90deg)' : 'rotate(0deg)' }} />
-                    </Button>
+                    </button>
                   ))}
                   {open[index] && (
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>

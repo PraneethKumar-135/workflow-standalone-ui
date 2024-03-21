@@ -2,16 +2,14 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, message, Steps, theme } from "antd";
-import AddResourcePool2 from "@/Components/AddResourcePool/AddresoucrePool2";
+import { Button, message, Steps, theme, notification, Breadcrumb } from "antd";
+import { AddResourcePool2 } from "@/Components/AddResourcePool/AddresoucrePool2";
 import AddNewProjectForm from "@/Components/AddNewProjectForm/AddNewProjectForm";
 import AddEmployReview from "@/Components/AddEmployeeReview/AddEmployReview";
 import { useDispatch, useSelector } from "react-redux";
 import { updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Link from "next/link";
-import { setNavigateToFirstPage, setNavigateToSecondPage } from "@/Context/AddNewProjectSlice/addProjectSlice";
-
 
 const { Step } = Steps;
 
@@ -31,22 +29,28 @@ const steps = [
 ];
 
 export default function page({ formNext }) {
-  const currentStep = useSelector(state => state.addProject);
-  const shouldNavigateToFirstPage = currentStep.shouldNavigateToFirstPage;
-  const shouldNavigateToSecondPage = currentStep.shouldNavigateToSecondPage;
-
   const projectData = useSelector((state) => state.addProject);
-  console.log(projectData)
+  const ProductManager = useSelector(
+    (state) => state.addResources.ProjectManager
+  );
+  const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
+  const UiDesigner = useSelector((state) => state.addResources.UIDeveloper);
+  const ApiDeveloper = useSelector((state) => state.addResources.APIDeveloper);
+  const Tester = useSelector((state) => state.addResources.Tester);
+  const UxResearcher = useSelector((state) => state.addResources.UXResearcher);
+  const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
+  const EditButton = useSelector((state) => state.addProject.ProjectStepperValue)
+  const openNotification = (placement, type, message) => {
+    notification[type]({
+      message: message,
+      placement: placement,
+    });
+  };
 
-  // const resourcesId = setresourcesId.id[0].resourcesId
+  const projectId = useSelector((state) => state.addProject.id);
 
-
-  // console.log("TesterId", TesterId)
-  // 
-  // const ValueresourcesId = resourcesId.map((obj) => Object.values(obj));
-  // console.log(ValueresourcesId);
-  // console.log("resoursesId", resourcesId);
-  // const str = useSelector((state) => state);
+  console.log("projectId : ", projectId);
+  // console.log("resourceIn Project", resourcesId);
   console.log(projectData);
 
   const [toggleValue, setToggleValue] = useState(false);
@@ -57,7 +61,10 @@ export default function page({ formNext }) {
     console.log("Received data from child:", data);
     setFormData(data); // Update the state in the parent component
   };
-
+  const ProjectId = (ProjectId) => {
+    dispatch(addProjectId(ProjectId));
+    console.log("Dispatched-ProjectID",ProjectId)
+  };
   const nonViewsteps = [
     {
       title: "Set up Project",
@@ -75,16 +82,15 @@ export default function page({ formNext }) {
 
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  // setCurrent(shouldNavigateToFirstPage);
 
   const prev = () => {
     setCurrent(current - 1);
   };
-
   // const next = () => {
   //   setCurrent(current + 1);
 
-  // };  
+  // };
+
   const items = steps.map((item) => ({
     key: item.title,
     title: item.title,
@@ -95,82 +101,122 @@ export default function page({ formNext }) {
     color: token.colorTextTertiary,
     marginTop: 16,
   };
-
-
   // Api project push
 
   const handleSubmit = async () => {
-   
-    if (current === 1) {
-      setCurrent(current + 1)
+    if (
+      !projectData.projectName ||
+      !projectData.projectDescription ||
+      !projectData.projectDepartment ||
+      !projectData.startDate ||
+      !projectData.endDate
+    ) {
+      message.error(
+        "Please fill in all fields before proceeding to the next step"
+      );
+      return;
     }
-    if (current === 0) {
+    setCurrent(current + 1);
+    // if (current === 0) {
 
-      try {
-        // console.log(projectData)
-        await Apisubmit(projectData);
+    //   try {
+    //     // console.log(projectData)
+    //     await Apisubmit(projectData);
 
-      } catch (error) {
-        console.error("Error submitting data:", error);
-      }
-    }
+    //   } catch (error) {
+    //     console.error("Error submitting data:", error);
+    //   }
+    // }
+    // // Apisubmit(projectData);
+    // // console.log(projectData);
 
+    // const roles = [
+    //   { ProductManagerId: ProductManager },
+    //   { UxdesignerId: Uxdesigner },
+    //   { UiDesignerId: UiDesigner },
+    //   { ApiDeveloperId: ApiDeveloper },
+    //   { TesterId: Tester },
+    //   { UxResearcherId: UxResearcher },
+    //   { CiCdId: CiCd},
+    // ];
+
+    // const filteredRoles = roles.filter(role => Object.values(role)[0].length > 0);
+
+    // console.log("filteredRoles", filteredRoles)
+    // if (current === 1) {
+    //   // console.log("TesterId", TesterId)
+    //   // console.log(object)
+    //   const postData = {
+    //     project_id: projectId,
+    //     team_name: projectData.projectName,
+    //     created_by_id: "550e8400-e29b-41d4-a716-446655440001",
+    //     roles: filteredRoles,
+    //   };
+
+    //   console.log("Before PUT request");
+    //   // console.log(project.projectId);
+    //   console.log(JSON.stringify(postData));
+    //   console.log("projectData", postData);
+
+    //   let config = {
+    //     method: "put",
+    //     maxBodyLength: Infinity,
+    //     url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //     },
+    //     data: postData,
+    //   };
+
+    //   axios
+    //     .request(config)
+    //     .then((response) => {
+    //       console.log(JSON.stringify(response.data));
+
+    //       setCurrent(current + 1);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+
+    // }
   };
 
-  const axios = require("axios");
-
-  const Apisubmit = async (project) => {
-    const projectname = project.projectName;
-    console.log(projectname);
-    let data = JSON.stringify({
-      name: project.projectName,
-      description: project.projectDescription,
-      department: project.projectDepartment,
-      start_date: project.startDate,
-      end_date: project.endDate,
-      image_url: project.image_url,
-    });
-
-    let config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: "https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      data: data,
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        const result = response.data;
-        console.log("success:", result, result.id);
-        dispatch(updateId(result.id));
-        setCurrent(current + 1);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const dispatch = useDispatch();
+  console.log("editbutton ", EditButton)
 
   useEffect(() => {
-    if (shouldNavigateToFirstPage) {
-      setCurrent(0);
-      dispatch(setNavigateToFirstPage(false));
+    if (EditButton === "0") {
+      setCurrent(current - 2); // Dispatch action to update stepper's current step
+    } else if (EditButton === "1") {
+      setCurrent(current - 1)
     }
-    else if (shouldNavigateToSecondPage) {
-      setCurrent(1);
-      dispatch(setNavigateToSecondPage(false));
-    }
-  }, [shouldNavigateToSecondPage, dispatch]);
+  }, [EditButton]);
+
+  const dispatch = useDispatch();
+0
+ 
+  const DefaultToggleValue = useSelector((state) => state.addProject.ProjectStepperValue)
+  console.log("pageToggle", DefaultToggleValue)
 
   return (
     <>
       <div className="w-auto py-2 px-1 mb-2 bg-white">
+        <Breadcrumb
+          className="bg-white p-2"
+          items={[
+            {
+              title: <a href="/main"> Home</a>
+            },
+            {
+              title: <a href="/main/projects">Projects Overview</a>,
+            },
+            {
+              title: "Create Project",
+            },
+          ]}
+        />
+
         <h1 className="text-2xl font-semibold ">Create Project</h1>
         <p>
           Form pages are used to collect or verify information to users, and
@@ -178,15 +224,15 @@ export default function page({ formNext }) {
         </p>
         {toggleValue.toString()}
       </div>
-      <div className="w-auto py-1 p-1 bg-white">
-        <Steps current={current} items={items} className="px-[10rem] py-3 p-5" />
+      <div className="w-auto py-1 bg-white overflow-hidden">
+        <Steps current={current} items={items} className="px-[10rem] py-3" />
         <div style={contentStyle}>
           {/* Render content based on current step */}
           {steps[current].content}
         </div>
 
         <div style={{ marginTop: 24 }}>
-          {current <= steps.length - 1 && (
+          {current < steps.length - 1 && (
             <Button
               type="primary"
               onClick={() => handleSubmit()}
@@ -196,14 +242,16 @@ export default function page({ formNext }) {
             </Button>
           )}
 
-
           {current === steps.length - 1 && (
             <Link href="/main/projects/workflowlist">
               <Button
                 type="primary"
+                onClick={() => {
+                  ProjectId(projectId);
+                }}
                 className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
               >
-                Create
+                Done
               </Button>
             </Link>
           )}

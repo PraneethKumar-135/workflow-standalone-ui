@@ -75,7 +75,7 @@ const addresourcesSlice = createSlice({
     "ProjectManager": [],
     "ProjectManagerLength": "",
     "UXDesigner": [],
-    "UXDesignerLength": "",
+    "UxDesignerLength": "",
     "UIDeveloper": [],
     "UIDeveloperLength": "",
     "APIDeveloper": [],
@@ -116,54 +116,62 @@ const addresourcesSlice = createSlice({
       state.ProjectManager = action.payload;
       console.log("ProjectManager Data: ", action.payload);
     },
-    lenghtofpm: (state, action) => {
-      state.ProjectManagerLength = action.payload
+    addResourcesPMLength: (state, action) => {
+      state.ProjectManagerLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     addResourcesUxDesigner: (state, action) => {
       state.UXDesigner = action.payload;
       console.log("UXDesigner Data: ", action.payload);
     },
-    lenghtofux: (state, action) => {
-      state.UXDesignerLength = action.payload
+    addResourcesUxDesignerLength: (state, action) => {
+      state.UxDesignerLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     addResourcesUiDeveloper: (state, action) => {
       state.UIDeveloper = action.payload;
       console.log("UIDeveloper Data: ", action.payload);
     },
-    lenghtofui: (state, action) => {
-      state.UIDeveloperLength = action.payload
+    addResourcesUiDeveloperLength: (state, action) => {
+      state.UIDeveloperLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     addResourcesApiDeveloper: (state, action) => {
       state.APIDeveloper = action.payload;
       console.log("APIDeveloper Data: ", action.payload);
     },
-    lenghtofapi: (state, action) => {
-      state.APIDeveloperLength = action.payload
+    addResourcesApiDeveLength: (state, action) => {
+      state.APIDeveloperLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     addResourcesTester: (state, action) => {
       state.Tester = action.payload;
       console.log("Tester Data: ", action.payload);
     },
-    lenghtoftester: (state, action) => {
-      state.TesterLength = action.payload
+    addResourcesTesterLength: (state, action) => {
+      state.TesterLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     addResourcesUxResearch: (state, action) => {
       state.UXResearcher = action.payload;
       console.log("UXResearcher Data: ", action.payload);
     },
-    lenghtofuxr: (state, action) => {
-      state.UXResearcherLength = action.payload
+    addResourcesUxResearcherLength: (state, action) => {
+      state.UXResearcherLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     addResourcesCiCd: (state, action) => {
       state.CICDSpecialist = action.payload;
       console.log("CICDSpecialist Data: ", action.payload);
     },
-    lenghtofcicd: (state, action) => {
-      state.CICDSpecialistLength = action.payload
+    addResourcesCiCdLength: (state, action) => {
+      state.CICDSpecialistLength = action.payload;
+      console.log("ProjectManager Data: ", action.payload);
     },
     // console.log(action.title)
     removeResources: (state, action) => {
       state.resoucesInfo = state.resoucesInfo.filter(resource => resource.id !== action.payload);
+      // state.id[0].resourcesId = state.id[0].resourcesId.filter(resource => resource.id !== action.payload);
       const removedEmployeeId = action.payload;
 
       state.ProjectManager = state.ProjectManager.filter(employeeId => employeeId !== removedEmployeeId.toString());
@@ -175,7 +183,18 @@ const addresourcesSlice = createSlice({
       state.CICDSpecialist = state.CICDSpecialist.filter(employeeId => employeeId !== removedEmployeeId.toString());
 
       console.log("Removed employee ID:", removedEmployeeId);
-    }
+    },
+    removeResourcesInfo: (state, action) => {
+      state.resoucesInfo = action.payload;
+      state.id[0].resourcesId = [];
+      state.ProjectManager = action.payload
+      state.UXDesigner = action.payload
+      state.UIDeveloper = action.payload
+      state.APIDeveloper = action.payload
+      state.Tester = action.payload
+      state.UXResearcher = action.payload
+      state.CICDSpecialist = action.payload
+    },
   },
 });
 
@@ -192,13 +211,15 @@ export const {
   addResourcesTester,
   addResourcesUxResearch,
   addResourcesCiCd,
-  lenghtofpm,
-  lenghtofux,
-  lenghtofui,
-  lenghtofapi,
-  lenghtoftester,
-  lenghtofuxr,
-  lenghtofcicd
+  //Lengths-----------
+  addResourcesPMLength,
+  addResourcesUxDesignerLength,
+  addResourcesUiDeveloperLength,
+  addResourcesApiDeveLength,
+  addResourcesTesterLength,
+  addResourcesUxResearcherLength,
+  CICDSpecialistLength,
+  removeResourcesInfo,
 } = addresourcesSlice.actions;
 export default addresourcesSlice.reducer;
 

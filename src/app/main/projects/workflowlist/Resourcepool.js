@@ -32,7 +32,7 @@ const Resourcepool = () => {
     // console.log(ProjectId)
   }
   const setprojectIds = useSelector((state) => state.addResources);
-  const projectId = setprojectIds.id[0].prjectId;
+  const projectId = setprojectIds.id[0].prjectId
   console.log(projectId)
   useEffect(() => {
     let config = {
