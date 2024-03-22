@@ -1,3 +1,4 @@
+"use client "
 import React, { useEffect, useState } from "react";
 import { Tabs,Steps } from "antd";
 import {
@@ -33,7 +34,7 @@ const UseCasesOverView = () => {
             },
           }
         );
-        console.log(response.data);
+        console.log(JSON.stringify(response.data));
         const data = response.data
         console.log(data.usecase.stages)
         setRequireData(response.data);
@@ -56,11 +57,13 @@ const UseCasesOverView = () => {
           <Steps
             direction="vertical"
             className=" w-[200px] h-[100%] gap-4 p-2 justify-center border bg-white"
+            
           >
             {mappedSteps.map((step, index) => (
               <Steps.Step
                 key={index}
                 title={step.title}
+                status="wait"
               />
             ))}
           </Steps>

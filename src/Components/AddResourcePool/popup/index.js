@@ -112,17 +112,22 @@ export const Projectmanager = (props) => {
                                         {/* CheckBox Button */}
                                         <input
                                             type="checkbox"
-                                            onChange={(e) => {
+                                            onClick={(e) => {
                                                 const selectedId = Manager.emp_id;
-                                                const selectedData = { id: Manager.emp_id, name: Manager.resource_name, email: Manager.work_email, image: Manager.image }; handleResourcesAdd(selectedId, selectedData);
-
                                                 const isChecked = e.target.checked;
-                                                const empId = Manager.emp_id;
                                                 if (isChecked) {
-                                                    handleAddResourcesPM(empId);
+                                                    const selectedData = {
+                                                        id: Manager.emp_id,
+                                                        name: Manager.resource_name,
+                                                        email: Manager.work_email,
+                                                        image: Manager.image,
+                                                        isChecked: true
+                                                    };
+                                                    handleResourcesAdd(selectedId, selectedData); // Send data when checkbox is checked
+                                                    handleAddResourcesPM(selectedId); // Add resource to PM list
                                                 } else {
-                                                    // Handle deselecting the checkbox
-                                                    const updatedSelectedData = selectedDataPM.filter(id => id !== empId);
+                                                    // Handle deselection: remove data and update PM list
+                                                    const updatedSelectedData = selectedDataPM.filter(id => id !== selectedId);
                                                     setSelectedDataPM(updatedSelectedData);
                                                     dispatch(addResourcesPM(updatedSelectedData));
                                                 }
@@ -133,7 +138,6 @@ export const Projectmanager = (props) => {
                                                 });
                                             }}
                                             checked={isCheckboxChecked[index]}
-
                                             className="cursor-pointer"
                                         />
                                     </div>

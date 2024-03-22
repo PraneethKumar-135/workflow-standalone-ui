@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Steps, Tooltip } from "antd";
+import { Breadcrumb, Steps, Tooltip } from "antd";
 import { TiTick } from "react-icons/ti";
 import { useSelector } from "react-redux";
 
@@ -8,12 +8,13 @@ import SubStagesStepper from "./SubStagesStepper";
 import UseCasesOverView from "@/Components/AddUsecaseStepperForms/UseCasesOverView";
 import Planning from "@/Components/AddUsecaseStepperForms/Planning";
 
+
 import { Tabs } from "antd";
 
-
-
 const Stepper = () => {
-
+  const projectName = useSelector((state) => state.addProject.ProjectName);
+  const UseCaseNames = useSelector((state) => state.addUsecase.UseCaseNames);
+  console.log(UseCaseNames)
   const items = [
     {
       key: "1",
@@ -28,21 +29,38 @@ const Stepper = () => {
     {
       key: "3",
       label: "Asset view",
-      children: "" ,
+      children: "",
     },
     {
       key: "4",
       label: "Planning",
-      children: <Planning/>,
+      children: <Planning />,
     },
   ];
 
   return (
     <>
       <div className=" px-2 ">
+        <Breadcrumb
+        className="bg-white p-2"
+          items={[
+            {
+              title:<a href="/main"> Home</a>
+            },
+            {
+              title: <a href="/main/projects">{projectName}</a>,
+            },
+            {
+              title: <a href="/main/projects/developmentUsecases">Development WorkFlow</a>,
+            },
+            {
+              title: `${UseCaseNames}`,
+            },
+          ]}
+        />
         <div className=" bg-white p-4">
           <h1 className="flex w-[100%] bg-white  h-7 flex-col justify-center text-black  text-2xl non-italic font-semibold leading-snug">
-            Procurement (Development workflow)
+           { UseCaseNames}
           </h1>
           <p>
             Form pages are used to collect or verify information to users, and
@@ -51,7 +69,7 @@ const Stepper = () => {
           </p>
 
           <div className="mt-3   ">
-            <Tabs defaultActiveKey="1" items={items}  />
+            <Tabs defaultActiveKey="1" items={items} />
           </div>
         </div>
       </div>

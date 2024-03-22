@@ -93,6 +93,7 @@ const addresourcesSlice = createSlice({
       state.id[0].resourcesId.push(action.payload);
       console.log(action.payload);
     },
+    //-- re
 
     addProjectId: (state, action) => {
       state.id[0].prjectId = action.payload;
@@ -110,7 +111,10 @@ const addresourcesSlice = createSlice({
     },
     addResourcesData: (state, action) => {
       state.resoucesInfo.push(action.payload);
-      console.log("resources Data: ", action.payload);
+      // if (state.resoucesInfo === action.payload) {
+      //    state.resoucesInfo = state.resoucesInfo.filter(resource => resource.id !== action.payload);
+      //   console.log("resources Data: ", action.payload);
+      // }
     },
     addResourcesPM: (state, action) => {
       state.ProjectManager = action.payload;
@@ -171,7 +175,6 @@ const addresourcesSlice = createSlice({
     // console.log(action.title)
     removeResources: (state, action) => {
       state.resoucesInfo = state.resoucesInfo.filter(resource => resource.id !== action.payload);
-      // state.id[0].resourcesId = state.id[0].resourcesId.filter(resource => resource.id !== action.payload);
       const removedEmployeeId = action.payload;
 
       state.ProjectManager = state.ProjectManager.filter(employeeId => employeeId !== removedEmployeeId.toString());
@@ -181,6 +184,7 @@ const addresourcesSlice = createSlice({
       state.Tester = state.Tester.filter(employeeId => employeeId !== removedEmployeeId.toString());
       state.UXResearcher = state.UXResearcher.filter(employeeId => employeeId !== removedEmployeeId.toString());
       state.CICDSpecialist = state.CICDSpecialist.filter(employeeId => employeeId !== removedEmployeeId.toString());
+
 
       console.log("Removed employee ID:", removedEmployeeId);
     },
@@ -219,7 +223,7 @@ export const {
   addResourcesTesterLength,
   addResourcesUxResearcherLength,
   CICDSpecialistLength,
-  removeResourcesInfo,
+  removeResourcesInfo
 } = addresourcesSlice.actions;
 export default addresourcesSlice.reducer;
 

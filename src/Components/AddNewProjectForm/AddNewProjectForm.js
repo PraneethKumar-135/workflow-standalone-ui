@@ -16,7 +16,7 @@ import useProject from "@/HOC/Project/Project";
 
 const { RangePicker } = DatePicker;
 
-import { UploadPopul2 } from "@/app/main/projects/addNewProject/uploadPopul";
+
 
 import moment from "moment";
 import { useDispatch } from "react-redux";
@@ -46,7 +46,13 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
   const [imageBase64, setImageBase64] = useState();
 
   const formData = useSelector((state) => state.addProject);
+  const [startDate, setStartDate] = useState(null);
 
+  
+  const disabledEndDate = (current) => {
+    // Disable dates that are before the selected start date or are the selected start date
+    return current && (current <= startDate);
+  };
   const dispatch = useDispatch();
 
   const handleChange = (e) => {
@@ -58,7 +64,7 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
   };
   const handleStartDateChange = (date, dateString) => {
     const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-    
+    setStartDate(date);
     setProject({
       ...project,
       startDate: formattedStartDate,
@@ -80,70 +86,9 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
     // Dispatch the updated form data with the startDate included
     dispatch(updateFormData({ ...project, endDate: formattedStartDate }));
   };
-  
-
-  
-//   const handleImageUpload = async (info) => {
-//     const file = info.file.originFileObj;
-  
-//     try {
-//       // Convert the image file to base64
-//       const base64 = await convertImageToBase64(file);
-//       // Set the base64 value using setImageBase64
-//       setImageBase64(base64);
-//       console.log("setImage:", base64);
-  
-//       // Convert the base64 URL to a readable URL
-//       const readableUrl = convertBase64ToReadableUrl(base64);
-//       console.log("readableUrl:", readableUrl);
-//     } catch (error) {
-//       console.error("Error uploading image:", error);
-//     }
-//   };
-// const convertBase64ToReadableUrl = (base64) => {
-//   // Add the correct prefix to the base64 string
-//   const base64WithPrefix = `data:image/jpeg;base64,${base64}`;
-
-//   // Convert the base64 string to a blob
-//   const blob = dataURItoBlob(base64WithPrefix);
-
-//   // Create a URL from the blob
-//   const url = URL.createObjectURL(blob);
-
-//   return url;
-// };
-
-// const dataURItoBlob = (dataURI) => {
-//   const byteString = atob(dataURI);
-//   const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-//   const ab = new ArrayBuffer(byteString.length);
-//   const ia = new Uint8Array(ab);
-//   for (let i = 0; i < byteString.length; i++) {
-//     ia[i] = byteString.charCodeAt(i);
-//   }
-//   const blob = new Blob([ab], { type: mimeString });
-//   return blob;
-// };
-// const convertImageToBase64 = (file) => {
-//     return new Promise((resolve, reject) => {
-//         const reader = new FileReader();
-
-//         reader.onloadend = () => {
-//             resolve(reader.result.split(',')[1]);
-//         };
-
-//         reader.onerror = (error) => {
-//             reject(error);
-//         };
-
-//         reader.readAsDataURL(file);
-//     });
-// };
-
 
 const handleImageUpload = async (info) => {
   const file = info.file.originFileObj;
-  // Dispatch the updated form data with the startDate included
   dispatch(updateFormData({ ...project, image_url: imageBase64 }));
 
   try {
@@ -182,6 +127,10 @@ const handleImageUpload = async (info) => {
 
   const projectData = useSelector(state => state.addProject);
   console.log(projectData)
+  function disabledDate(current) {
+    // Disable all dates before today
+    return current && current < moment().startOf('day');
+  }
   return (
     <div>
       <section className="flex flex-col items-center flex-shrink-0  w-auto py-1 bg-white ">
@@ -252,7 +201,7 @@ const handleImageUpload = async (info) => {
                 className="text-slate-500 font-sans text-sm font-normal not-italic leading-6 pb-1 self-stretch items-center flex-1 border rounded-sm border-slate-200  px-1 py-1 h-8 w-[184px] m-1"
                 // value={project.startDate}
                 onChange={handleStartDateChange}
-
+                disabledDate={disabledDate}
                 // value={project.startDate}
               />
               <span>-</span>
@@ -260,15 +209,7 @@ const handleImageUpload = async (info) => {
                 id="projectEndDate"
                 placeholder="End Date"
                 className="text-slate-500 font-sans text-sm font-normal not-italic leading-6 pb-1 self-stretch items-center flex-1 border rounded-sm border-slate-200shadow px-1 py-1 h-8 w-[184px] m-1"
-                // onChange={(date, dateString) =>
-                //   setProject({
-                //     ...project,
-                //     endDate: moment(dateString).format(
-                //       "YYYY-MM-DDTHH:mm:ss.SSS[Z]"
-                //     ),
-                //   })
-                // }
-                // value={project.endDate}
+                disabledDate={disabledEndDate}
                 onChange={handleEndDateChange}
               />
             </div>

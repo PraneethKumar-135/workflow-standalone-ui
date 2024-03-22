@@ -1,5 +1,4 @@
 "use client";
-"use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Button, message, Steps, theme, notification, Breadcrumb } from "antd";
@@ -7,7 +6,7 @@ import { AddResourcePool2 } from "@/Components/AddResourcePool/AddresoucrePool2"
 import AddNewProjectForm from "@/Components/AddNewProjectForm/AddNewProjectForm";
 import AddEmployReview from "@/Components/AddEmployeeReview/AddEmployReview";
 import { useDispatch, useSelector } from "react-redux";
-import { updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Link from "next/link";
 
@@ -30,23 +29,7 @@ const steps = [
 
 export default function page({ formNext }) {
   const projectData = useSelector((state) => state.addProject);
-  const ProductManager = useSelector(
-    (state) => state.addResources.ProjectManager
-  );
-  const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
-  const UiDesigner = useSelector((state) => state.addResources.UIDeveloper);
-  const ApiDeveloper = useSelector((state) => state.addResources.APIDeveloper);
-  const Tester = useSelector((state) => state.addResources.Tester);
-  const UxResearcher = useSelector((state) => state.addResources.UXResearcher);
-  const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
   const EditButton = useSelector((state) => state.addProject.ProjectStepperValue)
-  const openNotification = (placement, type, message) => {
-    notification[type]({
-      message: message,
-      placement: placement,
-    });
-  };
-
   const projectId = useSelector((state) => state.addProject.id);
 
   console.log("projectId : ", projectId);
@@ -61,10 +44,10 @@ export default function page({ formNext }) {
     console.log("Received data from child:", data);
     setFormData(data); // Update the state in the parent component
   };
-  const ProjectId = (ProjectId) => {
-    dispatch(addProjectId(ProjectId));
-    console.log("Dispatched-ProjectID",ProjectId)
-  };
+  // const ProjectId = (ProjectId) => {
+  //   dispatch(addProjectId(ProjectId));
+  //   // console.log(ProjectId)
+  // };
   const nonViewsteps = [
     {
       title: "Set up Project",
@@ -86,6 +69,7 @@ export default function page({ formNext }) {
   const prev = () => {
     setCurrent(current - 1);
   };
+
   // const next = () => {
   //   setCurrent(current + 1);
 
@@ -110,6 +94,7 @@ export default function page({ formNext }) {
       !projectData.projectDepartment ||
       !projectData.startDate ||
       !projectData.endDate
+      // !projectData.image_url
     ) {
       message.error(
         "Please fill in all fields before proceeding to the next step"
@@ -184,6 +169,7 @@ export default function page({ formNext }) {
   };
 
   console.log("editbutton ", EditButton)
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (EditButton === "0") {
@@ -193,14 +179,13 @@ export default function page({ formNext }) {
     }
   }, [EditButton]);
 
-  const dispatch = useDispatch();
-0
- 
+
   const DefaultToggleValue = useSelector((state) => state.addProject.ProjectStepperValue)
   console.log("pageToggle", DefaultToggleValue)
 
   return (
     <>
+
       <div className="w-auto py-2 px-1 mb-2 bg-white">
         <Breadcrumb
           className="bg-white p-2"
@@ -224,10 +209,13 @@ export default function page({ formNext }) {
         </p>
         {toggleValue.toString()}
       </div>
-      <div className="w-auto py-1 bg-white overflow-hidden">
-        <Steps current={current} items={items} className="px-[10rem] py-3" />
-        <div style={contentStyle}>
-          {/* Render content based on current step */}
+      <div className="w-auto py-1 bg-white m-5">
+        <Steps current={current} className="px-[10rem] py-3 p-5">
+          {steps.map((item) => (
+            <Step key={item.title} title={item.title} />
+          ))}
+        </Steps>
+        <div style={{ marginTop: 24 }}>
           {steps[current].content}
         </div>
 
@@ -235,28 +223,16 @@ export default function page({ formNext }) {
           {current < steps.length - 1 && (
             <Button
               type="primary"
-              onClick={() => handleSubmit()}
+              onClick={handleSubmit}
               className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
             >
               Next
             </Button>
-          )}
-
-          {current === steps.length - 1 && (
-            <Link href="/main/projects/workflowlist">
-              <Button
-                type="primary"
-                onClick={() => {
-                  ProjectId(projectId);
-                }}
-                className="ml-[90%] m-10 px-2 py-1 justify-center items-center rounded-sm border border-blue-500 bg-blue-500 shadow-sm h-8 font-sans text-center text-white text-sm font-normal not-italic leading-3 flex-row-reverse"
-              >
-                Done
-              </Button>
-            </Link>
           )}
         </div>
       </div>
     </>
   );
 }
+
+

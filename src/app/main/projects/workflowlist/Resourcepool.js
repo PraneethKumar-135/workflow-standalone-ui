@@ -31,8 +31,7 @@ const Resourcepool = () => {
     dispatch(addProjectId(ProjectId))
     // console.log(ProjectId)
   }
-  const setprojectIds = useSelector((state) => state.addResources);
-  const projectId = setprojectIds.id[0].prjectId
+  const projectId = useSelector((state) => state.addProject.resourcePoolProjectID);
   console.log(projectId)
   useEffect(() => {
     let config = {
@@ -79,7 +78,7 @@ const Resourcepool = () => {
   console.log("teamData", teamData)
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border-t-[2rem] border-[#F5F5F5]">
       <div className="bg-white flex px-5 justify-between items-center border border-gray-300 rounded-lg pt-2">
         <div>
           <h1 className="text-2xl font-semibold leading-snug tracking-normal text-left">
@@ -225,6 +224,10 @@ const Resourcepool = () => {
               ))}
             </div>
           ))}
+
+
+
+
         </div>
       </div>
     </div>

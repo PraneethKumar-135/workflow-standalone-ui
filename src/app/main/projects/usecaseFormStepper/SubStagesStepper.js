@@ -106,13 +106,13 @@
 // }
 
 // export default TestingStepper
-
+"use client"
 import React, { useState, useEffect } from "react";
 import "./stepper.css";
 import { TiTick } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import RequirementForm from "@/Components/AddUsecaseStepperForms/RequirementForm";
-import { addStagesName } from "@/Context/useCaseSlice/useCaseSlice";
+
 
 const SubStagesStepper = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -179,8 +179,8 @@ const SubStagesStepper = () => {
 
   return (
     <>
-      <div className="flex gap-2">
-        <div className="flex flex-col py-6  w-[auto] px-4 gap-y-[7rem] ">
+      <div className="flex">
+        <div className="flex flex-col py-6  w-[auto] px-3 gap-y-[7rem] ">
           {mappedSteps?.map((step, i) => (
             console.log(step.title),
             <div
@@ -190,10 +190,10 @@ const SubStagesStepper = () => {
               } `}
               onClick={() => handleStepClick(i, step.title)}
             >
-              <div className="step cursor-pointer">
+              <div className="step cursor-pointer w-1/4">
                 {i + 1 < currentStep || complete ? i+1 : i + 1}
               </div>
-              <p className="text-gray-500 ml-2 whitespace-pre-wrap cursor-pointer ">{step.title}</p>
+              <p className="text-gray-500 ml-2 whitespace-pre-wrap cursor-pointer w-[60%] "style={{ wordWrap: 'break-word' }}>{step.title}</p>
             </div>
           ))}
         </div>

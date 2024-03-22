@@ -1,38 +1,22 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import { Button } from "antd";
 import { Input } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  addProjectId,
-  removeResources,
-  addResourcesPM,
-  addResourcesData,
-  removeResourcesInfo,
-  projectID
-} from "@/Context/AddresourcesSlice/addresourcesSlice";
+import { addProjectId, removeResources, removeResourcesInfo } from "@/Context/AddresourcesSlice/addresourcesSlice";
+
 import Image from "next/image";
-import {
-  addStepperValue,
-  updateId,
-} from "@/Context/AddNewProjectSlice/addProjectSlice";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import user from "../../../public/assets/user.png"
+import { useRouter } from "next/navigation";
+import { addStepperValue, resourcePoolID, updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
+
 const { Search } = Input;
 
 const onSearch = (value, _e, info) => console.log(info?.source, value);
 
 const AddEmployReview = () => {
-  const ResourcesInfo = useSelector((state) => state.addResources);
-  const [data, setData] = useState([]);
-  const projectData = useSelector((state) => state.addProject);
-  // const projectId = useSelector((state) => state.addProject.id);
-  const projectId = useSelector((state) => state.addProject.id);
-  console.log(projectId);
-  console.log(projectData);
-
   const ProductManager = useSelector((state) => state.addResources.ProjectManager);
   const Uxdesigner = useSelector((state) => state.addResources.UXDesigner);
   const UiDesigner = useSelector((state) => state.addResources.UIDeveloper);
@@ -40,7 +24,14 @@ const AddEmployReview = () => {
   const Tester = useSelector((state) => state.addResources.Tester);
   const UxResearcher = useSelector((state) => state.addResources.UXResearcher);
   const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
+  const ResourcesInfo = useSelector((state) => state.addResources);
+  const [data, setData] = useState([]);
+  const projectData = useSelector((state) => state.addProject);
+  // const projectId = useSelector((state) => state.addProject.id);
+  const projectId = useSelector((state) => state.addProject.id);
 
+  console.log(projectId);
+  console.log(projectData);
   const ResourceAdded = ResourcesInfo.resoucesInfo;
   console.log(ResourceAdded);
 
@@ -50,16 +41,19 @@ const AddEmployReview = () => {
   };
   const dispatch = useDispatch();
 
-
-  // Creating Project And Add Resourses
   const route = useRouter();
   const routerFunction = (data) => {
     route.push(data)
   }
   const ProjectId = (ProjectId) => {
     dispatch(addProjectId(ProjectId));
+    if (ProjectId === projectId) {
+      dispatch(resourcePoolID(ProjectId))
+    }
     console.log("Dispatched-ProjectID", ProjectId)
   };
+
+
   const Apisubmit = async (projectData) => {
     console.log("Clicked");
     const projectname = projectData.projectName;
@@ -103,33 +97,6 @@ const AddEmployReview = () => {
       });
   };
 
-  // dispatch(addProjectId(projectId));
-
-
-  // if (
-  //   !projectData.projectName ||
-  //   !projectData.projectDescription ||
-  //   !projectData.projectDepartment ||
-  //   !projectData.startDate ||
-  //   !projectData.endDate
-  // ) {
-  //   message.error(
-  //     "Please fill in all fields before proceeding to the next step"
-  //   );
-  //   return;
-  // }
-  // if (current === 0) {
-
-  //   try {
-  //     // console.log(projectData)
-  //     await Apisubmit(projectData);
-
-  //   } catch (error) {
-  //     console.error("Error submitting data:", error);
-  //   }
-  // }
-  // Apisubmit(projectData);
-  // console.log(projectData);
   const handleCreatingTeam = async () => {
     const roles = [
       { ProductManagerId: ProductManager },
@@ -182,7 +149,6 @@ const AddEmployReview = () => {
         console.log(error);
       });
   };
-
   const axios = require("axios");
 
   return (
@@ -293,7 +259,7 @@ const AddEmployReview = () => {
             </thead>
             {ResourceAdded.map(
               (resource, index) => (
-       
+
                 (
                   <tbody
                     key={index}
@@ -344,3 +310,5 @@ const AddEmployReview = () => {
   );
 };
 export default AddEmployReview;
+
+
