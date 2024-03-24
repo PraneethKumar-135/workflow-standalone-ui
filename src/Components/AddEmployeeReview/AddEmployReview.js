@@ -10,7 +10,7 @@ import Image from "next/image";
 
 import user from "../../../public/assets/user.png"
 import { useRouter } from "next/navigation";
-import { addStepperValue, resourcePoolID, updateId } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { addStepperValue, resourcePoolID, updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 const { Search } = Input;
 
@@ -47,6 +47,7 @@ const AddEmployReview = () => {
   }
   const ProjectId = (ProjectId) => {
     dispatch(addProjectId(ProjectId));
+    dispatch(updateProjectName(projectData.projectName))
     if (ProjectId === projectId) {
       dispatch(resourcePoolID(ProjectId))
     }
@@ -243,23 +244,22 @@ const AddEmployReview = () => {
           <table className="min-w-full divide-y">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider pl-10" style={{ width: '40%' }}>
+                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider pl-10 " style={{ width: '30%' }}>
                   Name
                 </th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase tracking-wider" style={{ width: '20%' }}>
+                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider border border-y-0 border-r-0 border-l-2" style={{ width: '20%' }}>
                   Designation
                 </th>
-                <th className="px-6 py-3 text-center text-xs font-medium text-black uppercase tracking-wider pl-10" style={{ width: '20%' }}>
+                <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider pl-10 border border-y-0 border-r-0 border-l-2" style={{ width: '20%' }}>
                   Mail ID
                 </th>
-                <th className="px-6 ml-9 py-3 text-center text-xs font-medium text-black uppercase tracking-wider" colSpan={2} style={{ width: '20%' }}>
+                <th className="px-6 ml-9 py-3 text-left text-xs font-medium text-black uppercase tracking-wider border border-y-0 border-r-0 border-l-2" colSpan={2} style={{ width: '20%' }}>
                   Actions
                 </th>
               </tr>
             </thead>
             {ResourceAdded.map(
               (resource, index) => (
-
                 (
                   <tbody
                     key={index}
@@ -267,20 +267,20 @@ const AddEmployReview = () => {
                   >
                     <tr className="bg-white">
                       <td className="py-2 whitespace-nowrap">
-                        <div className="flex items-center space-x-5">
+                        <div className="flex items-center space-x-5 pl-1">
                           <Image src={resource.image ? resource.image : user} height={35} width={35} />
                           <div className="text-sm font-medium text-gray-900">
                             {resource.name}
                           </div>
                         </div>
                       </td>
-                      <td className="py-2 text-sm text-center font-medium text-gray-900">
+                      <td className="py-2 pl-5 text-sm text-left font-medium text-gray-900">
                         {resource.Designation}
                       </td>
-                      <td className="py-2 text-sm font-medium text-gray-900">
+                      <td className="py-2 pl-5 text-sm font-medium text-gray-900">
                         {resource.email}
                       </td>
-                      <td className="py-2 whitespace-nowrap text-sm space-x-5">
+                      <td className="py-2 whitespace-nowrap text-sm space-x-5 pl-2">
                         <Button
                           icon={<EditOutlined />}
                           onClick={() => {

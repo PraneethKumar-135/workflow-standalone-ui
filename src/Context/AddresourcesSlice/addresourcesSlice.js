@@ -110,11 +110,12 @@ const addresourcesSlice = createSlice({
       localStorage.setItem("workFlowId", setWorkFlowId);
     },
     addResourcesData: (state, action) => {
-      state.resoucesInfo.push(action.payload);
-      // if (state.resoucesInfo === action.payload) {
-      //    state.resoucesInfo = state.resoucesInfo.filter(resource => resource.id !== action.payload);
-      //   console.log("resources Data: ", action.payload);
-      // }
+      const newData = action.payload;
+      if (newData.isChecked === true) {
+        state.resoucesInfo.push(newData);
+      } else if (newData.isChecked === false) {
+        state.resoucesInfo = state.resoucesInfo.filter(item => item.id !== newData.id);
+      }
     },
     addResourcesPM: (state, action) => {
       state.ProjectManager = action.payload;
