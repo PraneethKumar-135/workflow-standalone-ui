@@ -26,11 +26,12 @@ const AddEmployReview = () => {
   const CiCd = useSelector((state) => state.addResources.CICDSpecialist);
   const ResourcesInfo = useSelector((state) => state.addResources);
   const [data, setData] = useState([]);
+  const projectId = useSelector((state) => state.addProject.id);
   const projectData = useSelector((state) => state.addProject);
   // const projectId = useSelector((state) => state.addProject.id);
-  const projectId = useSelector((state) => state.addProject.id);
 
-  console.log(projectId);
+
+  // console.log(projectId);
   console.log(projectData);
   const ResourceAdded = ResourcesInfo.resoucesInfo;
   console.log(ResourceAdded);
@@ -46,15 +47,13 @@ const AddEmployReview = () => {
     route.push(data)
   }
   const ProjectId = (ProjectId) => {
-    dispatch(addProjectId(ProjectId));
-    dispatch(updateProjectName(projectData.projectName))
-    if (ProjectId === projectId) {
-      dispatch(resourcePoolID(ProjectId))
-    }
+    
+    // dispatch(resourcePoolID(ProjectId))
+    
     console.log("Dispatched-ProjectID", ProjectId)
   };
-
-
+  
+  
   const Apisubmit = async (projectData) => {
     console.log("Clicked");
     const projectname = projectData.projectName;
@@ -78,17 +77,19 @@ const AddEmployReview = () => {
       },
       data: data,
     };
-
+    
     axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-        const result = response.data;
-        console.log("success:", result, result.id);
-        dispatch(updateId(result.id));
-        // Update projectId in local storage
-        dispatch(removeResourcesInfo([]))
-        handleCreatingTeam();
+    .request(config)
+    .then((response) => {
+      console.log(JSON.stringify(response.data));
+      const result = response.data;
+      console.log("success:", result, result.id);
+      dispatch(updateId(result.id));
+      dispatch(addProjectId(result.id));
+      dispatch(updateProjectName(projectData.projectName))
+      // Update projectId in local storage
+        
+        handleCreatingTeam(result.id);
       })
       .catch((error) => {
         console.log(error);
@@ -98,7 +99,7 @@ const AddEmployReview = () => {
       });
   };
 
-  const handleCreatingTeam = async () => {
+  const handleCreatingTeam = async (id) => {
     const roles = [
       { ProductManagerId: ProductManager },
       { UxdesignerId: Uxdesigner },
@@ -117,8 +118,9 @@ const AddEmployReview = () => {
 
     // console.log("TesterId", TesterId)
     // console.log(object)
+  
     const postData = {
-      project_id: projectId,
+      project_id: id,
       team_name: projectData.projectName,
       created_by_id: "550e8400-e29b-41d4-a716-446655440001",
       roles: filteredRoles,
@@ -132,7 +134,7 @@ const AddEmployReview = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
+      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${id}/team`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -144,6 +146,8 @@ const AddEmployReview = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
+        dispatch(removeResourcesInfo([]))
+        
         routerFunction("/main/projects/workflowlist");
       })
       .catch((error) => {
@@ -174,7 +178,7 @@ const AddEmployReview = () => {
                 type="primary"
                 className="bg-blue-500"
                 onClick={() => {
-                  Apisubmit(projectData), ProjectId(projectId)
+                  Apisubmit(projectData)
                 }}
               >
                 create

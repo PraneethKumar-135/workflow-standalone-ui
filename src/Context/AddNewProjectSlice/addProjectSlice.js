@@ -54,7 +54,7 @@ const addProjectSlice = createSlice({
     resourcePoolID: (state, action) => {
       state.resourcePoolProjectID = action.payload
       console.log("ResourcePoolId", action.payload)
-
+      
       let setresourcePoolID = JSON.stringify(state.resourcePoolProjectID);
       localStorage.setItem("resourcePoolID", setresourcePoolID);
     }
