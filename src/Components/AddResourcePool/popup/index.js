@@ -70,6 +70,7 @@ export const Projectmanager = (props) => {
     };
 
     const [selectedDataPM, setSelectedDataPM] = useState([]);
+    
     const handleAddResourcesPM = (data) => {
         const newData = [...selectedDataPM, data];
         setSelectedDataPM(newData);

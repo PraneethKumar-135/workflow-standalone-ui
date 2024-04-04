@@ -6,7 +6,7 @@ import { AddResourcePool2 } from "@/Components/AddResourcePool/AddresoucrePool2"
 import AddNewProjectForm from "@/Components/AddNewProjectForm/AddNewProjectForm";
 import AddEmployReview from "@/Components/AddEmployeeReview/AddEmployReview";
 import { useDispatch, useSelector } from "react-redux";
-import { updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { addStepperValue, updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addProjectId } from "@/Context/AddresourcesSlice/addresourcesSlice";
 import Link from "next/link";
 
@@ -28,7 +28,7 @@ const steps = [
 ];
 
 export default function page({ formNext }) {
-  const projectData = useSelector((state) => state.addProject);
+  const projectData = useSelector((state) => state.addProject.Projectform);
   const EditButton = useSelector((state) => state.addProject.ProjectStepperValue)
   const projectId = useSelector((state) => state.addProject.id);
 
@@ -89,7 +89,7 @@ export default function page({ formNext }) {
 
   const handleSubmit = async () => {
     if (
-      !projectData.projectName ||
+      !projectData.ProjectName ||
       !projectData.projectDescription ||
       !projectData.projectDepartment ||
       !projectData.startDate ||
@@ -101,71 +101,13 @@ export default function page({ formNext }) {
       );
       return;
     }
-    setCurrent(current + 1);
-    // if (current === 0) {
+    if (EditButton === "0") {
+      setCurrent(current + 2);
+    } else {
+      setCurrent(current + 1);
+    }
 
-    //   try {
-    //     // console.log(projectData)
-    //     await Apisubmit(projectData);
-
-    //   } catch (error) {
-    //     console.error("Error submitting data:", error);
-    //   }
-    // }
-    // // Apisubmit(projectData);
-    // // console.log(projectData);
-
-    // const roles = [
-    //   { ProductManagerId: ProductManager },
-    //   { UxdesignerId: Uxdesigner },
-    //   { UiDesignerId: UiDesigner },
-    //   { ApiDeveloperId: ApiDeveloper },
-    //   { TesterId: Tester },
-    //   { UxResearcherId: UxResearcher },
-    //   { CiCdId: CiCd},
-    // ];
-
-    // const filteredRoles = roles.filter(role => Object.values(role)[0].length > 0);
-
-    // console.log("filteredRoles", filteredRoles)
-    // if (current === 1) {
-    //   // console.log("TesterId", TesterId)
-    //   // console.log(object)
-    //   const postData = {
-    //     project_id: projectId,
-    //     team_name: projectData.projectName,
-    //     created_by_id: "550e8400-e29b-41d4-a716-446655440001",
-    //     roles: filteredRoles,
-    //   };
-
-    //   console.log("Before PUT request");
-    //   // console.log(project.projectId);
-    //   console.log(JSON.stringify(postData));
-    //   console.log("projectData", postData);
-
-    //   let config = {
-    //     method: "put",
-    //     maxBodyLength: Infinity,
-    //     url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`,
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Accept: "application/json",
-    //     },
-    //     data: postData,
-    //   };
-
-    //   axios
-    //     .request(config)
-    //     .then((response) => {
-    //       console.log(JSON.stringify(response.data));
-
-    //       setCurrent(current + 1);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-
-    // }
+    dispatch(addStepperValue(false))
   };
 
   console.log("editbutton ", EditButton)

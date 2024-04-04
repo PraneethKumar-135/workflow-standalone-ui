@@ -20,7 +20,7 @@ const { RangePicker } = DatePicker;
 
 import moment from "moment";
 import { useDispatch } from "react-redux";
-import { updateFormData ,UpdateStartDate} from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { FormData, updateProjectName, UpdateStartDate } from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 const layout = {
   labelCol: {
@@ -45,10 +45,26 @@ const validateMessages = {
 const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
   const [imageBase64, setImageBase64] = useState();
 
-  const formData = useSelector((state) => state.addProject);
+  const formData = useSelector((state) => state.addProject.Projectform);
   const [startDate, setStartDate] = useState(null);
+  const initialProjectState = formData || {
+    projectName: "",
+    projectDescription: "",
+    projectDepartment: "",
+    startDate: "",
+    endDate: "",
+    projectId: "",
+    image_url: "",
+  };
+  const [project, setProject] = useState(initialProjectState);
 
-  
+  // Update project state when Redux data changes
+  useEffect(() => {
+    setProject(formData || initialProjectState);
+  }, [formData]);
+
+
+
   const disabledEndDate = (current) => {
     // Disable dates that are before the selected start date or are the selected start date
     return current && (current <= startDate);
@@ -58,7 +74,8 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
   const handleChange = (e) => {
     // Update the project state as the user types
     setProject({ ...project, [e.target.name]: e.target.value });
-    dispatch(updateFormData({ ...project, [e.target.name]: e.target.value }));
+    dispatch(FormData({ ...project, [e.target.name]: e.target.value }));
+    // dispatch(updateFormData({ ...project, [e.target.name]: e.target.value }));
 
     console.log(project)
   };
@@ -69,68 +86,101 @@ const AddNewProjectForm = ({ receiveFormDataFromChild }) => {
       ...project,
       startDate: formattedStartDate,
     });
-  
+
     // Dispatch the updated form data with the startDate included
-    dispatch(updateFormData({ ...project, startDate: formattedStartDate }));
+    dispatch(FormData({ ...project, startDate: formattedStartDate }));
   };
 
 
   const handleEndDateChange = (date, dateString) => {
     const formattedStartDate = moment(dateString).format("YYYY-MM-DDTHH:mm:ss.SSS[Z]");
-    
+
     setProject({
       ...project,
       endDate: formattedStartDate,
     });
-  
+
     // Dispatch the updated form data with the startDate included
-    dispatch(updateFormData({ ...project, endDate: formattedStartDate }));
+    dispatch(FormData({ ...project, endDate: formattedStartDate }));
   };
 
-const handleImageUpload = async (info) => {
-  const file = info.file.originFileObj;
-  dispatch(updateFormData({ ...project, image_url: imageBase64 }));
+  const [fileuploaded, setfileuploaded] = useState(false);
+  const [convertedImages, setConvertedImages] = useState([]);
+  const [convertedImagesString, setconvertedImagesString] = useState("");
+  const [Attachments, setAttachments] = useState([]);
+  const [uploadingFiles, setUploadingFiles] = useState([]);
 
-  try {
-    // Convert the image file to base64 format
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      const base64String = event.target.result;
-      setImageBase64(base64String);
+  const handleFileChange = (info) => {
+    const allFiles = info.fileList;
+    const imgarray = allFiles.map((e) => e.originFileObj);
+    setfileuploaded(true);
+    setUploadingFiles(allFiles);
+    convertImagesToBase64(imgarray);
+  };
 
-      // Dispatch the updated form data with the image base64 string
-      setProject({
-        ...project,
-        image_url: base64String,
-      });
-    };
-    reader.readAsDataURL(file);
-  } catch (error) {
-    console.error("Error uploading image:", error);
-  }
-};
+  const convertImagesToBase64 = async (images) => {
+    const newConvertedImages = [];
+    for (let i = 0; i < images.length; i++) {
+      const file = images[i];
+      if (file) {
+        const reader = new FileReader();
+        const base64 = await new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        newConvertedImages.push({ fileName: file.name, data: base64 });
+      }
+    }
+    setConvertedImages(newConvertedImages);
+  };
+  let accesstoken =
+    "eyJraWQiOiJ0WExXYzd1ZGhyaVwvVEhLYldwK3F2bEw4SGtJTXQwZVBhUmlzQXhCd0lwRT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI1NDk4ZDQ0OC00MGExLTcwNzQtMzZhNi00MGFiYjkyM2EyNzkiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfSlA1QjRXWGJIIiwiY3VzdG9tOnVzZXJfaWQiOiI4YTU2MzY3Ni00NGY1LTQ2NjgtOTgzZC1hZDVlZTU3ZTFmNDgiLCJjdXN0b206b3JnX2lkIjoiMmQ5OGJhNzctNjk1Yi00ZWI0LTgwN2MtNGVmYmI4MTU5OTQwIiwiY29nbml0bzp1c2VybmFtZSI6IjU0OThkNDQ4LTQwYTEtNzA3NC0zNmE2LTQwYWJiOTIzYTI3OSIsIm9yaWdpbl9qdGkiOiIwNWY3Y2Y0MS1jMGU1LTQ2YTUtYWZhMi1hOGIyMTlmZTlhN2MiLCJhdWQiOiI3OXFhMDR1bXY1bzFoc2tvajVmcXRkMnM4cCIsImV2ZW50X2lkIjoiZTkxMzk5ZDMtZGJkNi00MzBkLWFiM2QtZWNjODI3OGJhYTE3IiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3MTIxMzc2MzMsImV4cCI6MTcxMjIyNDAzMywiY3VzdG9tOnJvbGUiOiJhZG1pbiIsImlhdCI6MTcxMjEzNzYzMywianRpIjoiZTc3Njk4MTMtYjAzZi00OGQ1LWJiNWQtYjVjYTAwMjVhZWU0IiwiZW1haWwiOiJhYmR1bGxhaGFoaWw3ODYxQGdtYWlsLmNvbSJ9.ptAD_sCKGvnX6eXl2wkYB-JMXr6vBcwSCBtnWp3Aky3rOxxXNmESuJL2DITr3FNtYfIiy7inJH_q4KSjfR4KhhIIDy3wXF9UKOgMqN06706ELQEkrnU61bdDScHsxk-k00fRYESjL_DGxfwTHX3nosIcR7pMraliiaRjT1G6VfOsehPTfaR7p441l3pztpaS2IidWZs8D9FNiU22AyiEKOiAxzZb7YQhvOdDSgclm7TIrzh-51jQ_TbW4qIMYduRV-P9mCmCWV-ZVYXN-u6XBkzd_JleGdpBNhh7R9um0ciFTyCrWhAPuLRrXvD7wmHPuzkNBA0XWP0NE_eFJyhHcA";
+  const uploadingImages = async () => {
+    const newAttachments = [];
+    for (let i = 0; i < convertedImages.length; i++) {
+      try {
+        const response = await axios.post(
+          "https://i3mdnxvgrf.execute-api.us-east-1.amazonaws.com/dev/docUpload",
+          convertedImages[i],
+          {
+            headers: {
+              Authorization: `Bearer ${accesstoken}`,
+            },
+          }
+        );
+        newAttachments.push(response.data.link);
+        // setconvertedImagesString(response.data.link);
+        console.log(response.data.link)
+        setProject({ ...project, image_url: response.data.link })
+        dispatch(FormData({ ...project, image_url: response.data.link }))
+      } catch (error) {
+        console.error(error);
+        alert("Error uploading image. Please try again.");
+      }
+    }
+    setAttachments([...newAttachments]);
+    setConvertedImages([]); // Reset convertedImages after upload
+    setUploadingFiles([]); // Clear uploading files after upload
+  };
 
-
-
+  useEffect(() => {
+    if (fileuploaded && convertedImages.length > 0) {
+      uploadingImages();
+      setfileuploaded(false);
+    }
+  }, [fileuploaded, convertedImages]);
   const router = useRouter();
 
   // useProject
-  const [project, setProject] = useState({
-    projectName: "",
-    projectDescription: "",
-    projectDepartment: "",
-    startDate: "",
-    endDate: "",
-    projectId: "",
-    image_url: "",
-  });
-
   const projectData = useSelector(state => state.addProject);
   console.log(projectData)
   function disabledDate(current) {
     // Disable all dates before today
     return current && current < moment().startOf('day');
   }
+
+
   return (
     <div>
       <section className="flex flex-col items-center flex-shrink-0  w-auto py-1 bg-white ">
@@ -141,6 +191,7 @@ const handleImageUpload = async (info) => {
             maxWidth: 600,
           }}
           validateMessages={validateMessages}
+          initialValues={project}
         >
           <Form.Item
             name={["ProjectName"]}
@@ -152,10 +203,10 @@ const handleImageUpload = async (info) => {
             ]}
           >
             <Input
+              name="ProjectName"
+              id="ProjectName"
               value={project.projectName}
               onChange={handleChange}
-              name="projectName"
-              id="projectName"
             />
           </Form.Item>
 
@@ -172,8 +223,7 @@ const handleImageUpload = async (info) => {
               name="projectDescription"
               id="projectDescription"
               value={project.projectDescription}
-              onChange={handleChange}
-            />
+              onChange={handleChange} />
           </Form.Item>
 
           <Form.Item
@@ -189,8 +239,7 @@ const handleImageUpload = async (info) => {
               name="projectDepartment"
               id="projectDepartment"
               value={project.projectDepartment}
-              onChange={handleChange}
-            />
+              onChange={handleChange} />
           </Form.Item>
 
           <Form.Item name="range-time-picker" label="Project Duration">
@@ -202,7 +251,7 @@ const handleImageUpload = async (info) => {
                 // value={project.startDate}
                 onChange={handleStartDateChange}
                 disabledDate={disabledDate}
-                // value={project.startDate}
+              // value={project.startDate}
               />
               <span>-</span>
               <DatePicker
@@ -227,17 +276,17 @@ const handleImageUpload = async (info) => {
             >
               <Button icon={<UploadOutlined />}>Upload</Button>
             </Upload> */}
-            
+
 
             <Upload
               name="image_url"
-              type="file" 
+              type="file"
               accept="image/*"
               className="flex flex-col items-start ml-1"
               action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
               listType="picture"
               alt="Uploaded Image"
-              onChange={handleImageUpload}
+              onChange={handleFileChange}
             >
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>

@@ -10,7 +10,7 @@ import Image from "next/image";
 
 import user from "../../../public/assets/user.png"
 import { useRouter } from "next/navigation";
-import { addStepperValue, resourcePoolID, updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import { addStepperValue, removeFormData, resourcePoolID, updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 const { Search } = Input;
 
@@ -27,7 +27,7 @@ const AddEmployReview = () => {
   const ResourcesInfo = useSelector((state) => state.addResources);
   const [data, setData] = useState([]);
   const projectId = useSelector((state) => state.addProject.id);
-  const projectData = useSelector((state) => state.addProject);
+  const projectData = useSelector((state) => state.addProject.Projectform);
   // const projectId = useSelector((state) => state.addProject.id);
 
 
@@ -47,19 +47,19 @@ const AddEmployReview = () => {
     route.push(data)
   }
   const ProjectId = (ProjectId) => {
-    
+
     // dispatch(resourcePoolID(ProjectId))
-    
+
     console.log("Dispatched-ProjectID", ProjectId)
   };
-  
-  
+
+
   const Apisubmit = async (projectData) => {
     console.log("Clicked");
     const projectname = projectData.projectName;
     console.log(projectname);
     let data = JSON.stringify({
-      name: projectData.projectName,
+      name: projectData.ProjectName,
       description: projectData.projectDescription,
       department: projectData.projectDepartment,
       start_date: projectData.startDate,
@@ -77,18 +77,18 @@ const AddEmployReview = () => {
       },
       data: data,
     };
-    
+
     axios
-    .request(config)
-    .then((response) => {
-      console.log(JSON.stringify(response.data));
-      const result = response.data;
-      console.log("success:", result, result.id);
-      dispatch(updateId(result.id));
-      dispatch(addProjectId(result.id));
-      dispatch(updateProjectName(projectData.projectName))
-      // Update projectId in local storage
-        
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        const result = response.data;
+        console.log("success:", result, result.id);
+        dispatch(updateId(result.id));
+        dispatch(addProjectId(result.id));
+        dispatch(updateProjectName(projectData.ProjectName))
+        // Update projectId in local storage
+
         handleCreatingTeam(result.id);
       })
       .catch((error) => {
@@ -118,10 +118,10 @@ const AddEmployReview = () => {
 
     // console.log("TesterId", TesterId)
     // console.log(object)
-  
+
     const postData = {
       project_id: id,
-      team_name: projectData.projectName,
+      team_name: projectData.ProjectName,
       created_by_id: "550e8400-e29b-41d4-a716-446655440001",
       roles: filteredRoles,
     };
@@ -147,7 +147,8 @@ const AddEmployReview = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         dispatch(removeResourcesInfo([]))
-        
+        dispatch(removeFormData(""))
+        dispatch(removeFormData({}))
         routerFunction("/main/projects/workflowlist");
       })
       .catch((error) => {
@@ -196,7 +197,7 @@ const AddEmployReview = () => {
               <div className="p-5 space-y-10 mx-5">
                 <div>
                   <p>Project Name</p>
-                  <h3 className="font-semibold">{projectData.projectName}</h3>
+                  <h3 className="font-semibold">{projectData.ProjectName}</h3>
                 </div>
                 <div>
                   <p>Project department</p>
