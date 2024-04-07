@@ -10,7 +10,7 @@ import Image from "next/image";
 
 import user from "../../../public/assets/user.png"
 import { useRouter } from "next/navigation";
-import { addStepperValue, removeFormData, resourcePoolID, updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
+import {addStepperValue, removeFormData, resourcePoolID, updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
 
 const { Search } = Input;
 
@@ -147,7 +147,6 @@ const AddEmployReview = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data));
         dispatch(removeResourcesInfo([]))
-        dispatch(removeFormData(""))
         dispatch(removeFormData({}))
         routerFunction("/main/projects/workflowlist");
       })
