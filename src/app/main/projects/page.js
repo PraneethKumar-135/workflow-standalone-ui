@@ -64,7 +64,7 @@ const ProjectLayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await getData();
-      setData(result);
+      setData(result.projects);
     };
     fetchData();
   }, []);
