@@ -2,6 +2,7 @@
 import { FileOutlined } from '@ant-design/icons';
 import { Collapse } from 'antd';
 import axios from 'axios';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 
@@ -11,7 +12,7 @@ const AssetView = () => {
     const [data, setData] = useState({});
     const [openItemIndex, setOpenItemIndex] = useState(null);
     const [error, setError] = useState(null);
-    const addUsecaseId = useSelector((state) => state.addUsecase.useCaseId   );
+    const addUsecaseId = useSelector((state) => state.addUsecase.useCaseId);
     const projectId = useSelector((state) => state.addProject.id);
 
     useEffect(() => {
@@ -61,10 +62,13 @@ const AssetView = () => {
                                         </div>
                                         <div className='p-3'>
                                             <p className='mb-3'>Attachment</p>
-                                            <span className='border p-2 flex flex-col rounded-lg'>
-                                                <FileOutlined style={{ color: "#70c8f1", fontSize: "2rem" }} />
-                                                <p>text.file</p>
-                                            </span>
+                                            <div className='flex'>
+                                                <span className='border p-2 flex flex-col rounded-lg w-20 justify-center items-center space-y-3'>
+                                                    <FileOutlined style={{ color: "#70c8f1", fontSize: "2rem" }} />
+                                                    <p>text.file</p>
+                                                </span>
+                                            </div>
+
                                         </div>
                                     </React.Fragment>
                                 ))}
