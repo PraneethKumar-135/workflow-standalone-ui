@@ -1,5 +1,5 @@
 // api/api.js
- 
+
 import axios from 'axios';
 
 const baseUrl = 'https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev';

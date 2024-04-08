@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import SubStagesStepper from "./SubStagesStepper";
 import UseCasesOverView from "@/Components/AddUsecaseStepperForms/UseCasesOverView";
 import Planning from "@/Components/AddUsecaseStepperForms/Planning";
+import AssertView from "@/Components/AddUsecaseStepperForms/AssertView";
 
 
 import { Tabs } from "antd";
@@ -29,7 +30,7 @@ const Stepper = () => {
     {
       key: "3",
       label: "Asset view",
-      children: "",
+      children: <AssertView />,
     },
     {
       key: "4",
@@ -42,16 +43,22 @@ const Stepper = () => {
     <>
       <div className=" px-2 ">
         <Breadcrumb
-        className="bg-white p-2"
+          className="bg-white p-2"
           items={[
             {
-              title:<a href="/main"> Home</a>
+              // title: <a path="/main"> Home</a>
+              path: '/main',
+              breadcrumbName: 'Home'
             },
             {
-              title: <a href="/main/projects">{projectName}</a>,
+              path: '/main/projects',
+              breadcrumbName: { projectName }
+              // title: <a href="/main/projects">{projectName}</a>,
             },
             {
-              title: <a href="/main/projects/developmentUsecases">Development WorkFlow</a>,
+              path: '/main/projects/developmentUsecases',
+              breadcrumbName: 'Development WorkFlow'
+              // title: <a href="/main/projects/developmentUsecases">Development WorkFlow</a>,
             },
             {
               title: `${UseCaseNames}`,
@@ -60,7 +67,7 @@ const Stepper = () => {
         />
         <div className=" bg-white p-4">
           <h1 className="flex w-[100%] bg-white  h-7 flex-col justify-center text-black  text-2xl non-italic font-semibold leading-snug">
-           { UseCaseNames}
+            {UseCaseNames}
           </h1>
           <p>
             Form pages are used to collect or verify information to users, and

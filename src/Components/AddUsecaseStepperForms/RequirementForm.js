@@ -1,6 +1,19 @@
 "use client";
 import React, { useEffect, useState, useRef } from "react";
-import { Form, Input, Modal, Tabs, Upload, notification } from "antd";
+import {
+  Form,
+  Input,
+  Modal,
+  Tabs,
+  Upload,
+  notification,
+  Dropdown,
+  Space,
+  Button,
+  Menu,
+  Typography,
+  Skeleton,
+} from "antd";
 import {
   BugOutlined,
   CaretDownOutlined,
@@ -10,7 +23,6 @@ import {
   SearchOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
-import { Dropdown, Space, Button, Menu, Typography, Skeleton } from "antd";
 import {
   BarsOutlined,
   ShoppingOutlined,
@@ -29,7 +41,10 @@ import { InboxOutlined } from "@ant-design/icons";
 import axios from "axios";
 import Link from "next/link";
 import Item from "antd/es/list/Item";
-import user from "../../../public/assets/user.png"
+// import user from "../../../public/assets/icons8-user.gif"
+import user from "../../../public/assets/icons8-user-48.png";
+import getAccessTokenFromCookie from "@/utils/getAccessToken";
+import AssignBtnImg from "../../../public/assets/AssignImg.png";
 const { Dragger } = Upload;
 //Doc upload//
 
@@ -53,7 +68,6 @@ const RequirementForm = (stepperState) => {
   const setUsecaseId = useSelector((state) => state.addUsecase);
   const UsecaseId = setUsecaseId.useCaseId;
   const [loading, setLoading] = useState(true);
- 
 
   const [RolesDetails, setRolesDetails] = useState();
   const [Roles, setRoles] = useState();
@@ -67,7 +81,7 @@ const RequirementForm = (stepperState) => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}/task`,
+      url: `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}/task`,
       headers: {
         Accept: "application/json",
       },
@@ -119,7 +133,7 @@ const RequirementForm = (stepperState) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`
+          `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/project/${projectId}/team`
         );
         const responseData = response.data;
         console.log("responsedata ", responseData);
@@ -139,6 +153,7 @@ const RequirementForm = (stepperState) => {
   console.log("teamData", teamData);
   console.log("teamDetails", RolesDetails);
   console.log(requiretasks);
+  console.log(JSON.stringify(requiretasks));
 
   const InsideDropDown = ({ name }) => {
     const [visible, setVisible] = useState(false);
@@ -193,34 +208,12 @@ const RequirementForm = (stepperState) => {
     }));
   }
 
-  // const props = {
-  //   action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
-  //   onChange({ file, fileList }) {
-  //     if (file.status !== "uploading") {
-  //       console.log(file, fileList);
-  //     }
-  //   },
-  //   defaultFileList: [
-  //     {
-  //       uid: "1",
-  //       name: "yyy.png",
-  //       status: "done",
-  //       url: "http://www.baidu.com/yyy.png",
-  //     },
-  //     {
-  //       uid: "2",
-  //       name: "yyy.png",
-  //       status: "done",
-  //       url: "http://www.baidu.com/yyy.png",
-  //     },
-  //   ],
-  // };
-
   //////////---------------- Doc upload starts here
   const [image, setimage] = useState([]);
   const [fileuploaded, setfileuploaded] = useState(false);
   const [convertedImages, setConvertedImages] = useState([]);
   const [convertedImagesString, setconvertedImagesString] = useState("");
+  const [convertedLinkString, setconvertedLinkString] = useState("");
   const [Attachments, setAttachments] = useState([]);
   const [uploadingFiles, setUploadingFiles] = useState([]);
 
@@ -249,18 +242,19 @@ const RequirementForm = (stepperState) => {
     }
     setConvertedImages(newConvertedImages);
   };
-  let accesstoken =
-    "eyJraWQiOiJ0WExXYzd1ZGhyaVwvVEhLYldwK3F2bEw4SGtJTXQwZVBhUmlzQXhCd0lwRT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJjNGI4YjRhOC05MDExLTcwMmUtOTY2ZC1lZDQ3NmUzODY5ZDciLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfSlA1QjRXWGJIIiwiY3VzdG9tOnVzZXJfaWQiOiI2NDY4ZjIzNi02NmM4LTRlMjItYWVlYS0xMDA0YjE0YzVjMjkiLCJjdXN0b206b3JnX2lkIjoiYjk0YTU2NGQtODlmNy00NmQxLWJkNDEtYzZmNzQwMzQ5N2JjIiwiY29nbml0bzp1c2VybmFtZSI6ImM0YjhiNGE4LTkwMTEtNzAyZS05NjZkLWVkNDc2ZTM4NjlkNyIsIm9yaWdpbl9qdGkiOiI4MWNhZTliNC00NmQ3LTRlNzQtOGM4NS0zOGNhMWM0MDZhOTMiLCJhdWQiOiI3OXFhMDR1bXY1bzFoc2tvajVmcXRkMnM4cCIsImV2ZW50X2lkIjoiYjliMjkwZTktZDBlNi00MDdlLWFiYmItMTk0MDdjN2MyZDUzIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3MTEwNzk2MDAsImV4cCI6MTcxMTE2NjAwMCwiY3VzdG9tOnJvbGUiOiJhZG1pbiIsImlhdCI6MTcxMTA3OTYwMCwianRpIjoiOGI4YzU3ZTAtOWFiMi00OTNhLThlOWUtYmUwMDhiY2UyNDc3IiwiZW1haWwiOiJpdHphbHRhZmh1c2FpbkBnbWFpbC5jb20ifQ.hZt3B30zbhANvIyAzVC8VdsTSFHTZALtQBINapFjU1ezJ2YHNDc6WuYxgXP0QfPjK3pONgWf_iR3Wgf0rFHner602HNmcFCbGpMUbkE-et8-Q1irRkF-RbYR9ErNpkKtJdWZbghDvkrPQmaAIgwxvNJSO56Dx67Vlma9d80J4rEV4X_Sj7_MQhm097tZKUNkL0LgEdQ-wATR9ZlMlKWeUVL3AHD4oIXYbTB6hbXHjDFwxtsr8L9Jka-byWVcK0bbejwTMicGEhdCN5WEAZiCOjrxpHD6dSD8nA7Ju6n9EQiuW4mXSG1F4wNu515PTgTJDFRQ47Ou12sMRaZS0ZEnsA";
+  // const accessToken = getAccessTokenFromCookie();
+  const accessToken =
+    "eyJraWQiOiJ0WExXYzd1ZGhyaVwvVEhLYldwK3F2bEw4SGtJTXQwZVBhUmlzQXhCd0lwRT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIwNDA4NjQ2OC1kMDUxLTcwMmQtOTY2Mi1hNWRmNTQ5ZjRlMzQiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfSlA1QjRXWGJIIiwiY3VzdG9tOnVzZXJfaWQiOiIyNGUyOTU0Yi05MzQzLTQ3MWQtODI2Yi0wMDAzYTBlNzZiYjEiLCJjdXN0b206b3JnX2lkIjoiNWM3NWE0MDQtMTJhOC00Yzc5LTkwZDgtNmIzMzgyNTE1NDlkIiwiY29nbml0bzp1c2VybmFtZSI6IjA0MDg2NDY4LWQwNTEtNzAyZC05NjYyLWE1ZGY1NDlmNGUzNCIsIm9yaWdpbl9qdGkiOiJjZmZlMzI3MC00ZWM3LTQwYzYtYjQzMC02NTk3OTA0MzNjODUiLCJhdWQiOiI3OXFhMDR1bXY1bzFoc2tvajVmcXRkMnM4cCIsImV2ZW50X2lkIjoiNzYyYjk3M2MtOGZkYS00MWQxLWIyNGQtMGY4N2JhMzk5Y2E1IiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3MTI1Njg3MTgsImV4cCI6MTcxMjY1NTExOCwiY3VzdG9tOnJvbGUiOiJhZG1pbiIsImlhdCI6MTcxMjU2ODcxOCwianRpIjoiYmU0Mzg0NzItNjQ1Yi00ZTdkLWI2YTItNGQyODdlOGYzMzBmIiwiZW1haWwiOiJqZWRlZmVsMTU1QGNlbnRlcmYuY29tIn0.C_IgEAsz3Irzi3UjTHDrNZjb9kgB3k4N-72OP-9KjYJv8yxqZX3i7m26vtaK4pPaJvGQTwcBe-1LcZUo0oilzWzWmrx47LPdYM2WtBaL4nxt1KKToFPDNXJsGTeZHA14l0LarPuxY7Yg-t4dl-ZT9J6hSs3rnawVIgmX9Lq9x-lw6-V4zxF6D31cotvKLHoAq2-SdDgZChPbwtJ9MDeV2S2cyut4tLBu0JxrjfWWTV2Aq4g9FOnFLbzBIy9YuS5W-Xjww1gfmyG0CEs5g90nO7AnCMOvLWpG5cpm8Sg6c3ZFkctXpCYcJjXXf37mEpwAeZwEVwoFCKWjk9k3hYdcGg";
   const uploadingImages = async () => {
     const newAttachments = [];
     for (let i = 0; i < convertedImages.length; i++) {
       try {
         const response = await axios.post(
-          "https://i3mdnxvgrf.execute-api.us-east-1.amazonaws.com/dev/docUpload",
+          "https://68v4n18rx1.execute-api.us-east-1.amazonaws.com/dev/docUpload",
           convertedImages[i],
           {
             headers: {
-              Authorization: `Bearer ${accesstoken}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -361,20 +355,20 @@ const RequirementForm = (stepperState) => {
 
       // Send data to API
       const apiResponse = await axios.post(
-        "https://i3mdnxvgrf.execute-api.us-east-1.amazonaws.com/dev/docUpload",
+        "https://68v4n18rx1.execute-api.us-east-1.amazonaws.com/doc/docUpload",
         request,
         {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: `Bearer ${accesstoken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
 
       // Handle API response
       console.log(apiResponse.data);
-
+      setconvertedLinkString(apiResponse.data.link);
       newAttachments.push(apiResponse.data.link);
       setAttachments([...Attachments, ...newAttachments]);
       setConvertedImages([]); // Reset convertedImages after upload
@@ -384,16 +378,6 @@ const RequirementForm = (stepperState) => {
       console.error("Error:", error);
     }
   };
-
-  // Function to convert Blob to base64
-  // const blobToBase64 = (blob) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => resolve(reader.result.split(',')[1]);
-  //     reader.onerror = reject;
-  //     reader.readAsDataURL(blob);
-  //   });
-  // };
 
   const blobToBase64 = (blob) => {
     return new Promise((resolve, reject) => {
@@ -423,20 +407,62 @@ const RequirementForm = (stepperState) => {
   };
   //------------Docs Post
   const UploadingDoc = () => {
-    const currentTask = requiretasks.at(AssignIndex);
-    // console.log("Docs", currentTask)
-    (currentTask.docs[0] = {
-      doc_name: DocumentAssign.doc_name,
-      doc_url: convertedImagesString,
-    }),
+    // const currentTask = requiretasks.at(AssignIndex);
+    // const updatedDocs = [...currentTask.docs];
+    // // console.log("Docs", currentTask)
+    // // (currentTask.docs[0] = {
+    // //   doc_name: DocumentAssign.doc_name,
+    // //   doc_url: convertedImagesString,
+    // // }),
+    // //   console.log("Docs", currentTask);
 
+    //   updatedDocs.push({
+    //     doc_name: DocumentAssign.doc_name,
+    //     doc_url: convertedImagesString,
+    //   });
+
+    //   // Create a new object for currentTask to ensure immutability
+    //   const updatedTask = {
+    //     ...currentTask,
+    //     docs: updatedDocs,
+    //   };
+
+    //   // Create a new array with updatedTask at AssignIndex
+    //   const updatedTasks = [...requiretasks];
+    //   updatedTasks[AssignIndex] = updatedTask;
+
+    //   // Update the state with the new array
+    //   setrequireTasks(updatedTasks);
+    HandleUploadingDoc(), handleCancel();
+  };
+  const UploadingLink = () => {
+    const currentTask = requiretasks.at(AssignIndex);
+    const updatedDocs = [...currentTask.docs];
+
+    // console.log("Docs", currentTask)
+    updatedDocs.push({
+      doc_name: name,
+      doc_url: convertedLinkString,
+    }),
       console.log("Docs", currentTask);
     // handleAssignButtonClick(AssignResourseId);
-    HandleUploadingDoc(), handleCancel();
+    const updatedTask = {
+      ...currentTask,
+      docs: updatedDocs,
+    };
+
+    // Create a new array with updatedTask at AssignIndex
+    const updatedTasks = [...requiretasks];
+    updatedTasks[AssignIndex] = updatedTask;
+
+    // Update the state with the new array
+    setrequireTasks(updatedTasks);
+    HandleUploadingLink(), handleCancel();
   };
 
   const HandleUploadingDoc = async () => {
     let data = JSON.stringify({
+      // created_by: "bb933ca1-df71-413a-9f96-f0f289e4417a",
       doc_name: DocumentAssign.doc_name,
       doc_url: convertedImagesString,
     });
@@ -444,7 +470,55 @@ const RequirementForm = (stepperState) => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/task/${TaskId}/doc`,
+      url: `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/task/${TaskId}/doc`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.status === 200) {
+          const currentTask = requiretasks.at(AssignIndex);
+          const updatedDocs = [...currentTask.docs];
+
+          updatedDocs.push({
+            doc_name: DocumentAssign.doc_name,
+            doc_url: convertedImagesString,
+          });
+
+          const updatedTask = {
+            ...currentTask,
+            docs: updatedDocs,
+          };
+
+          const updatedTasks = [...requiretasks];
+          updatedTasks[AssignIndex] = updatedTask;
+
+          setrequireTasks(updatedTasks);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        openNotification("topRight", "error", `${error.response.data.message}`);
+      });
+  };
+
+  /////-----HandelLinkUpload
+  const HandleUploadingLink = async () => {
+    let data = JSON.stringify({
+      doc_name: name,
+      doc_url: convertedLinkString,
+    });
+    console.log("request :", data);
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/task/${TaskId}/doc`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -470,6 +544,7 @@ const RequirementForm = (stepperState) => {
   const [openActionIndex, setopenActionIndex] = useState(null);
   const [openImageIndex, setopenImageIndex] = useState([]);
   const dropdownRef = useRef(null);
+  const closedropdownRef = useRef(null);
   const [showOptions, setShowOptions] = useState(
     requiretasks ? Array(requiretasks.length).fill(false) : []
   );
@@ -485,8 +560,9 @@ const RequirementForm = (stepperState) => {
   const [AssignResourseId, setAssignResurseId] = useState();
   const [TaskId, setTaskId] = useState();
   const [AssigneeImg, setAssigneeImg] = useState(null);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for main dropdown
+
   // console.log(AssignName, AssignIndex);
-  const [imagebutton, setimageButton] = useState(false)
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -496,24 +572,41 @@ const RequirementForm = (stepperState) => {
         !event.target.closest(".relative.flex")
       ) {
         setOpenItemIndex(null);
-        setopenActionIndex(null)
       }
     }
 
     if (openItemIndex !== null) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else if (openActionIndex !== null) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    else {
+    } else {
       document.removeEventListener("mousedown", handleClickOutside);
     }
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, [openItemIndex, dropdownRef]);
 
+  // action button
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        closedropdownRef.current &&
+        !closedropdownRef.current.contains(event.target) &&
+        !event.target.closest(".relative")
+      ) {
+        setopenActionIndex(null);
+      }
+    }
 
-  }, [openItemIndex, openActionIndex, dropdownRef]);
+    if (openActionIndex !== null) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openActionIndex]);
 
   const openNotification = (placement, type, message) => {
     notification[type]({
@@ -554,21 +647,11 @@ const RequirementForm = (stepperState) => {
 
   const toggleSubItems = (index) => {
     setOpenItemIndex(openItemIndex === index ? null : index);
+    // setIsDropdownOpen(!isDropdownOpen);
   };
   const handleSubItemClick = (subItem) => {
     setSelectedSubItem(subItem);
   };
-
-  // const handleSelectedResourse = (index, resource_id, name, image_url) => {
-  //   console.log("passing values", index, resource_id);
-  //   const UpdatedTask = {
-  //     assigne_index: index,
-  //     assigneId: resource_id,
-  //     assigneName: name,
-  //     assigne_image: image_url,
-  //   };
-  //   setSelectedAssignee(UpdatedTask);
-  // };
   console.log("selectedResource", selectedAssignee);
 
   const handleTaskId = (taskId) => {
@@ -584,6 +667,7 @@ const RequirementForm = (stepperState) => {
       (currentTask.assigned_to.name = AssignName),
       (currentTask.assigned_to.image = AssignImg);
     handleAssignButtonClick(AssignResourseId);
+    setOpenItemIndex(null);
   };
 
   const handleAssignButtonClick = (id) => {
@@ -594,7 +678,7 @@ const RequirementForm = (stepperState) => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/task/${TaskId}/assign/${id}`,
+      url: `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/task/${TaskId}/assign/${id}`,
       headers: {
         Accept: "application/json",
       },
@@ -621,69 +705,6 @@ const RequirementForm = (stepperState) => {
   // console.log("requiredData:", requireData.usecase.stages  )
   return (
     <div>
-      {/* {requireData && (
-        <div className=" w-[100%] px-4">
-          <div className="flex space-x-5 items-center mb-3 ">
-            <div>
-              <img
-                src={requireData.image}
-                className="w-[7rem] h-[7rem] rounded-md"
-              />
-            </div>
-            <div>
-              <h1 className="my-3 text-xl font-medium leading-7 tracking-normal text-left">
-                {requireData.assignee_name}
-              </h1>
-              <div className="my-3 flex space-x-2">
-                <ShoppingOutlined style={{ fontSize: "1rem" }} />
-                <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">
-                  {requireData.role}
-                </h3>
-              </div>
-              <div className="my-3 flex space-x-2">
-                <BarsOutlined style={{ fontSize: "1rem" }} />
-                <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">
-                  {requireData.total_task}
-                </h3>
-              </div>
-            </div>
-            <div>
-              <div className="flex space-x-3 my-10">
-                <p className="text-sm font-medium leading-snug tracking-normal text-left">
-                  Assigned date
-                </p>
-                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
-                  {formatedDate}
-                </h3>
-              </div>
-              <div className="flex space-x-3 my-10">
-                <p className="text-sm font-medium leading-snug tracking-normal text-left">
-                  Planned date
-                </p>
-                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
-                  {requireData.usecase.end_date}
-                </h3>
-              </div>
-            </div>
-            <div>
-              <div className="flex space-x-3 my-10">
-                <p className="text-sm font-medium leading-snug tracking-normal text-left">
-                  Start date
-                </p>
-                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
-                  {requireData.usecase.start_date}
-                </h3>
-              </div>
-              <div className="flex space-x-3 my-10">
-                <p className="text-sm font-medium leading-snug tracking-normal text-left">
-                  Deviation
-                </p>
-                <h3 className="text-base font-normal leading-tight tracking-normal text-left">
-                  03days
-                </h3>
-              </div>
-            </div>
-          </div> */}
       {loading ? (
         <p>
           {" "}
@@ -700,7 +721,7 @@ const RequirementForm = (stepperState) => {
             (data, index) => (
               console.log("taskData", data),
               (
-                <div className="mb-8" key={index}>
+                <div className="mb-8 " style={{ zIndex: "0" }} key={index}>
                   <div
                     className="flex items-center justify-between py-3 px-2"
                     style={{ background: "rgba(230, 247, 255, 1)" }}
@@ -708,189 +729,230 @@ const RequirementForm = (stepperState) => {
                     <h1 className="text-base font-bold leading-tight tracking-normal text-left">
                       {data.name}
                     </h1>
-                    <DownOutlined />
                   </div>
                   <div
-                    className="flex items-center justify-between mt-2 px-4"
+                    className="flex items-start justify-between mt-2 px-4 "
+                    style={{ height: "9.5rem" }}
                     key={index}
                   >
-                    <div
-                      ref={dropdownRef}
-                      className="relative flex items-center gap-4"
-                    >
-                      <button
-                        onClick={() => toggleSubItems(index)}
-                        className="bg-white border text-black p-2 rounded-md flex items-center gap-1 "
-                      >
-                        Assign
-                        <img
-                          width="15"
-                          src="https://img.icons8.com/ios/50/expand-arrow--v2.png"
-                          alt="expand-arrow--v2"
-                        />
-                      </button>
-                      {loading ? (
-                        <p></p>
-                      ) : (
-                        <div className="flex gap-2 w-[2]" id="AssigneeImg">
-                          {(imagebutton && openImageIndex[index +1]) && ( // Check if the inner "Assign" button has been clicked
-                            <Image
-                              src={data.assigned_to.image ? data.assigned_to.image : user}
-                              alt={data.assigned_to.name}
-                              height={34}
-                              width={34}
-                            />
-                          )}
+                    <div className="Main-Wrap">
+                      <div className="flex items-center gap-1">
+                        <div
+                          ref={dropdownRef}
+                          className=" Assinee-Btn relative flex items-center gap-4"
+                        >
+                          <button
+                            onClick={() => toggleSubItems(index)}
+                            className="z-0"
+                          >
+                            <Image src={AssignBtnImg} />
+                          </button>
 
-                          {data.docs &&
+                          {openItemIndex === index && showOptions && (
+                            <ul
+                              className="absolute top-10 left-0 bg-white text-black shadow-md rounded-md "
+                              style={{ zIndex: "10" }}
+                            >
+                              <div className="flex items-center justify-center">
+                                <SearchOutlined className="pl-2" />
+                                <input
+                                  type="text"
+                                  placeholder="Search Role"
+                                  className="outline-none ml-2"
+                                />
+                              </div>
+                              {teamData.map(
+                                (itemsData, itemIndex) => (
+                                  console.log(itemsData),
+                                  (
+                                    <li key={itemIndex} className="p-2">
+                                      <div className="flex items-center justify-between">
+                                        {Object.keys(itemsData).map(
+                                          (key, inx) => (
+                                            console.log(key),
+                                            (
+                                              <button
+                                                key={inx}
+                                                onClick={() =>
+                                                  handleSubItemClick(
+                                                    itemIndex ===
+                                                      selectedSubItem
+                                                      ? null
+                                                      : itemIndex
+                                                  )
+                                                }
+                                                className="font-semibold"
+                                              >
+                                                {key}
+                                              </button>
+                                            )
+                                          )
+                                        )}
+                                        <CaretDownOutlined />
+                                      </div>
+                                      {selectedSubItem === itemIndex &&
+                                        itemsData && (
+                                          <ul>
+                                            <li className=" ">
+                                              {Object.values(itemsData).map(
+                                                (subItem, i) => (
+                                                  <React.Fragment key={i}>
+                                                    {Array.isArray(subItem) &&
+                                                      subItem.map(
+                                                        (item, j) => (
+                                                          console.log(
+                                                            item.resource_id
+                                                          ),
+                                                          (
+                                                            <button
+                                                              key={j}
+                                                              className="py-1 w-[100%]"
+                                                              style={{
+                                                                backgroundColor:
+                                                                  selectedAssign ===
+                                                                  item.resource_id // Assuming selectedSubItem is the selected name
+                                                                    ? "#E6F7FF"
+                                                                    : "transparent",
+                                                              }}
+                                                              onClick={() => {
+                                                                setAssignIndex(
+                                                                  index
+                                                                );
+                                                                setAssignResurseId(
+                                                                  item.resource_id
+                                                                ),
+                                                                  setAssignName(
+                                                                    item.name
+                                                                  ),
+                                                                  setAssignImg(
+                                                                    items.image_url
+                                                                  );
+
+                                                                handleTaskId(
+                                                                  data.id
+                                                                );
+                                                                // handleSelectedResourse(
+                                                                //   item.resource_id
+                                                                // );
+
+                                                                handleAssigneName(
+                                                                  item.name
+                                                                );
+                                                                setSelectedAssign(
+                                                                  item.resource_id
+                                                                );
+                                                              }}
+                                                            >
+                                                              {item.name}
+                                                              {/* Assuming name is the property to be displayed */}
+                                                            </button>
+                                                          )
+                                                        )
+                                                      )}
+                                                  </React.Fragment>
+                                                )
+                                              )}
+                                            </li>
+                                            <button
+                                              ref={dropdownRef}
+                                              onClick={() => {
+                                                // handleAssignButtonClick(
+                                                //   selectedAssign
+                                                // );
+                                                assigndbutton();
+                                                handleSubItemClick(
+                                                  itemIndex === selectedSubItem
+                                                    ? null
+                                                    : itemIndex
+                                                );
+                                                toggleSaved(index);
+                                                // setIsDropdownOpen(false)
+                                              }}
+                                              style={{
+                                                backgroundColor: "#4299e1",
+                                                padding: "0.5rem 0.75rem",
+                                                color: "#ffffff",
+                                                borderRadius: "0.375rem",
+                                              }}
+                                              // className="action-button bg-sky-500 px-2 py-1 text-white rounded-sm  "
+                                            >
+                                              Assign
+                                            </button>
+                                          </ul>
+                                        )}
+                                    </li>
+                                  )
+                                )
+                              )}
+                            </ul>
+                          )}
+                        </div>
+                        <div className="Assignee">
+                          {loading ? (
+                            <p></p>
+                          ) : (
+                            <div className="flex gap-2 w-[2]" id="AssigneeImg">
+                              <h5>{data.assigned_to.name}</h5>
+                              {/* <Image
+                            src={data.assigned_to.image}
+                            alt={data.assigned_to.name}
+                            height={34}
+                            width={34}
+                          ></Image> */}
+                              {/* {data.docs &&
                             data.docs.length > 0 &&
                             data.docs.map((doc, index) => (
-                              <Image
-                                key={index}
-                                src={doc.doc_url}
-                                alt={doc.doc_name}
-                                height={34}
-                                width={30}
-                              />
-                            ))}
+                              <div key={index} className="bg-white border relative right-0 text-black p-4 rounded-md flex flex-col items-center items-center gap-1 ">
+                                <Image
+                                  src={doc.doc_url}
+                                  alt={doc.doc_name}
+                                  height={34}
+                                  width={30}
+                                />
+                                <a href={doc.doc_url} target="_blank">
+                                  {doc.doc_name}
+                                </a>
+                              </div>
+                            ))} */}
 
-                          {/* {AssignDocs === data.id && ( */}
-                        </div>
-                      )}
-
-                      {openItemIndex === index && showOptions && (
-                        <ul className="absolute top-10 left-0 bg-white text-black shadow-md rounded-md z-[2]">
-                          <div className="flex items-center justify-center">
-                            <SearchOutlined className="pl-2" />
-                            <input
-                              type="text"
-                              placeholder="Search Role"
-                              className="outline-none ml-2"
-                            />
-                          </div>
-                          {teamData.map(
-                            (itemsData, itemIndex) => (
-                              console.log(itemsData),
-                              (
-                                <li key={itemIndex} className="p-2">
-                                  <div className="flex items-center justify-between">
-                                    {Object.keys(itemsData).map(
-                                      (key, inx) => (
-                                        console.log(key),
-                                        (
-                                          <button
-                                            key={inx}
-                                            onClick={() =>
-                                              handleSubItemClick(
-                                                itemIndex === selectedSubItem
-                                                  ? null
-                                                  : itemIndex
-                                              )
-                                            }
-                                            className="font-semibold"
-                                          >
-                                            {key}
-                                          </button>
-                                        )
-                                      )
-                                    )}
-                                    <CaretDownOutlined />
-                                  </div>
-                                  {selectedSubItem === itemIndex &&
-                                    itemsData && (
-                                      <ul>
-                                        <li className=" ">
-                                          {Object.values(itemsData).map(
-                                            (subItem, i) => (
-                                              <React.Fragment key={i}>
-                                                {Array.isArray(subItem) &&
-                                                  subItem.map(
-                                                    (item, j) => (
-                                                      console.log(
-                                                        item.resource_id
-                                                      ),
-                                                      (
-                                                        <button
-                                                          key={j}
-                                                          className="py-1 w-[100%]"
-                                                          style={{
-                                                            backgroundColor:
-                                                              selectedAssign ===
-                                                                item.resource_id // Assuming selectedSubItem is the selected name
-                                                                ? "#E6F7FF"
-                                                                : "transparent",
-                                                          }}
-                                                          onClick={() => {
-                                                            setAssignIndex(
-                                                              index
-                                                            );
-                                                            setAssignResurseId(
-                                                              item.resource_id
-                                                            ),
-                                                              setAssignName(
-                                                                item.name
-                                                              ),
-                                                              setAssignImg(
-                                                                items.image_url
-                                                              );
-                                                            handleTaskId(
-                                                              data.id
-                                                            );
-                                                            // handleSelectedResourse(
-                                                            //   item.resource_id
-                                                            // );
-
-                                                            handleAssigneName(
-                                                              item.name
-                                                            );
-                                                            setSelectedAssign(
-                                                              item.resource_id
-                                                            );
-                                                            
-                                                          }}
-                                                        >
-                                                          {item.name}
-                                                          {/* Assuming name is the property to be displayed */}
-                                                        </button>
-                                                      )
-                                                    )
-                                                  )}
-                                              </React.Fragment>
-                                            )
-                                          )}
-                                        </li>
-                                        <button ref={dropdownRef}
-                                          onClick={() => {
-                                            // handleAssignButtonClick(
-                                            //   selectedAssign
-                                            // );
-                                            setimageButton(true)
-                                            assigndbutton();
-                                            handleSubItemClick(
-                                              itemIndex === selectedSubItem
-                                                ? null
-                                                : itemIndex
-                                            );
-
-                                            toggleSaved(index);
-                                          }}
-                                          className="action-button bg-sky-500 px-2 py-1 text-white rounded-sm  "
-                                        >
-                                          Assign
-                                        </button>
-                                      </ul>
-                                    )}
-                                </li>
-                              )
-                            )
+                              {/* {AssignDocs === data.id && ( */}
+                            </div>
                           )}
-                        </ul>
-                      )}
+                        </div>
+                      </div>
+                      <div className="Assignee-Doc mt-2">
+                        {loading ? (
+                          <p></p>
+                        ) : (
+                          <div className="flex gap-2 w-[2]" id="AssigneeImg">
+                            {data.docs &&
+                              data.docs.length > 0 &&
+                              data.docs.map((doc, index) => (
+                                <div
+                                  key={index}
+                                  className="bg-white border relative right-0 text-black p-4 rounded-md flex flex-col items-center gap-1 "
+                                >
+                                  <Image
+                                    src={doc.doc_url}
+                                    alt={doc.doc_name}
+                                    height={34}
+                                    width={30}
+                                  />
+                                  <a href={doc.doc_url} target="_blank">
+                                    {doc.doc_name}
+                                  </a>
+                                </div>
+                              ))}
+
+                            {/* {AssignDocs === data.id && ( */}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <MessageOutlined style={{ fontSize: "20px" }} />
-                      <div className="relative" ref={dropdownRef}>
+                      <div className="relative" ref={closedropdownRef}>
                         <button
                           onClick={() => {
                             toggleOptions(index), setAssignIndex(index);
@@ -905,7 +967,7 @@ const RequirementForm = (stepperState) => {
                         </button>
 
                         {openActionIndex === index && (
-                          <div className="absolute z-10 bg-white w-[10rem] p-2 -left-[50%] rounded-lg shadow-lg overflow-hidden">
+                          <div className=" cursor-pointer absolute z-10 bg-white w-[10rem] p-2 -left-[50%] rounded-lg shadow-lg overflow-hidden">
                             <ul>
                               <li onClick={handleOptionClick}>
                                 <FileProtectOutlined /> Upload Document
@@ -965,8 +1027,33 @@ const RequirementForm = (stepperState) => {
                           open={isModalOpen}
                           onOk={() => {
                             handleOk(), handleSubmit();
+                            UploadingLink();
                           }}
                           onCancel={handleCancel}
+                          footer={[
+                            // Customizing the footer of the Modal
+                            <Button key="cancel" onClick={handleCancel}>
+                              Cancel
+                            </Button>, // Cancel button
+                            <Button
+                              key="submit"
+                              type="primary"
+                              onClick={() => {
+                                // Submit button with primary type
+                                handleOk();
+                                handleSubmit();
+                                UploadingLink();
+                              }}
+                              style={{
+                                backgroundColor: "#4299e1",
+                                padding: "0.2rem 0.75rem",
+                                color: "#ffffff",
+                                borderRadius: "0.375rem",
+                              }}
+                            >
+                              OK
+                            </Button>,
+                          ]}
                         >
                           <div className="flex flex-col gap-4">
                             <input
@@ -1012,293 +1099,7 @@ const RequirementForm = (stepperState) => {
         </>
       )}
     </div>
-    // )}
-    // </div>
   );
 };
 
 export default RequirementForm;
-
-//-------------------------------------------------////-------------------------------------------------///
-
-// import React from "react";
-// import { Input, Select, Form, DatePicker, Button } from "antd";
-// import { ShoppingOutlined, BarsOutlined, FileAddOutlined } from "@ant-design/icons"
-
-// const { Option } = Select;
-
-// const axios = require('axios');
-// let data = JSON.stringify({
-//     "example": {
-//         "name": "string",
-//         "updated_by_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-//         "stages": [
-//             {
-//                 "Requirements1": {
-//                     "tasks": [
-//                     ],
-//                     "checklist": [
-//                     ]
-//                 }
-//             },
-//             {
-//                 "mock1": {
-//                     "tasks": [
-//                         "mytask-1",
-//                         "task-2",
-//                         "task-3"
-//                     ],
-//                     "checklist": [
-//                         "thing 1",
-//                         "thing 2",
-//                         "thing 3"
-//                     ]
-//                 }
-//             }
-//         ]
-//     }
-// });
-
-// let config = {
-//     method: 'put',
-//     maxBodyLength: Infinity,
-//     url: 'https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/<uuid>',
-//     headers: {
-//         'Content-Type': 'application/json',
-//         'Accept': 'application/json'
-//     },
-//     data: data
-// };
-
-// axios.request(config)
-//     .then((response) => {
-//         console.log(JSON.stringify(response.data));
-//     })
-//     .catch((error) => {
-//         console.log(error);
-//     });
-
-// const RequirementForm = () => {
-//     return (
-//         <div>
-//             <div className='flex items-center justify-between mb-3'>
-//                 <div className="flex space-x-2 items-center">
-//                     <img src="https://cdn.pixabay.com/photo/2015/12/01/20/28/road-1072821_1280.jpg" className='w-[7rem] h-[7rem] rounded-md' />
-//                     <div>
-//                         <h1 className="my-3 text-lg font-medium leading-7 tracking-normal text-left">Darlene Robertson</h1>
-//                         <div className="my-3 flex space-x-2" >
-//                             <ShoppingOutlined style={{ fontSize: "1rem" }} />
-//                             <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">Project Manager</h3>
-//                         </div>
-//                         <div className="my-3 flex space-x-2" >
-//                             <BarsOutlined style={{ fontSize: "1rem" }} />
-//                             <h3 className="text-base font-normal leading-normal tracking-normal text-left space-y-4">10 Task</h3>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div>
-//                     <div className="flex space-x-3 my-10">
-//                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Assigned date</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>February 24, 2023</h3>
-//                     </div>
-//                     <div className="flex space-x-3 my-10">
-//                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Planned date</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>MM/DD/YY</h3>
-//                     </div>
-//                 </div>
-//                 <div>
-//                     <div className="flex space-x-3 my-10">
-//                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Start date</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>MM/DD/YY</h3>
-//                     </div>
-//                     <div className="flex space-x-3 my-10">
-//                         <p className="text-sm font-medium leading-snug tracking-normal text-left">Deviation</p>
-//                         <h3 className='text-base font-normal leading-tight tracking-normal text-left'>00days</h3>
-//                     </div>
-//                 </div>
-//             </div>
-//             <div className="flex space-x-5">
-//                 <div className="w-1/2 space-y-5 h-1/2">
-//                     <div className="space-y-5 p-3 border h-1/4">
-//                         <h3 className="text-sm font-bold leading-snug tracking-normal text-left">Create Usecase Document</h3>
-//                         <FileAddOutlined className="flex justify-center items-center py-8" style={{ fontSize: "70px" }} />
-//                     </div>
-//                     <div className="border p-4 h-1/4">
-//                         <h3>Checklist for requirement</h3>
-//                         <div className="flex items-center m-4 space-x-3">
-//                             <input type="checkbox" />
-//                             <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Use Case Document is stitched in netlify site in Use Cases Matrix</h3>
-//                         </div>
-//                         <div className="flex items-center m-4 space-x-3">
-//                             <input type="checkbox" />
-//                             <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Screen Design is stitched in netlify site in Use Cases Matrix</h3>
-//                         </div>
-//                         <div className="flex items-center m-4 space-x-3">
-//                             <input type="checkbox" />
-//                             <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Functional Design Review meeting is done with Technical Team</h3>
-//                         </div>
-//                         <div className="flex items-center m-4 space-x-3">
-//                             <input type="checkbox" />
-//                             <h3 className="text-sm font-normal leading-snug tracking-normal text-left">Scrum Planning with Micro Level Task Allocation is done</h3>
-//                         </div>
-//                     </div>
-//                 </div>
-//                 <div className="w-1/2 border">
-//                     <div className="flex justify-between m-2 border px-2 py-5 rounded-md">
-//                         <div className="flex space-x-1">
-//                             <img src="" className="w-8 h-8 rounded-full" />
-//                             <div>
-//                                 <p className="text-sm font-bold leading-tight tracking-normal text-left">Olivia Rhye @olivia</p>
-//                                 <p className="text-sm font-normal leading-tight tracking-normal text-left">Product Manager, Integrations</p>
-//                             </div>
-//                         </div>
-//                         <input type="checkbox" />
-//                     </div>
-//                     <div className="flex justify-between m-2 border px-2 py-5 rounded-md">
-//                         <div className="flex space-x-1">
-//                             <img src="" className="w-8 h-8 rounded-full" />
-//                             <div>
-//                                 <p className="text-sm font-bold leading-tight tracking-normal text-left">Phoenix Baker @phoenix</p>
-//                                 <p className="text-sm font-normal leading-tight tracking-normal text-left">Product Manager, Integrations</p>
-//                             </div>
-//                         </div>
-//                         <input type="checkbox" />
-//                     </div>
-//                     <div className="flex justify-between m-2 border px-2 py-5 rounded-md">
-//                         <div className="flex space-x-1">
-//                             <img src="" className="w-8 h-8 rounded-full" />
-//                             <div>
-//                                 <p className="text-sm font-bold leading-tight tracking-normal text-left">Lori Bryson @lori</p>
-//                                 <p className="text-sm font-normal leading-tight tracking-normal text-left">Product Manager, Integrations</p>
-//                             </div>
-//                         </div>
-//                         <input type="checkbox" />
-//                     </div>
-//                     <div className="flex justify-between m-2 border px-2 py-5 rounded-md">
-//                         <div className="flex space-x-1">
-//                             <img src="" className="w-8 h-8 rounded-full" />
-//                             <div>
-//                                 <p className="text-sm font-bold leading-tight tracking-normal text-left">Orlando Diggs @orlando</p>
-//                                 <p className="text-sm font-normal leading-tight tracking-normal text-left">Product Manager, Integrations</p>
-//                             </div>
-//                         </div>
-//                         <input type="checkbox" />
-//                     </div>
-//                     <div className="flex justify-between m-2 border px-2 py-5 rounded-md">
-//                         <div className="flex space-x-1">
-//                             <img src="" className="w-8 h-8 rounded-full" />
-//                             <div>
-//                                 <p className="text-sm font-bold leading-tight tracking-normal text-left">Kate Morrison @kate</p>
-//                                 <p className="text-sm font-normal leading-tight tracking-normal text-left">Product Manager, Integrations</p>
-//                             </div>
-//                         </div>
-//                         <input type="checkbox" />
-//                     </div>
-
-//                 </div>
-//             </div>
-//             <div className="flex items-center justify-center m-3">
-//                 <Button type="primary" style={{ background: "rgba(24, 144, 255, 1)" }}>Next</Button>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default RequirementForm;
-
-// import React, { Children, useState } from 'react'
-// import { DownOutlined, MessageOutlined } from "@ant-design/icons";
-// import { Dropdown, Space, Button, Menu, Typography } from 'antd';
-
-// const InsideDropDown = ({ name, }) => {
-//     const [visible, setVisible] = useState(false);
-
-//     const items = [
-//         { key: '1', label: 'Item 1' },
-//         { key: '2', label: 'Item 2' },
-//         { key: '3', label: 'Item 3' },
-//     ];
-
-//     const handleVisibleChange = (flag) => {
-//         setVisible(flag);
-//     };
-
-//     const handleButtonClick = () => {
-//         // Handle button click action here
-//     }
-//     return (
-//         <Dropdown
-//         visible={visible}
-//         onVisibleChange={handleVisibleChange}
-//         overlay={
-//             <Space direction="vertical">
-//                 {items.map((item) => (
-//                     <Button key={item.key} type="text">
-//                         {item.label}
-//                     </Button>
-//                 ))}
-//             </Space>
-//         }
-//     >
-//         <Typography.Link onClick={(e) => e.preventDefault()}>
-//             <Space>
-//                 {name}
-//                 <DownOutlined />
-//             </Space>
-//         </Typography.Link>
-//         {visible && (
-//             <Button type="primary" onClick={handleButtonClick}>
-//                 Action
-//             </Button>
-//         )}
-//     </Dropdown>
-
-//     )
-// }
-// const items = [
-//     {
-//         label: <InsideDropDown name={"UI Designer"} />,
-//         key: '0',
-//     },
-//     {
-//         label: <InsideDropDown name={"API Developer"} />,
-//         key: '1',
-//     },
-//     {
-//         label: <InsideDropDown name={"Tester"} />,
-//         key: '2',
-//     },
-//     {
-//         label: <InsideDropDown name={"UX Designer"} />,
-//         key: '3',
-//     },
-// ];
-
-// const RequirementForm = () => {
-//     return (
-//         <div>
-//             <div className='flex items-center justify-between py-3 px-2' style={{ background: "rgba(230, 247, 255, 1)" }}>
-//                 <h1 className='text-base font-bold leading-tight tracking-normal text-left'>Create Usecase Document</h1>
-//                 <DownOutlined />
-//             </div>
-//             <div className='flex items-center justify-between mt-2'>
-//                 <Dropdown
-//                     menu={{ items, }} trigger={['click']}
-//                 >
-//                     <button onClick={(e) => e.preventDefault()} className='border py-1 px-2'>
-//                         <Space>
-//                             Assign
-//                             <DownOutlined />
-//                         </Space>
-//                     </button>
-//                 </Dropdown>
-//                 <div className='flex items-center space-x-2'>
-//                     <MessageOutlined style={{ fontSize: "20px" }} />
-//                     <Button type='primary' style={{ background: "rgba(24, 144, 255, 1)" }}>Action</Button>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
-
-// export default RequirementForm

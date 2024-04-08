@@ -8,7 +8,6 @@ import AddEmployReview from "@/Components/AddEmployeeReview/AddEmployReview";
 import { useDispatch, useSelector } from "react-redux";
 import { updateId, updateProjectName } from "@/Context/AddNewProjectSlice/addProjectSlice";
 import { addStepperValue } from "@/Context/AddNewProjectSlice/addProjectSlice";
-
 import Link from "next/link";
 
 const { Step } = Steps;
@@ -94,7 +93,7 @@ export default function page({ formNext }) {
       !projectData.projectDescription ||
       !projectData.projectDepartment ||
       !projectData.startDate ||
-      !projectData.endDate ||
+      !projectData.endDate||
       !projectData.image_url
     ) {
       message.error(
@@ -122,6 +121,9 @@ export default function page({ formNext }) {
     }
   }, [EditButton]);
 
+
+  const DefaultToggleValue = useSelector((state) => state.addResources.ProjectStepperValue)
+  console.log("pageToggle", DefaultToggleValue)
 
   return (
     <>
@@ -174,5 +176,4 @@ export default function page({ formNext }) {
     </>
   );
 }
-
 

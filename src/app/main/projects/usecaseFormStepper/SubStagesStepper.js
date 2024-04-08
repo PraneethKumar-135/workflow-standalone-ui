@@ -19,7 +19,7 @@
 //         const fetchData = async () => {
 //           try {
 //             const response = await axios.get(
-//               `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
+//               `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
 //               {
 //                 headers: {
 //                   Accept: "application/json",
@@ -128,7 +128,7 @@ const SubStagesStepper = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
+          `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/usecase/${UsecaseId}`,
           {
             headers: {
               Accept: "application/json",
@@ -179,8 +179,8 @@ const SubStagesStepper = () => {
 
   return (
     <>
-      <div className="flex">
-        <div className="flex flex-col py-6  w-[auto] px-3 gap-y-[7rem] ">
+      <div className="flex gap-2">
+        <div className="flex flex-col py-6  w-[auto] px-4 gap-y-[7rem] ">
           {mappedSteps?.map((step, i) => (
             console.log(step.title),
             <div
@@ -190,10 +190,10 @@ const SubStagesStepper = () => {
               } `}
               onClick={() => handleStepClick(i, step.title)}
             >
-              <div className="step cursor-pointer w-1/4">
+              <div className="step cursor-pointer">
                 {i + 1 < currentStep || complete ? i+1 : i + 1}
               </div>
-              <p className="text-gray-500 ml-2 whitespace-pre-wrap cursor-pointer w-[60%] "style={{ wordWrap: 'break-word' }}>{step.title}</p>
+              <p className="text-gray-500 ml-2 whitespace-pre-wrap cursor-pointer ">{step.title}</p>
             </div>
           ))}
         </div>
