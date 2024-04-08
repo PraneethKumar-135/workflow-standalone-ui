@@ -159,7 +159,7 @@ const AddEmployReview = () => {
   return (
     <div>
       <div>
-        <div className="rounded-md mt-5 space-y-5 p-5 bg-white">
+        <div className="rounded-md mt-5 space-y-5 p-5 bg-white ml-7">
           <div className="flex justify-between">
             <h1 className="text-xl font-bold leading-snug tracking-normal text-left">
               Setup project
