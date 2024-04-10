@@ -23,12 +23,9 @@ const Page = () => {
     newInputs[index] = inputValue;
 
     // Clear all input fields if the current input is cleared
-    if (inputValue === "") {
-      for (let i = index - 1; i >= 0; i--) {
-        newInputs[i] = "";
-      }
+    if (inputValue === "" && index > 0) {
+      newInputs[index] = ""; // Clear the value in the last input field
     }
-
     setOtpInputs(newInputs);
 
     // Enable the next input field if the current one is filled
@@ -105,7 +102,7 @@ const Page = () => {
                     handleInputChange(index, inputValue);
                   }
                 }}
-                disabled={value !== "" && index < otpInputs.length - 1 && otpInputs[index + 1] !== ""}
+                // disabled={value !== "" && index < otpInputs.length - 1 && otpInputs[index + 1] !== ""}
                 className="otp-input"
               />
             ))}
