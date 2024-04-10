@@ -45,7 +45,7 @@ const Planning = () => {
       </div>
       <div className='w-full mt-5'>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead >
+          <thead>
             <tr>
               <th style={{ width: '36%' }} className='p-1 pr-10 text-sm text-left'>Stages</th>
               <th style={{ width: '11%' }} className='p-1 pr-10 text-sm border border-y-0 border-r-0 border-l-2'>Assign to</th>
@@ -57,7 +57,7 @@ const Planning = () => {
           </thead>
           <tbody>
             {reciveddata.map((Data, index) => (
-              <tr key={index} className='  mt-3'>
+              <tr key={index}>
                 <td colSpan={6}>
                   {Object.keys(Data).map((key) => (
                     <button
@@ -82,8 +82,8 @@ const Planning = () => {
                       </colgroup>
                       {Object.values(Data).map((values) => (
                         Object.values(values).map((valuesdata) => (
-                          valuesdata.map((actualData, index) => (
-                            <tr key={index} className='border border-x-0 border-y-2 mt-3'>
+                          valuesdata.map((actualData) => (
+                            <tr key={actualData.name}>
                               <td className='text-sm font-semibold leading-snug text-left py-3  '>{actualData.name}</td>
                               <td className='text-sm font-semibold leading-snug text-left py-3 pl-2'>{actualData.assigned_to.name}</td>
                               <td className='text-sm font-semibold leading-snug text-left py-3 pl-4'>{actualData.start_date}</td>

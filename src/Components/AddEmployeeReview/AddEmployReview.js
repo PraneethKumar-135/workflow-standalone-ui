@@ -65,12 +65,13 @@ const AddEmployReview = () => {
       start_date: projectData.startDate,
       end_date: projectData.endDate,
       image_url: "https://i.imgur.com/PujQY5Y.png",
+      // image_url: projectData.image_url,
     });
 
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project",
+      url: "https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/project",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -134,7 +135,7 @@ const AddEmployReview = () => {
     let config = {
       method: "put",
       maxBodyLength: Infinity,
-      url: `https://spj7xgf470.execute-api.us-east-1.amazonaws.com/dev/project/${id}/team`,
+      url: `https://m41stqhs8f.execute-api.us-east-1.amazonaws.com/dev/project/${id}/team`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",

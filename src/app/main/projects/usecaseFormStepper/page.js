@@ -7,8 +7,7 @@ import { useSelector } from "react-redux";
 import SubStagesStepper from "./SubStagesStepper";
 import UseCasesOverView from "@/Components/AddUsecaseStepperForms/UseCasesOverView";
 import Planning from "@/Components/AddUsecaseStepperForms/Planning";
-import AssertView from "@/Components/AddUsecaseStepperForms/AssertView";
-
+import AssetView from "@/Components/AddUsecaseStepperForms/AssertView";
 
 import { Tabs } from "antd";
 
@@ -30,7 +29,7 @@ const Stepper = () => {
     {
       key: "3",
       label: "Asset view",
-      children: <AssertView />,
+      children: <AssetView/>,
     },
     {
       key: "4",
