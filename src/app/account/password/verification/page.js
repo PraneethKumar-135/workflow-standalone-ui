@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,33 +18,46 @@ const Page = () => {
   const reset = useSelector((state) => state.resetPassword);
   console.log(reset);
 
-  const handleInputChange = (index, inputValue) => {
+  const handleInputChange = (index, inputValue, event) => {
+    console.log("Input change:", index, inputValue, event);
     const newInputs = [...otpInputs];
     newInputs[index] = inputValue;
 
-    // Clear all input fields if the current input is cleared
-    if (inputValue === "" && index > 0) {
-      newInputs[index] = ""; // Clear the value in the last input field
+    // Clear the current input if it's emptied by backspacing
+    if (inputValue === "" && event.key === "Backspace" && index > 0) {
+      newInputs[index] = "";
+      setOtpInputs(newInputs);
+      const prevInput = document.getElementById(`otp-input-${index - 1}`);
+      if (prevInput) {
+        prevInput.focus();
+      }
+      return;
     }
+
     setOtpInputs(newInputs);
 
     // Enable the next input field if the current one is filled
     if (inputValue && index < 5) {
       const nextInput = document.getElementById(`otp-input-${index + 1}`);
-      nextInput.removeAttribute("disabled");
-      nextInput.focus();
+      if (nextInput) {
+        nextInput.removeAttribute("disabled");
+        nextInput.focus();
+      }
     }
 
     // Disable previous input fields when backspacing
     if (!inputValue && index > 0) {
       const prevInput = document.getElementById(`otp-input-${index - 1}`);
-      prevInput.focus();
+      if (prevInput) {
+        prevInput.focus();
+      }
     }
   };
 
 
 
   const handleVerify = () => {
+    console.log("Paste event:", e, index);
     // Logic for OTP verification
     const otp = otpInputs.join("");
     console.log("Verifying OTP:", otp);
@@ -55,6 +68,21 @@ const Page = () => {
       router.push("/account/password/new-password");
     }
   };
+
+  const handlePaste = (e, index) => {
+    e.preventDefault();
+    const pasteData = e.clipboardData.getData("text/plain");
+    if (pasteData.length === 6) {
+      const newInputs = pasteData.split("");
+      setOtpInputs(newInputs);
+      // Focus on the last input field after pasting
+      const lastInput = document.getElementById(`otp-input-${otpInputs.length - 1}`);
+      if (lastInput) {
+        lastInput.focus();
+      }
+    }
+  };
+
 
   return (
     <div className="flex px-10 flex-row items-center h-screen gap-8">
@@ -99,9 +127,10 @@ const Page = () => {
                   const inputValue = e.target.value;
                   // Ensure only one number is entered
                   if (!isNaN(inputValue) && inputValue.length <= 1) {
-                    handleInputChange(index, inputValue);
+                    handleInputChange(index, inputValue, e); // Pass the event object
                   }
                 }}
+                onPaste={(e) => handlePaste(e, index)}
                 // disabled={value !== "" && index < otpInputs.length - 1 && otpInputs[index + 1] !== ""}
                 className="otp-input"
               />
